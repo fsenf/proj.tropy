@@ -1,0 +1,17 @@
+# some installation note about tropy python routine collection
+# ============================================================
+
+# --- set local python path ----
+LOCAL_PYTHON_PATH=$HOME/.local/lib/python2.7/site-packages
+mkdir -p $LOCAL_PYTHON_PATH
+
+# --- additional packages ---
+# (i) simpleITK
+easy_install -d $LOCAL_PYTHON_PATH  -f http://www.simpleitk.org/SimpleITK/resources/software.html -U SimpleITK
+
+# (ii) mahotas
+easy_install -U -d $LOCAL_PYTHON_PATH mahotas
+
+
+# Compiling the Bitconversion stuff
+# f2py -c -m --f90flags='-O3 -fPIC' _f90_bit_conversion bit_conversion.f90
