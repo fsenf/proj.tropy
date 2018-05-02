@@ -1,7 +1,5 @@
 import sys
-sys.path.append('/u1/home/fabian/lib/tropy')
-
-from plotting_tools.shaded import shaded
+from shaded import shaded
 import numpy as np
 import pylab as py
 

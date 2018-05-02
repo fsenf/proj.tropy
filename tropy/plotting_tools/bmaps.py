@@ -8,7 +8,7 @@ import pylab as pl
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
-from standard_config import *
+from tropy.standard_config import *
 
 #####################################################################
 #####################################################################

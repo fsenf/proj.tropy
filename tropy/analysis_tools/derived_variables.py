@@ -2,9 +2,9 @@
 
 import sys, os
 
-import ECMWFtools
+import tropy.ECMWFtools as ECMWFtools
 import numpy as np
-from analysis_tools.grid_and_interpolation import ldiff, lmean
+from grid_and_interpolation import ldiff, lmean
 
 ######################################################################
 ######################################################################

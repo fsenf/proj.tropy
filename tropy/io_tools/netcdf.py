@@ -20,7 +20,7 @@ import datetime
 
 import hdf as hio
 
-from standard_config import *
+from tropy.standard_config import *
 
 ######################################################################
 ######################################################################

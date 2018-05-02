@@ -3,11 +3,11 @@
 import sys, os, glob, copy
 import numpy as np
 
-import analysis_tools.grid_and_interpolation as gi
+import grid_and_interpolation as gi
 import datetime, time
 import scipy.ndimage
 
-import io_tools.radolan as radolan
+import tropy.io_tools.radolan as radolan
 
 ######################################################################
 ######################################################################

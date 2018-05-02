@@ -3,7 +3,7 @@
 # load libraries -----------------------------------------------------
 import os
 import datetime
-from l15_msevi.msevi_config import _arch_config
+from tropy.l15_msevi.msevi_config import _arch_config
 # ====================================================================
    
 

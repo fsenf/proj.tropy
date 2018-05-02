@@ -18,10 +18,6 @@
 # load libraries -----------------------------------------------------
 import sys, os, glob
 
-import MSGtools
-import tropy.io_tools.HRIT as hio
-import tropy.io_tools.hdf as iohdf
-from tropy.io_tools.find_latest_slot import find_latest_slot
 import numpy as np
 import datetime as dt
 import pylab as pl
@@ -29,10 +25,15 @@ import pylab as pl
 from msevi_config import _predefined_regions, _narrow_channels,\
     _channel_config, _calibration_constants, _hdf_cutout_regions,\
     _arch_config
-from tropy.analysis_tools.make_hrv_upscaling import make_hrv_upscaling
-
 # use pyorbital from pytroll group for sun zenith angle calculations
 import pyorbital.astronomy
+
+import tropy.MSGtools as MSGtools
+import tropy.io_tools.HRIT as hio
+import tropy.io_tools.hdf as iohdf
+from tropy.io_tools.find_latest_slot import find_latest_slot
+from tropy.analysis_tools.make_hrv_upscaling import make_hrv_upscaling
+
 
 # ====================================================================
    

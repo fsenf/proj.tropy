@@ -8,7 +8,7 @@ import tempfile
 import numpy as np
 import pylab as pl
 
-import io_tools.netcdf as ncio
+import tropy.io_tools.netcdf as ncio
 
 ######################################################################
 ######################################################################

@@ -10,7 +10,7 @@ import scipy.ndimage
 
 import pylab as pl
 import matplotlib.colors as col
-import plotting_tools.colormaps
+import tropy.plotting_tools.colormaps as colormaps
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -374,8 +374,8 @@ class MSeviRGB(MSevi):
     
 
             # get color schemes ......................................
-            cmap_sea = plotting_tools.colormaps.nice_cmaps('ocean-clouds')
-            cmap_land = plotting_tools.colormaps.nice_cmaps('land-clouds')
+            cmap_sea = colormaps.nice_cmaps('ocean-clouds')
+            cmap_land = colormaps.nice_cmaps('land-clouds')
 
 
             

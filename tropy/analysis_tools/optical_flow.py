@@ -8,7 +8,7 @@ import datetime
 import cv2
 import scipy.ndimage
 
-import analysis_tools.grid_and_interpolation as gi
+import grid_and_interpolation as gi
 
 
 ######################################################################

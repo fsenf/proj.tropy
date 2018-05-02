@@ -7,7 +7,7 @@ import scipy.optimize, scipy.ndimage, scipy.stats, scipy.odr
 import sklearn.preprocessing
 import statsmodels.api as sm
 
-import analysis_tools.grid_and_interpolation as gi
+import grid_and_interpolation as gi
 
 ######################################################################
 ######################################################################

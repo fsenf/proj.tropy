@@ -4,7 +4,7 @@ import numpy as np
 import pylab as pl
 import scipy.ndimage
 
-import analysis_tools.grid_and_interpolation as gi
+import tropy.analysis_tools.grid_and_interpolation as gi
 
 ######################################################################
 ######################################################################
