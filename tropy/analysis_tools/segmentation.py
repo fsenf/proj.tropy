@@ -207,11 +207,22 @@ def watershed_clustering(f, thresh,
 
     elif marker_method == 'iterative_shrinking':
 
+
+        # all segmentation / filter keywords are needed for marker determination
+        marker_kwargs = kwargs.copy()
+    
+        marker_kwargs['ctype'] = ctype
+        marker_kwargs['filter_method'] = filter_method
+        marker_kwargs['numberOfIterations'] = numberOfIterations
+        marker_kwargs['cluster_masking'] = cluster_masking
+        marker_kwargs['siggauss'] = siggauss
+    
+        
         markers = markers_from_iterative_shrinking(ma_sm,
                                         marker_shrinkage_Niter = marker_shrinkage_Niter,
                                         marker_shrinkage_dmin = marker_shrinkage_dmin,
-                                        **kwargs)
-
+                                        **marker_kwargs)
+    
     # ================================================================
 
 
