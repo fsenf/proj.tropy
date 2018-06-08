@@ -154,6 +154,51 @@ def ll2xy(lon, lat, lon0=10., lat0=50., R = 6380.):
 ######################################################################
 ######################################################################
 
+def ll2xyc(lon, lat, lon0 = 0, lat0 = 0.):
+
+    '''
+    Applies a centered version of ll2xy. The centering is around the
+    mean lon/lat value and lon0, lat0 only define the x/y offset.
+
+
+    Parameters
+    ----------
+    lon : numpy array
+        longitude
+    lat : numpy array
+        latitude
+    l
+
+    Returns
+    -------
+    x : numpy array
+        x-coordinate
+
+    y : numpy array
+        y-coordinate
+    '''
+
+    # define the center point
+    mlon = lon.mean()
+    mlat = lat.mean()
+
+    # apply sinusoidal transformation
+    x, y = ll2xy( lon, lat, lon0 = mlon, lat0 = mlat )
+
+    # and finally shift x/y with offset
+    x0, y0 = ll2xy( 0, 0, lon0 = mlon, lat0 = mlat)
+    x -= x0
+    y -= y0
+
+    return x, y
+
+
+######################################################################
+######################################################################
+
+
+
+
 def xy2ll(x, y, lon0=10., lat0=50., R = 6380):
     ''' 
     Transformation between local Cartesian coordinates in west-east direction (x) 
