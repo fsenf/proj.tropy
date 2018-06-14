@@ -850,7 +850,7 @@ def make_vert_cut(p1, p2, lon, lat, vg, **kwargs):
 ######################################################################
 
 
-def simple_pixel_area(lon,lat, uncertainty = False):
+def simple_pixel_area(lon, lat, xy = False, uncertainty = False):
 
     ''' 
     Approximates the grid box area of a lon - lat grid.
@@ -882,7 +882,10 @@ def simple_pixel_area(lon,lat, uncertainty = False):
         sys.exit(0)
 
     # convert lon,lat into Cartesian coordinates
-    x,y = ll2xy(lon,lat)
+    if xy:
+        x, y = lon, lat
+    else:
+        x, y = ll2xy(lon, lat)
 
     # add some edge via linear extrapolation
     x_ext = make_add_edge(x)

@@ -1,6 +1,7 @@
 
 
 # from setuptools import setup
+from tropy._version import __version__
 from numpy.distutils.core import setup, Extension
 
 #f2py -c -m --f90flags='-O3 -fPIC' _f90_bit_conversion_altair bit_conversion.f90
@@ -9,7 +10,7 @@ e1 = Extension( '_f90_bit_conversion',
                 extra_f90_compile_args = ['-O3 -fPIC'], )
 
 setup(name='tropy',
-      version='0.1',
+      version = __version__,
       description='Collection of IO and Analysis Tools for TROPOS work',
       author='Fabian Senf',
       author_email='senf@tropos.de',
