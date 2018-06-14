@@ -154,7 +154,7 @@ def ll2xy(lon, lat, lon0=10., lat0=50., R = 6380.):
 ######################################################################
 ######################################################################
 
-def ll2xyc(lon, lat, lon0 = 0, lat0 = 0.):
+def ll2xyc(lon, lat, mlon = None, mlat = None, lon0 = 0, lat0 = 0.):
 
     '''
     Applies a centered version of ll2xy. The centering is around the
@@ -165,9 +165,22 @@ def ll2xyc(lon, lat, lon0 = 0, lat0 = 0.):
     ----------
     lon : numpy array
         longitude
+    
     lat : numpy array
         latitude
-    l
+    
+    mlon : float
+        longitude center point of projection
+
+    mlat : float
+        latitutde center point of projection
+
+    lon0 : float
+        zero longitude (for x-offset)
+
+    lat0 : float
+        zero latitude (for y-offset)
+        
 
     Returns
     -------
@@ -179,8 +192,11 @@ def ll2xyc(lon, lat, lon0 = 0, lat0 = 0.):
     '''
 
     # define the center point
-    mlon = lon.mean()
-    mlat = lat.mean()
+    if mlon is None:
+        mlon = lon.mean()
+
+    if mlat is None:
+        mlat = lat.mean()
 
     # apply sinusoidal transformation
     x, y = ll2xy( lon, lat, lon0 = mlon, lat0 = mlat )
