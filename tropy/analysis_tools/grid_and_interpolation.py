@@ -186,7 +186,7 @@ def ll2xyc(lon, lat, lon0 = 0, lat0 = 0.):
     x, y = ll2xy( lon, lat, lon0 = mlon, lat0 = mlat )
 
     # and finally shift x/y with offset
-    x0, y0 = ll2xy( 0, 0, lon0 = mlon, lat0 = mlat)
+    x0, y0 = ll2xy( lon0, lat0, lon0 = mlon, lat0 = mlat)
     x -= x0
     y -= y0
 
@@ -566,7 +566,7 @@ def make_index_set(nrows, ncols):
 
 
 
-def create_interpolation_index(lon1, lat1, lon2, lat2):
+def create_interpolation_index(lon1, lat1, lon2, lat2, xy = False):
 
     '''
     Given georeference of two grids in lon and lat, an index is built to map 
@@ -601,9 +601,12 @@ def create_interpolation_index(lon1, lat1, lon2, lat2):
 
     ic1, ir1 = np.meshgrid(ic, ir)
 
-
-    x1, y1 = ll2xy(lon1, lat1)
-    x2, y2 = ll2xy(lon2, lat2)
+    if xy:
+        x1, y1 = lon1, lat1
+        x2, y2 = lon2, lat2
+    else:
+        x1, y1 = ll2xy(lon1, lat1)
+        x2, y2 = ll2xy(lon2, lat2)
 
     pos = np.array((x2.flatten(), y2.flatten()))
     
