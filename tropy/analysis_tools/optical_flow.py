@@ -61,7 +61,7 @@ def displacement_from_opt_flow(f1, f2,
     im1 = (fr1*255).astype(np.uint8)
     im2 = (fr2*255).astype(np.uint8)
 
-    flow = cv2.calcOpticalFlowFarneback(im1,im2,  0.5, nlayers, boxsize, 3, 5, 1.2, 0)
+    flow = cv2.calcOpticalFlowFarneback(im1,im2, None,  0.5, nlayers, boxsize, 3, 5, 1.2, 0)
     # ================================================================
 
     return flow
