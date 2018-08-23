@@ -14,6 +14,7 @@ import tropy.io_tools.radolan as radolan
 
 def parallax_correct_on_radolan(lon, lat, cth, f, 
                                 do_masking =True,
+                                satlon = 9.5, 
                                 do_sequential_hole_filling = False): 
 
     '''
@@ -51,7 +52,7 @@ def parallax_correct_on_radolan(lon, lat, cth, f,
 
 
     # parallax correction --------------------------------------------
-    plon, plat = parallax_correction(lon[m], lat[m], cth[m])
+    plon, plat = parallax_correction(lon[m], lat[m], cth[m], satlon = satlon)
 
     # and remapping
     xp, yp = radolan.rado_ll2xy(plon, plat)
