@@ -15,6 +15,8 @@ import tropy.io_tools.radolan as radolan
 def parallax_correct_on_radolan(lon, lat, cth, f, 
                                 do_masking =True,
                                 satlon = 9.5, 
+                                smoothing = True,
+                                gauss_sig = 3,
                                 do_sequential_hole_filling = False): 
 
     '''
@@ -39,20 +41,31 @@ def parallax_correct_on_radolan(lon, lat, cth, f,
     '''
 
 
+    # do smoothing ---------------------------------------------------
+    if smoothing or gauss_sig != 0:
+        print '..use cth smoothing with sigma', gauss_sig
+        cth_sm =  scipy.ndimage.percentile_filter(cth, 90, size = 4 * gauss_sig)
+        cth_sm =  scipy.ndimage.gaussian_filter(cth_sm, gauss_sig)
+    else:
+        cth_sm = cth
+    # ================================================================
+
+
     # make masking ---------------------------------------------------
     if do_masking:
         f = np.ma.masked_invalid(f)
         mnot = f.mask
         mf = np.logical_not(mnot)
     
-        m = (mf) & ( cth != 0)
+        m = (mf) & ( cth_sm != 0)
     else:
-        m = np.ones_like(cth).astype(np.bool)
+        m = np.ones_like(cth_sm).astype(np.bool)
     # ================================================================
 
+        
 
     # parallax correction --------------------------------------------
-    plon, plat = parallax_correction(lon[m], lat[m], cth[m], satlon = satlon)
+    plon, plat = parallax_correction(lon[m], lat[m], cth_sm[m], satlon = satlon)
 
     # and remapping
     xp, yp = radolan.rado_ll2xy(plon, plat)
@@ -82,10 +95,11 @@ def parallax_correct_on_radolan(lon, lat, cth, f,
 
     # successive index-based interpolation ---------------------------
     Nsteps = 10
-    h = np.linspace(0, cth.max(), Nsteps + 1)  
+    h = np.linspace(0, cth_sm.max(), Nsteps + 1)  
 
     # initial field
-    fpar = -9999 * np.ones_like(xnew).astype(np.int)
+    fpar = -9999 * np.ones_like( f )
+    fpar[~m] = f[~m]
 
 
     # iteration
@@ -94,7 +108,7 @@ def parallax_correct_on_radolan(lon, lat, cth, f,
         h_upp = h[n + 1]
 
         # make mask
-        ma = np.logical_and(cth[m][madd] >= h_low, cth[m][madd] < h_upp)
+        ma = np.logical_and(cth_sm[m][madd] >= h_low, cth_sm[m][madd] < h_upp)
 
         fpar[ir[ma],ic[ma]] = f[m][madd][ma]
 
