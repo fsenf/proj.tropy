@@ -988,6 +988,46 @@ def draw_from_empirical_dist(bins, hist, Nsamp = 100, discrete_version = False):
     
 
     return rvalues
+
+######################################################################
+######################################################################
+
+
+def draw_from_empirical_1ddist(bins, hist, Nsamp = 100):
+
+    '''
+    Draw random number from an empirical distribution. Implemented for 1d histograms.
+    
+    
+    INPUT
+    ======
+    bins: list of bins edges (1dim)
+    hist: histogram values (either absolute frequencies or relative)
+    
+    OUTPUT
+    ======
+    rvalues: random values (2d) that are distributes like hist
+    '''
+
+
+    # get bin mid points
+    bin_midpoints = gi.lmean(bins)
+
+    # resort the empirical distribution and calculate cdf
+    cdf = np.cumsum(hist.ravel())
+    cdf = cdf / np.float(cdf[-1])
+    
+    # draw the a random realization of cdf values
+    cvalues = np.random.rand( Nsamp )
+
+    # get bin index by inversion of cdf values
+    value_bins = np.searchsorted(cdf, cvalues)
+
+    # and find the correspoding values
+    rvalues = bin_midpoints[value_bins]
+
+
+    return rvalues
     
 
 ######################################################################
