@@ -221,7 +221,7 @@ class Radolan(object):
          (ii) or from HDCP2 netcdf format
         '''
 
-        if rproduct in ['rx', 'rw']:
+        if rproduct in ['rx', 'rw', 'sf']:
             self.rawread(name_or_time, rproduct = rproduct)
 
         elif rproduct == 'rx_hdcp2':
@@ -565,7 +565,7 @@ def radoname_from_time(tin,
     # ================================================================
 
 
-    if rproduct in ['rx', 'rw']:
+    if rproduct in ['rx', 'rw', 'sf']:
         date_str = t.strftime('%Y/%m/%d')
         time_str = t.strftime('%y%m%d%H%M')
 
