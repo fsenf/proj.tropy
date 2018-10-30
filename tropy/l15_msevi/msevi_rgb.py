@@ -351,9 +351,11 @@ class MSeviRGB(MSevi):
             # prepare masking ........................................
             # get brightness temperature 
             tsurf = kwargs.get( 'ir_natcol_tsurf', 270)
+            lowcloud_delta = kwargs.get( 'ir_natcol_lowcloud_delta', 15)
+            lowcloud_factor  = kwargs.get( 'ir_natcol_lowcloud_factor', 0.8)
 
             bmax = tsurf + 35 * np.cos(np.deg2rad(self.lat))
-            bmed = bmax - 15.
+            bmed = bmax - lowcloud_delta
             bmin = 210
             bt108 = self.bt['IR_108']
 
@@ -363,7 +365,7 @@ class MSeviRGB(MSevi):
             v1 = (bt108 - bmin) / (bmed - bmin)
             v2 = (bt108 - bmed) / (bmax - bmed)
 
-            fac = 0.8
+            fac = lowcloud_factor
             v = np.where(bt108 < bmed, v1 * fac, fac + v2 * (1 - fac))
             v = np.clip(v, 0., 1.)
 
