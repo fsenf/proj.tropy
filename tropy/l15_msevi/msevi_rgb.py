@@ -52,7 +52,7 @@ class MSeviRGB(MSevi):
         #=============================================================
 
         # make rgb images --------------------------------------------
-        self.create_rgb(self.rgb_type, tstamp = tstamp)
+        self.create_rgb(self.rgb_type, tstamp = tstamp, **kwargs)
         #=============================================================
 
         return
