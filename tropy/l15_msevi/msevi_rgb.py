@@ -234,7 +234,7 @@ class MSeviRGB(MSevi):
             
             for im in required_images:
                 if not self.images.has_key(im):
-                    self.create_rgb(im)
+                    self.create_rgb(im, tstamp = tstamp)
 
             img_vis = self.images['pytroll_nc']
             img_ir = self.images['ir_natcol']
