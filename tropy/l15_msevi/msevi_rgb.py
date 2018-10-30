@@ -65,7 +65,11 @@ class MSeviRGB(MSevi):
  
 #####################################################################
 
-    def create_rgb(self, rgb_type, tstamp = True, **kwargs):
+    def create_rgb(self, rgb_type, **kwargs):
+
+        
+        tstamp = kwargs.get('tstamp', True)
+
 
         # check if several composites should be made -----------------
         if type(rgb_type) == type([]):
@@ -73,7 +77,7 @@ class MSeviRGB(MSevi):
             rgb_list = rgb_type
 
             for rgb in rgb_list:
-                self.create_rgb(rgb)
+                self.create_rgb(rgb, **kwargs)
 
             return
         else:
@@ -205,7 +209,7 @@ class MSeviRGB(MSevi):
             
             for im in required_images:
                 if not self.images.has_key(im):
-                    self.create_rgb(im)
+                    self.create_rgb(im, **kwargs)
 
             img_h = self.images['nc_hrv']
             img_ir = self.images['col_108'].resize(img_h.size)
@@ -234,7 +238,7 @@ class MSeviRGB(MSevi):
             
             for im in required_images:
                 if not self.images.has_key(im):
-                    self.create_rgb(im, tstamp = tstamp)
+                    self.create_rgb(im, **kwargs)
 
             img_vis = self.images['pytroll_nc']
             img_ir = self.images['ir_natcol']
@@ -641,7 +645,7 @@ class MSeviRGB(MSevi):
             return
 
         if not self.images.has_key(rgb_str):
-            self.create_rgb(rgb_str)
+            self.create_rgb(rgb_str, **kwargs)
 
         if overlay:
             self.overlay()
@@ -689,7 +693,7 @@ class MSeviRGB(MSevi):
 
         # check if images exist --------------------------------------
         if not self.images.has_key(rgb_str):
-            self.create_rgb(rgb_str)
+            self.create_rgb(rgb_str, **kwargs)
         # ============================================================
 
  
