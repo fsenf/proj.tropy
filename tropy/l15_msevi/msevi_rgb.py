@@ -65,7 +65,7 @@ class MSeviRGB(MSevi):
  
 #####################################################################
 
-    def create_rgb(self, rgb_type, tstamp = True):
+    def create_rgb(self, rgb_type, tstamp = True, **kwargs):
 
         # check if several composites should be made -----------------
         if type(rgb_type) == type([]):
@@ -346,7 +346,9 @@ class MSeviRGB(MSevi):
 
             # prepare masking ........................................
             # get brightness temperature 
-            bmax = 270. + 35 * np.cos(np.deg2rad(self.lat))
+            tsurf = kwargs.get( 'ir_natcol_tsurf', 270)
+
+            bmax = tsurf + 35 * np.cos(np.deg2rad(self.lat))
             bmed = bmax - 15.
             bmin = 210
             bt108 = self.bt['IR_108']
