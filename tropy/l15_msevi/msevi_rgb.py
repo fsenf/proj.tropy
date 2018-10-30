@@ -739,7 +739,7 @@ class MSeviRGB(MSevi):
 
 ######################################################################
 
-    def time_stamp(self, rgb_str):
+    def time_stamp(self, rgb_str, offset = 38, fontsize = 16):
         
         img = self.images[rgb_str]
         nx, ny = img.size
@@ -749,16 +749,16 @@ class MSeviRGB(MSevi):
 
     # load font
         fontfile='/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf'
-        sans = ImageFont.truetype(fontfile, 16)
+        sans = ImageFont.truetype(fontfile, fontsize)
 
 
     # include time stamp 
-        offset = 38
+        offset = offset
         dimg.text((offset, ny-offset ),self.time.strftime('%Y-%m-%d  %H:%M UTC'), \
                       font=sans, fill='black')
         
-        offset += 2
-        dimg.text((offset, ny-offset),self.time.strftime('%Y-%m-%d  %H:%M UTC'), \
+        white_offset = offset + 2
+        dimg.text((offset, ny - white_offset),self.time.strftime('%Y-%m-%d  %H:%M UTC'), \
                       font=sans, fill='white')
     
         return
