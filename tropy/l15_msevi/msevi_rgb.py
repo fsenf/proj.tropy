@@ -292,9 +292,9 @@ class MSeviRGB(MSevi):
 
         
         # convective storms composite --------------------------------
-        if rgb_job in ('convective_storms', 'all'):  
+        if rgb_job in ('severe_storms', 'all'):  
              
-            rgb = 'convective_storms'
+            rgb = 'severe_storms'
     
             # load required channels ................................. 
             required_channels =  ['WV_062', 'WV_073', 'IR_039', 'IR_016', 'IR_108', 'VIS006']
@@ -309,9 +309,9 @@ class MSeviRGB(MSevi):
 
 
             # minimum and maximum values .............................
-            (rmin, rmax) = (-30, 0)     
-            (gmin, gmax) = (0, 55)     
-            (bmin, bmax) = (-0.7, -0.2)     
+            (rmin, rmax) = (-35, 5)     
+            (gmin, gmax) = (-5, 60)     
+            (bmin, bmax) = (-0.7, 0.25)     
              
  
             # set red, green, blue ...................................    
