@@ -9,7 +9,40 @@ import cv2
 import scipy.ndimage
 
 import grid_and_interpolation as gi
+import statistics as stats
 
+
+######################################################################
+######################################################################
+#
+# Set default OFLOW parameters
+#
+######################################################################
+######################################################################
+
+_farneback_default_parameters = {'flow': None,
+                                 'pyr_scale':0.5, 
+                                 'levels': 5,
+                                 'win_size':15,
+                                 'iterations':3,
+                                 'poly_n':5,
+                                 'poly_sigma':1.2,
+                                 'flags':0 }
+
+
+
+_tvl1_default_parameters = {'epsilon':0.01,
+                            'lambda':0.2,
+                            'outer_iterations':20,#40,
+                            'inner_iterations':5,#7,
+                            'gamma':0.4,
+                            'scales_number':3,#5,
+                            'tau':0.25,
+                            'theta':0.8,
+                            'warpings_number':3,#5,
+                            'scale_step':0.5,
+                            'median_filtering':1,
+                            'use_initial_flow':0}
 
 ######################################################################
 ######################################################################
@@ -20,39 +53,110 @@ import grid_and_interpolation as gi
 ######################################################################
 
 def displacement_from_opt_flow(f1, f2, 
-                               vmin = 0, 
-                               vmax = 1.,
-                               nlayers = 5,
-                               boxsize = 15):
+                               **kwargs):
 
     '''
     Derives displacement vector between to fields f1 and f2 
-    using optical flow method.
+    using optical flow method (either farnebaeck, or tvl1).
 
-    INPUT
-    =====
-    f1, f2: two 2d fields
-    vmin: optional, lower bound of fields for rescaling
-    vmax: optional, upper bound of fields for rescaling
-    nlayers: optional, number of layers for pyramidal coarse-graining
-    boxsize: optional, size of avering box from which flow is estimated
+
+    Parameters
+    ----------
+
+    f1 : numpy array, 2dim
+         field for past time step
+
+    f2 : numpy array, 2dim
+         field for actual time step
+
+    method : str, optional, default = 'farneback'
+         method selected for optical flow calculations
+         possible options: 'farneback' and 'tvl1'
+
+
+    kwargs : dict
+        parameters for opencv optical flow algorithm 
+        if not given, default is taken from  _farnebaeck_default_parameters
     
     
 
-    OUTPUT
-    ======
-    flow: displacement vector, 1st component is related to u, i.e. 
-          displacement along row, 2nd to v, i.e. along column
+    Returns
+    --------
+    flow : numpy array, 3dim
+        displacement vector as index shift
+        1st component is related to u, i.e. displacement along row, 
+        2nd to v, i.e. along column
+    '''
+
+
+    if method == 'farneback':
+        return  displacement_from_opt_flow_farneback(f1, f2, 
+                                                     **kwargs)
+    elif method == 'tvl1':
+        return  displacement_from_opt_flow_tvl1(f1, f2, 
+                                                **kwargs)
+    else:
+        raise ValueError('Unknown method,  possible options: "farneback" and "tvl1"')
+    
+
+
+######################################################################
+######################################################################
+
+
+def displacement_from_opt_flow_farneback(f1, f2, 
+                                         vmin = None, 
+                                         vmax = None,
+                                         **kwargs):
 
     '''
+    Derives displacement vector between to fields f1 and f2 
+    using optical flow method after Farneback (2003).
+
+
+    Parameters
+    ----------
+
+    f1 : numpy array, 2dim
+         field for past time step
+
+    f2 : numpy array, 2dim
+         field for actual time step
+
+    vmin : float, optional, default = None
+        lower bound of fields for rescaling
+
+    vmax : float, optional, default = None
+        upper bound of fields for rescaling
+
+    kwargs : dict
+        parameters for opencv optical flow algorithm 
+        if not given, default is taken from  _farnebaeck_default_parameters
+    
+
+    Returns
+    --------
+    flow : numpy array, 3dim
+        displacement vector as index shift
+        1st component is related to u, i.e. displacement along row, 
+        2nd to v, i.e. along column
+    '''
+
+
+    # get parameters from keywords -----------------------------------
+
+    # get default
+    flow_parameters =  _farneback_default_parameters.copy()
+    
+    # and overwrite with input paras
+    flow_parameters.update( kwargs )
+    # ================================================================
+
 
     
     # field rescaling ------------------------------------------------
-    fr1 = (f1 - vmin) / (vmax - vmin)
-    fr1 = np.clip( fr1, 0., 1.)
-
-    fr2 = (f2 - vmin) / (vmax - vmin)
-    fr2 = np.clip( fr2, 0., 1.)
+    fr1 = stats.normalize_field( f1, vmin = vmin, vmax = vmax)
+    fr2 = stats.normalize_field( f2, vmin = vmin, vmax = vmax)
     # ================================================================
 
 
@@ -61,7 +165,106 @@ def displacement_from_opt_flow(f1, f2,
     im1 = (fr1*255).astype(np.uint8)
     im2 = (fr2*255).astype(np.uint8)
 
-    flow = cv2.calcOpticalFlowFarneback(im1,im2, None,  0.5, nlayers, boxsize, 3, 5, 1.2, 0)
+    flow = cv2.calcOpticalFlowFarneback(im1, im2,  
+                                        flow_parameters['flow'],
+                                        flow_parameters['pyr_scale'],
+                                        flow_parameters['levels'],
+                                        flow_parameters['win_size'],
+                                        flow_parameters['iterations'],
+                                        flow_parameters['poly_n'],
+                                        flow_parameters['poly_sigma'],
+                                        flow_parameters['flags'])
+
+    # ================================================================
+
+    return flow
+
+
+######################################################################
+######################################################################
+
+def displacement_from_opt_flow_tvl1(f1, f2, 
+                                    vmin = None, 
+                                    vmax = None,
+                                    **kwargs):
+
+    '''
+    Derives displacement vector between to fields f1 and f2 
+    using optical flow method after  Zach et al (2007).
+
+
+    Parameters
+    ----------
+
+    f1 : numpy array, 2dim
+         field for past time step
+
+    f2 : numpy array, 2dim
+         field for actual time step
+
+    vmin : float, optional, default = None
+        lower bound of fields for rescaling
+
+    vmax : float, optional, default = None
+        upper bound of fields for rescaling
+
+    kwargs : dict
+        parameters for opencv optical flow algorithm 
+        if not given, default is taken from  _farnebaeck_default_parameters
+    
+
+    Returns
+    --------
+    flow : numpy array, 3dim
+        displacement vector as index shift
+        1st component is related to u, i.e. displacement along row, 
+        2nd to v, i.e. along column
+    '''
+
+
+    # get parameters from keywords -----------------------------------
+
+    # get default
+    flow_parameters =  _farneback_default_parameters.copy()
+    
+    # and overwrite with input paras
+    flow_parameters.update( kwargs )
+    # ================================================================
+
+
+    
+    # field rescaling ------------------------------------------------
+    fr1 = stats.normalize_field( f1, vmin = vmin, vmax = vmax)
+    fr2 = stats.normalize_field( f2, vmin = vmin, vmax = vmax)
+    # ================================================================
+
+
+
+    # convert fields to images and applied optical flow --------------
+    im1 = (fr1*255).astype(np.uint8)
+    im2 = (fr2*255).astype(np.uint8)
+
+
+    optflow=cv2.createOptFlow_DualTVL1()
+    
+    optflow.setEpsilon( flow_parameters['epsilon'] )
+    optflow.setLambda( flow_parameters['lambda'] )
+    optflow.setOuterIterations( flow_parameters['outer_iterations'] )
+    optflow.setInnerIterations( flow_parameters['inner_iterations'] )
+    optflow.setGamma( flow_parameters['gamma'] )
+    optflow.setScalesNumber( flow_parameters['scales_number'] )
+    optflow.setTau( flow_parameters['tau'] )
+    optflow.setTheta( flow_parameters['theta'] )
+    optflow.setWarpingsNumber( flow_parameters['warpings_number'] )
+    optflow.setScaleStep( flow_parameters['scale_step'] )
+    optflow.setMedianFiltering( flow_parameters['median_filtering'] )
+    optflow.setUseInitialFlow( flow_parameters['use_initial_flow'] )
+    
+    if initial_flow is not None:
+      optflow.setUseInitialFlow( True )
+
+    # calculate flow
+    optflow.calc( im1, im2 )
     # ================================================================
 
     return flow
