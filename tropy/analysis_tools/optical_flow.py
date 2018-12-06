@@ -30,7 +30,8 @@ _farneback_default_parameters = {'flow': None,
                                  'flags':0 }
 
 
-_tvl1_default_parameters = {'epsilon':0.01,
+_tvl1_default_parameters = {'flow': None,
+                            'epsilon':0.01,
                             'lambda':0.2,
                             'outer_iterations':20,#40,
                             'inner_iterations':5,#7,
@@ -261,7 +262,8 @@ def displacement_from_opt_flow_tvl1(f1, f2,
     optflow.setUseInitialFlow( flow_parameters['use_initial_flow'] )
 
     # calculate flow
-    optflow.calc( im1, im2 )
+    flow = optflow.calc( im1, im2, 
+                         flow_parameters['flow'] )
     # ================================================================
 
     return flow
