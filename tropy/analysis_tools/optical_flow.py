@@ -53,6 +53,7 @@ _tvl1_default_parameters = {'epsilon':0.01,
 ######################################################################
 
 def displacement_from_opt_flow(f1, f2, 
+                               method = 'farneback',
                                **kwargs):
 
     '''
@@ -146,7 +147,7 @@ def displacement_from_opt_flow_farneback(f1, f2,
     # get parameters from keywords -----------------------------------
 
     # get default
-    flow_parameters =  _farneback_default_parameters.copy()
+    flow_parameters =  _tvl1_default_parameters.copy()
     
     # and overwrite with input paras
     flow_parameters.update( kwargs )
