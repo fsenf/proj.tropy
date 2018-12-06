@@ -259,9 +259,6 @@ def displacement_from_opt_flow_tvl1(f1, f2,
     optflow.setScaleStep( flow_parameters['scale_step'] )
     optflow.setMedianFiltering( flow_parameters['median_filtering'] )
     optflow.setUseInitialFlow( flow_parameters['use_initial_flow'] )
-    
-    if initial_flow is not None:
-      optflow.setUseInitialFlow( True )
 
     # calculate flow
     optflow.calc( im1, im2 )
