@@ -1033,6 +1033,50 @@ def draw_from_empirical_1ddist(bins, hist, Nsamp = 100):
 ######################################################################
 ######################################################################
 
+def normalize_field( f,
+                     vmin = None, 
+                     vmax = None ):
+
+    '''
+    Normalization of a field is applied.
+
+
+    Parameters
+    ----------
+    f : numpy array, 2dim
+         2dim field 
+
+    vmin : float, optional, default = None
+        lower bound of fields for rescaling
+
+    vmax : float, optional, default = None
+        upper bound of fields for rescaling
+
+
+    Returns
+    --------
+    f_norm  : numpy array, 2dim
+         2dim field 
+    '''
+
+
+    # get min/max if not specified
+    if vmin is None:
+        vmin = np.ma.masked_invalid( f ).min()
+
+    if vmax is None:
+        vmax = np.ma.masked_invalid( f ).max()
+
+
+    # field normalization
+    f_norm = (f - vmin) / (vmax - vmin)
+    f_norm = np.clip( f_norm, 0., 1.)
+
+    return f_norm
+
+######################################################################
+######################################################################
+
 
 
 if __name__ == '__main__':
