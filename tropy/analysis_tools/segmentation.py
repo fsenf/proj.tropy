@@ -37,6 +37,7 @@ import mahotas as mh
 import grid_and_interpolation as gi
 
 ######################################################################
+# (1) Single Threshold Clustering
 ######################################################################
 
 def clustering(f, thresh, 
@@ -592,9 +593,185 @@ def markers_from_iterative_shrinking(mask,
     return markers
                                      
 
+
+######################################################################
+# (2) Multi-Treshold Clustering
+######################################################################
+
+def multithreshold_clustering( f, thresh_min, thresh_max, 
+                             nthresh = 10, 
+                             use_percentile_threshold = False,
+                             **kws ):
+    
+    '''
+    Performs sequential segmentation and returns the combine result only keeping the
+    predecessor object alive.
+    
+    
+    Parameters
+    ----------
+    f : numpy array, 2dim or 3dim
+        input field
+        
+    thresh_min : float
+        minimum threshold value
+        
+    thresh_max : float
+        maximum threshold value
+        
+    nthresh : int
+        number of threshold values
+        
+    **kws : dict
+        keywords passed to segmentation routine
+        
+        
+    Returns
+    -------
+    c : numpy array, same shape as f
+        combined label field
+    '''
+    
+    # get the segmented data stack
+    c3d = sequential_segmentation(f, thresh_min, thresh_max, 
+                                  nthresh = nthresh, 
+                                  use_percentile_threshold = use_percentile_threshold,
+                                  **kws)
+
+ 
+    # do the sequential combination
+    c = combine_object_stack( c3d )
+    
+
+    return c
+
 ######################################################################
 ######################################################################
 
+def sequential_segmentation( f, thresh_min, thresh_max, 
+                             nthresh = 10, 
+                             use_percentile_threshold = False,
+                             **kws ):
+    
+    '''
+    Performs sequential segmentation.
+    
+    
+    Parameters
+    ----------
+    f : numpy array, 2dim or 3dim
+        input field
+        
+    thresh_min : float
+        minimum threshold value
+        
+    thresh_max : float
+        maximum threshold value
+        
+    nthresh : int
+        number of threshold values
+        
+    **kws : dict
+        keywords passed to segmentation routine
+        
+    
+    Returns
+    -------
+    c3d : numpy array, one dimension added
+        stack of labeled field, from max. thresh to min. thresh
+    '''
+    
+    
+    # get shape of field
+    s = list ( f.shape )
+    
+    
+    # get threshold list
+    if use_percentile_threshold:
+        perc_list = np.linspace( thresh_min, thresh_max, nthresh )
+        
+        thresh_list = np.percentile( f, perc_list)
+    else:
+        thresh_list = np.linspace( thresh_min, thresh_max, nthresh )
+          
+    # inverse list from max to min
+    thresh_list = thresh_list[::-1]
+        
+    shape3d = [nthresh,] + s
+    c3d = np.zeros( shape3d )
+    noffset = 0
+    
+    # now loop over thresholds
+    for i in range( nthresh ):
+        
+        # get labels
+        thresh = thresh_list[i]
+        c = clustering( f, thresh, **kws ) 
+        
+        # store with offset
+        c3d[i] = np.where( c == 0, 0, c + noffset)
+        noffset = c3d[i].max()
+        
+    return c3d
+
+######################################################################
+######################################################################
+
+def combine_object_stack( c3d ):
+    
+    '''
+    Sequentially combines object label fields by searching for new objects 
+    that have no predecessor in the higher hierarchy level.
+    
+    
+    Parameters
+    ----------
+    c3d : numpy array, 3dim or 4dim
+        labeled object data stack
+        
+    
+    Returns
+    -------
+    c : numpy array, 2dim or 3dim
+        combined label field
+    '''
+    
+    # get shape and number of stacks
+    s = c3d.shape 
+    nstack = s[0]
+    
+    c = c3d[0, :]
+    
+    for i in range( 1, nstack ):
+        
+        # extract two labeling levels
+        c_prev = c # 3d[i - 1].astype( np.int )
+        c_next = c3d[i].astype( np.int )
+        
+        # get indication if cell is already define for predecessor
+        maxlab_prev = scipy.ndimage.measurements.maximum(c_prev, 
+                                                         labels = c_next, 
+                                                         index = np.arange(0, c_next.max() + 1))
+        
+        # predecessor mask where a cell already exists
+        pred_mask = maxlab_prev[c_next] > 0
+        
+        # and also get the background
+        next_bg_mask = c_next == 0
+        
+        # combine the two possibilities
+        mask = np.logical_or( pred_mask, next_bg_mask)
+        
+        c = np.where( mask, c, c_next )    
+        
+    c = sort_clusters( c.astype(np.int) )
+    
+    return c
+    
+
+######################################################################
+# (3) Utility Functions
+######################################################################
 
 
 
@@ -924,6 +1101,8 @@ def percentiles_from_cluster(f, c, p = [25, 50, 75], index = None):
 
 ######################################################################
 ######################################################################
+
+
 
 
 if __name__ == "__main__":
