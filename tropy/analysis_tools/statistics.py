@@ -1069,7 +1069,7 @@ def normalize_field( f,
 
 
     # field normalization
-    f_norm = (f - vmin) / (vmax - vmin)
+    f_norm = (1. * f - vmin) / (vmax - vmin)
     f_norm = np.clip( f_norm, 0., 1.)
 
     return f_norm
