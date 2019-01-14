@@ -213,7 +213,8 @@ def parallax_correct_field_remap(lon, lat, cth, f,
 ######################################################################
 
 
-def sequential_hole_filling(f, NaN = -9999, Nmax = 20, 
+def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
+                            verbose = True,
                             filtertype = 'median'):
 
     '''
@@ -234,7 +235,9 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
 
     fout = copy.copy(f)
 
-    print '... start with %d Nan values' % len(f[f == NaN])
+    if verbose:
+        print '... start with %d Nan values' % len(f[f == NaN])
+
     fmin = NaN
     nint = 1
     while fmin == NaN and nint < Nmax:
@@ -246,7 +249,7 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
             fmed = scipy.ndimage.median_filter(fout, 2 * nint + 1)
 
         elif filtertype == 'max':
-            # calculate local median
+            # calculate local maximum
             fmed = scipy.ndimage.maximum_filter(fout, 2 * nint + 1)
 
 
@@ -261,7 +264,8 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
 
         nint += 1
 
-    print '... end with %d Nan values' % len(fout[fout == NaN])
+    if verbose:
+        print '... end with %d Nan values' % len(fout[fout == NaN])
     
     return fout 
 
