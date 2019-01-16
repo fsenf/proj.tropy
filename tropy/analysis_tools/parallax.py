@@ -242,7 +242,6 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
     nint = 1
     while fmin == NaN and nint < Nmax:
 
-        print nint
 
         if filtertype == 'median':
             # calculate local median
