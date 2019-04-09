@@ -33,20 +33,24 @@ def get_highres_cma(t, region = 'de',
     Reads product of High-Res Cloud Mask product (Bley et al., 2013) for a given date.
 
 
-    USAGE:
-    =====
-    var = get_highres_cma (t, arch_dir = "none")
+    Parameters
+    ----------
+    t : datetime object 
+        day and time of MSG time slot
+
+    region : str, optional, default = 'de'
+        string that defines regional cutout
+
+    scan_type : str, optional, default = 'rss'
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved (OPTIONAL)
 
 
-    INPUT:
-    ======
-    t: datetime object which include day and time of MSG time slot
-    arch: archive directory where NWC-SAF files are saved (OPTIONAL)
-
-
-    OUTPUT:
-    =======
-    var: Cma product as field
+    Returns
+    --------
+    var : numpy array
+        Cma product as field
     '''
 
 
@@ -123,21 +127,28 @@ def get_berendes_prod(prod, t,
     Reads product of Berendes Cloud type product for a given date.
 
 
-    USAGE:
-    =====
-    var = get_berendes_prod(prod, t, arch_dir = "none")
+
+    Parameters
+    ----------
+    prod : str
+        name of Berendes product, either ccm or texture
+
+    t : datetime object 
+        day and time of MSG time slot
+
+    region : str, optional, default = 'de'
+        string that defines regional cutout
+
+    scan_type : str, optional, default = 'rss'
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved (OPTIONAL)
 
 
-    INPUT:
-    ======
-    prod: name of Berendes product, either ccm or texture
-    t: datetime object which include day and time of MSG time slot
-    arch: archive directory where NWC-SAF files are saved (OPTIONAL)
-
-
-    OUTPUT:
-    =======
-    var: Berendes product as field
+    Returns
+    --------
+    var : numpy array
+        Berendes product as field
     '''
 
 
@@ -209,22 +220,20 @@ def prod_reference(prod): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     substring to address the product file.
 
 
-    USAGE:
-    =====
-    name = prod_reference(prod)
+    Parameters
+    ----------
+    prod :  str
+        name of NWC-SAF product, e.g. CMa, CT, CRR
 
 
-    INPUT:
-    ======
-    prod: name of NWC-SAF product, e.g. CMa, CT, CRR
+    Returns
+    --------
+    name : str
+        substring in the NWC-SAF product file
 
 
-    OUTPUT:
-    =======
-    name: substring in the NWC-SAF product file
-
-    COMMENT:
-    =======
+    Notes
+    -----
     Further products with its corresponding substrings should be 
     included in future.
 
@@ -284,40 +293,59 @@ def get_nwcsaf_prod(prod, day,
     Reads product of NWC-SAF for a given date.
 
 
-    USAGE:
-    =====
+    Parameters
+    ----------
+    prod : str
+        name of NWCSAF product
+        prod in ['CMa', 'CMa_DUST', 'CT', 'CTTH_EFFECT', 'CTTH_HEIGHT', 'CTTH_PRESS', 'CTTH_QUALITY', 'CTTH_TEMPER', 'CT_PHASE']
+
+
+    day : datetime object 
+        day and time of MSG time slot
+
+    region : str, optional, default = 'eu'
+        string that defines regional cutout
+
+    scan_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
+
+    calibrate : bool, optional, default = False
+        switch for slope/offset calibration 
+
+    is_region_shifted : bool, optional, default = False
+        switch if bugfix for (mistakingly) shifted regions has to be applied
+
+
+    Returns
+    --------
+    product : numpy array, optional
+        calibrated NWCSAF product data (if calibrate == True)
+
+    counts : numpy array, optional
+        NWCSAF product count data (if calibrate == False)
+    
+    scal : float, optional
+        scale factor for NWCSAF products (if calibrate == False)
+
+    offset : float, optional
+        offset for NWCSAF products (if calibrate == False)
+
+
+    Notes
+    ------
+    Data are saved as integer via: DATA = scal * count +  offset
+
+
+    The following structures can be returned:
+
     counts, scal, offset = get_nwcsaf_prod(prod, day, calibrate = False) 
 
      OR
 
     product = get_nwcsaf_prod(prod, day, calibrate = True)
-
-
-
-    INPUT:
-    ======
-    prod: name of NWC-SAF product, e.g. CMa, CT, CRR
-    day: datetime object which include day and time of MSG time slot
-    arch: archive directory where NWC-SAF files are saved (OPTIONAL)
-    scan_type: sets of scanning modus, i.e. 'rss' or 'hrs' (DEFAULT: 'rss')
-    calibrate: switch for slope/offset calibration (OPTIONAL)
-
-
-    OUTPUT:
-    =======
-    counts: integer counts  
-    scal:   scaling factor of data
-    offset: offset of data
-
-      OR
-
-    product: calibrated product data
-
-
-
-    COMMENT:
-    =======
-    Data are saved as integer via: DATA = scal * count +  offset
 
     '''
 
@@ -431,33 +459,59 @@ def get_cmsaf_prod(prod, day,
     Reads product of CM-SAF (KNMI retrieval) for a given date.
 
 
-    USAGE:
-    =====
-    counts, scal, offset = get_cmsaf_prod(prod, day, calibrate=False)
 
-    OR
+    Parameters
+    ----------    
+    prod : str
+        name of CMSAF product
+
+    day : datetime object 
+        day and time of MSG time slot
+
+    region : str, optional, default = 'eu'
+        string that defines regional cutout
+
+    scan_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
+
+    calibrate : bool, optional, default = False
+        switch for slope/offset calibration 
+
+    switch2new : bool, optional, default = True
+        if the "new" set of CMSAF products should be selected 
+        "new" means collection two: "c2"
+
+
+    Returns
+    --------
+    product : numpy array, optional
+        calibrated CMSAF product data (if calibrate == True)
+
+    counts : numpy array, optional
+        CMSAF product count data (if calibrate == False)
     
-    var = get_cmsaf_prod(prod, day, calibrate=True)
+    scal : float, optional
+        scale factor for CMSAF products (if calibrate == False)
+
+    offset : float, optional
+        offset for CMSAF products (if calibrate == False)
 
 
-    INPUT:
-    ======
-    prod: name of NWC-SAF product, e.g. CMa, CT, CRR
-    day: datetime object which include day and time of MSG time slot
-    arch: archive directory where NWC-SAF files are saved (OPTIONAL)
-    calibrate: the slope / offset transformation is done internally (OPTIONAL)
-
-
-    OUTPUT:
-    =======
-    counts: integer counts  
-    scal:   scaling factor of data
-    offset: offset of data
-
-
-    COMMENT:
-    =======
+    Notes
+    ------
     Data are saved as integer via: DATA = scal * count +  offset
+
+
+    The following structures can be returned:
+
+    counts, scal, offset = get_cmsaf_prod(prod, day, calibrate = False) 
+
+     OR
+
+    product = get_cmsaf_prod(prod, day, calibrate = True)
 
     '''
 
@@ -569,20 +623,19 @@ def list_cmsaf_prod(day, arch='none'): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     at a given date.
 
 
-    USAGE:
-    =====
-    L = list_cmsaf_prod(day, arch = 'none')
+    Parameters
+    ----------
+    day : datetime object 
+        day and time of MSG time slot
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
 
 
-    INPUT:
-    ======
-    day: datetime object which include day and time of MSG time slot
-    arch: archive directory where NWC-SAF files are saved (OPTIONAL)
-
-
-    OUTPUT:
-    =======
-    L: list of cmsaf products
+    Returns
+    --------
+    L : list 
+        list of cmsaf products
 
     '''
 
@@ -631,24 +684,33 @@ def get_seviri_chan(ch_name, day,
     Reads MSG - SEVIRI radiance of a given channel for a given date.
 
 
-    USAGE:
-    =====
-    out_field, info = get_seviri_chan(ch_name, day, calibrate=True)
+    Parameters
+    ----------
+    ch_name : str
+        name of MSG SEVIRI channel, e.g. ir_108 or IR_108 (case does not matter)
+
+    day : datetime object 
+        day and time of MSG time slot
+
+    scan_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
+
+    arch : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
+
+    calibrate : bool, optional, default = False
+        switch for slope/offset calibration 
+        if True, radiances are output
+
+    
+    Returns
+    --------
+    out_field : numpy array
+        radiance/counts (depending on calibrate option) of channel <ch_name> at date <day>
 
 
-    INPUT:
-    ======
-    ch_name: name of channel, e.g. ir_108 or IR_108 (case does not matter)
-    day: datetime object which include day and time of MSG time slot
-    calibrate : optional, decides if output is radiance (True) or counts (False)
-    scan_type: sets of scanning modus, i.e. 'rss' or 'hrs' (DEFAULT: 'rss')
-
-
-    OUTPUT:
-    =======
-    out_field: radiance/counts of channel <ch_name> at date <day>
-    info: meta info list which includes calibration coefficients
-
+    info : dict
+        meta info list which includes calibration coefficients
     '''
 
     # get strings of filename creation -------------------------------
@@ -752,27 +814,27 @@ def get_seviri_chan(ch_name, day,
     
 
 def get_cos_zen(day, 
-                scan_type='rss',
+                scan_type = 'rss',
                 arch = 'none'): 
 
     '''
     Reads sun zenith angle from the partical satellite hdf file
     and calculates the cosine of the sun zenith.
 
-    USAGE:
-    =====
-    coszen = get_cos_zen(day, sat_type)
+
+    Parameters
+    ----------
+    day : datetime object 
+        day and time of MSG time slot
+
+    scan_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
 
 
-    INPUT:
-    ======
-    day: datetime object which include day and time of MSG time slot
-    sat_type: which type of msg is used, 
-                    * ) allowed keys are: 'msg1','msg2','meteosat8','meteosat9','hrs',rss'
-
-    OUTPUT:
-    =======
-    coszen: cosine of sun zenith angle
+    Returns
+    --------
+    coszen : numpy array, optional
+        cosine of sun zenith angle
 
     '''
 
@@ -844,26 +906,25 @@ def get_cos_zen(day,
 
     
 
-def get_msg_sat_zen(day, sat_type='rss'): 
+def get_msg_sat_zen(day, sat_type = 'rss'): 
 
     '''
     Reads satellite zenith angle from the partical satellite hdf file.
 
 
-    USAGE:
-    =====
-    satzen = get_msg_sat_zen(day, sat_type)
+    Parameters
+    ----------
+    day : datetime object 
+        day and time of MSG time slot
+
+    sat_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
 
 
-    INPUT:
-    ======
-    day: datetime object which include day and time of MSG time slot
-    sat_type: which type of msg is used, 
-                    * ) allowed keys are: 'msg1','msg2','meteosat8','meteosat9','hrs',rss'
-
-    OUTPUT:
-    =======
-    satzen: satellite zenith angle
+    Returns
+    --------
+    satzen : numpy array
+        satellite zenith angle
 
     '''
 
@@ -918,25 +979,31 @@ def get_msg_sat_zen(day, sat_type='rss'):
 
 
 def rad2refl(rad, info, day, coszen):
+
     '''
     Conversion of satellite radiances in reflectances.
 
-    USAGE:
-    =====
-    refl = rad2refl(rad, info, day, coszen)
+
+    Parameters
+    ----------
+    rad : numpy array
+        radiance of a visible channel
+
+    info : dict
+        dictionary which contains information about calibration coefficients
+
+    day : datetime object 
+        day and time of MSG time slot
+
+    coszen : numpy array
+        cosine of sun zenith angle
 
 
-    INPUT:
-    ======
-    rad: radiance of a visible channel
-    info: dictionary which contains information about calibration coefficients
-    day: datetime object which include day and time of MSG time slot
-    coszen: cosine of sun zenith angle
+    Returns
+    --------
+    refl : numpy array
+        reflectance
 
-
-    OUTPUT:
-    =======
-    refl: reflectance
     '''
 
     # get the Julian day
@@ -960,20 +1027,19 @@ def rad2bt(rad, info): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     radiance and info list containing calibration coefficients.
 
 
-    USAGE:
-    ======
-    bt =  rad2bt(rad, info)
+    Parameters
+    ----------
+    rad : numpy array
+        radiance of an infrared channel
+
+    info : dict
+        dictionary which contains information about calibration coefficients. 
 
 
-    INPUT:
-    ======
-    rad: radiance of an infrared channel
-    info: dictionary which contains information about calibration coefficients. 
-
-
-    OUTPUT:
-    =======
-    bt = brightness temperature
+    Returns
+    --------
+    bt : numpy array
+        brightness temperature
 
     '''
 
@@ -998,6 +1064,7 @@ def rad2bt(rad, info): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 
 
 def get_msg_lsm(region,  scan_type = 'rss', arch_dir = 'none'): 
+
     # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 
     '''
@@ -1005,20 +1072,23 @@ def get_msg_lsm(region,  scan_type = 'rss', arch_dir = 'none'):
     auxiliary file in the MSG archive.
 
 
-    USAGE:
-    =====
-    lsm = get_rss_lsm(region,sat_type)
+    Parameters
+    ----------
+    region :  str
+        predefined cutout of MSG fulldisk, e.g. 'eu'
+
+    scan_type : str
+        which type of msg is used, 
+        * ) allowed keys are: 'pzs',rss'
+    
+    arch_dir : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
 
 
-    INPUT:
-    ======
-    region:   predefined cutout of MSG fulldisk, e.g. 'eu'
-    scan_type: which type of msg is used, 
-                    * ) allowed keys are: 'msg1','msg2','meteosat8','meteosat9','hrs',rss'
-
-    OUTPUT:
-    =======
-    lsm: land sea mask
+    Returns
+    --------
+    lsm : numpy array
+        land sea mask
 
     '''
 
@@ -1089,22 +1159,25 @@ def get_msg_lon_lat(region, scan_type='rss', arch_dir = 'none'): # LLLLLLLLLLLLL
     auxiliary file in the MSG archive.
 
 
-    USAGE:
-    =====
-    lon, lat = get_rss_lon_lat(region,sat_type)
+    Parameters
+    ----------
+    region : str
+        predefined cutout of MSG fulldisk, e.g. 'eu'
 
+    scan_type : str, optional, default = 'rss'
+        one of the two Meteosat scan types
 
-    INPUT:
-    ======
-    region:  predefined cutout of MSG fulldisk, e.g. 'eu'
-    sat_type: which type of msg is used, 
-                    * ) allowed keys are: 'msg1','msg2','meteosat8','meteosat9','hrs',rss'
+    arch_dir : str, optional, default = "none"
+        archive directory where NWC-SAF files are saved 
 
+    
+    Returns
+    --------
+    lon : numpy array
+        longitudes of pixels
 
-    OUTPUT:
-    =======
-    lon: longitudes of pixels
-    lat: latitudes of pixels
+    lat : numpy array
+        latitudes of pixels
 
     '''
 # get the right file suffix ..........................................
@@ -1168,19 +1241,17 @@ def channel_segment_sets(set_name):
     '''
     Outputs a predefined set of channels and segments'
 
-    USAGE:
-    =====
-    chan_seg = channel_segment_sets(set_name)
 
-
-    INPUT:
-    ======
-    set_name: name of a predefined set
+    Parameters
+    ----------
+    set_name : str
+        name of a predefined set
     
 
-    OUTPUT:
-    =======
-    chan_seg: Dictionary of channels with a list of segments. 
+    Returns
+    --------
+    chan_seg : dict
+        Dictionary of channels with a list of segments. 
 
     '''
 
@@ -1238,35 +1309,36 @@ def channel_segment_sets(set_name):
 
 
 
-def get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'hrs' ,\
-                           arch_dir = None, out_path = None):
+def get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'pzs' ,
+                       arch_dir = None, out_path = None):
     
     '''
     Gets and decompresses the original HRIT files from archive. A
     typical set of channels and segments can be chosen.
 
 
-    USAGE:
-    =====
-    file_list =  get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'hrs' ,\
-                           arch_dir = None, out_path = None)
+    Parameters
+    ----------
+    day : datetime object 
+        day and time of MSG time slot
 
+    chan_set : str, optional, default = 'nc-full'
+        name of a predefined channels set
 
-    INPUT:
-    ======
-    day: datetime object which include day and time of MSG time slot
-    chan_set = name for a channel-segment set
-    scan_type: which type of msg is used, 
-                    * ) allowed keys are: 'hrs' and 'rss'
+    scan_type : str, optional, default = 'pzs'
+        one of the two Meteosat scan types
 
-    arch_dir = archive directory
-    out_path = directory where the HRIT files are saved.
+    arch_dir : str, optional, default = None
+        archive directory where NWC-SAF files are saved 
 
+    out_path : str, optional, default = None
+        directory where the HRIT files are saved.
 
-
-    OUTPUT:
-    =======
-    file_list : list of extracted HRIT files
+    
+    Returns
+    --------
+    file_list : list 
+        list of extracted HRIT files
 
     '''
 
@@ -1374,20 +1446,18 @@ def read_rad_from_hdf(hfile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     intermediately saved in an hdf file.
 
 
-    USAGE:
-    =====
-    RAD = read_rad_from_hdf(hfile)
+    Parameters
+    ----------
+    hfile : str
+        file name of the hdf file where synthetic radiances are stored.
 
-
-    INPUT:
-    ======
-    hfile: file name of the hdf file where synthetic radiances are stored.
-
-
-    OUTPUT:
-    =======
-    RAD: dictionary of radiances 
-         * the channel name, e.g. IR_108, is used as key to access the
+    
+    Returns
+    --------
+    RAD : dict
+        dictionary of radiances
+ 
+        the channel name, e.g. IR_108, is used as key to access the
            data array (e.g. saved on COSMO grid) 
     '''
 
@@ -1412,227 +1482,3 @@ def read_rad_from_hdf(hfile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ######################################################################
 ######################################################################
 
-
-
-def get_ind_set(index_file): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-
-    '''
-    Reads the index set for next neighbor interpolation.
-
-
-    USAGE:
-    =====
-    ix, iy =  get_ind_set(index_file)
-
-
-    INPUT:
-    ======
-    index_file: file name of the hdf file where the index set is stored.
-
-
-    OUTPUT:
-    =======
-    ix: field of zonal indices: 
-         * on the output grid, the next neighbor index of the input input
-           is given, i.e. for each pair (i,j) of the input grid the 
-           combination (ix[i,j], iy[i,j]) gives the corresponding index
-           of the next neighbor of the output grid.
-         
-    iy: field of meridional indices:
-         * see description of ix
-
-         
-
-    COMMENT:
-    ========
-    index files available at moment (22.05.2012)
-    
-    * for MSG to RADOLAN conversion:
-      /u1/home/fabian/data/HErZ_Composite/MSG-Radolan_index_asso.h5
-
-    * for COSMO to MSG conversion:
-      /u1/home/fabian/data/HErZ_Composite/COSMO-MSG_index_asso.h5
-
-    * for MSG to COSMO conversion:
-      /u1/home/fabian/data/HErZ_Composite/MSG-COSMO_index_asso.h5
-    '''
-
-
-    # test if file exist
-    if not h5py.is_hdf5(index_file):
-        print 'No index file available!'
-        return
-
-    # open index file
-    f = h5py.File(index_file,"r")
-
-
-    # read index set
-    ix = f['COLUMN_INDEX'].value 
-    iy = f['ROW_INDEX'].value
-
-
-    f.close()
-
-    return ix, iy # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
-
-
-######################################################################
-######################################################################
-
-
-
-def reproject_nn(dat,proj): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-
-    '''
-    Next neighbor interpolation from input grid to output grid.
-
-
-    USAGE:
-    =====
-    rdat = reproject_nn(dat,proj)
-
-
-    INPUT:
-    =====         
-    dat: data field given on the input grid
-    proj: string containing projection information
-
-
-    OUPUT:
-    =====
-    rdat: data field given on the output grid
-
-
-    COMMENT:
-    ========
-    next neighbor projections available at moment (22.05.2012)
-
-    
-    * for MSG-RSS to RADOLAN conversion:  proj = 'msg2radolan'
-
-    * for COSMO to MSG-RSS conversion:    proj = 'cosmo2msg'
-
-    * for MSG-RSS to COSMO conversion:    proj = 'msg2cosmo'
-
-    * for COSMO to MSG-RSS conversion:    proj = 'cosmo2msg2'
-
-    * for MSG-RSS to COSMO conversion:    proj = 'msg22cosmo'
-    
-    '''
-
-    # set filename for projection
-    if proj ==  'msg2radolan':
-        hfile = '/u1/home/fabian/data/HErZ_Composite/MSG-Radolan_index_asso.h5'
-
-    elif proj == 'cosmo2msg':
-        hfile = '/u1/home/fabian/data/HErZ_Composite/COSMO-MSG_index_asso.h5'
-
-    elif proj == 'msg2cosmo':
-        hfile = '/u1/home/fabian/data/HErZ_Composite/MSG-COSMO_index_asso.h5'
-
-    elif proj == 'cosmo2msg2':
-        hfile = '/u1/home/fabian/data/HErZ_Composite/COSMO-MSG2_index_asso.h5'
-
-    elif proj == 'msg22cosmo':
-        hfile = '/u1/home/fabian/data/HErZ_Composite/MSG2-COSMO_index_asso.h5'
-    else:
-        print 'ERROR: projection unknown'
-        return
-    
-
-    # get index set
-    ix,iy = get_ind_set(hfile)
-
-    
-    # size of output grid
-    Nx,Ny = ix.shape
-
-    # create a zero array on output grid
-    rdat = np.zeros((Nx,Ny),dtype=dat.dtype)
-
-
-    # do the mapping
-    for i in range(Nx):
-        for j in range(Ny):
-
-            
-            if ix[i,j] < 0 or iy[i,j] < 0:
-                rdat[i,j] = 0.
-            else:
-                ind = (ix[i,j], iy[i,j])
-                rdat[i,j] = dat[ind]
-
-    return rdat # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
-
-######################################################################
-######################################################################
-
-
-def reproject_with_index(ix,iy,dat): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
-
-    '''
-    Next neighbor interpolation from input grid to output grid given an 
-    recalculated index set.
-
-
-    USAGE:
-    =====
-    rdat = reproject_with_index(ix,iy,dat)
-
-
-    INPUT:
-    =====
-    ix: field of zonal indices: 
-         * on the output grid, the next neighbor index of the input input
-           is given, i.e. for each pair (i,j) of the input grid the 
-           combination (ix[i,j], iy[i,j]) gives the corresponding index
-           of the next neighbor of the output grid.
-         
-    iy: field of meridional indices:
-         * see description of ix
-
-         
-    dat: data field given on the input grid
-
-
-    OUPUT:
-    =====
-    rdat: data field given on the output grid
-
-
-    COMMENT:
-    ========
-    The index field should be calculated or imported in advance.
-    '''
-
-    
-    # size of output grid
-    Nx,Ny = ix.shape
-
-    # create a zero array on output grid
-    rdat = np.zeros((Nx,Ny),dtype=dat.dtype)
-
-
-    # do the mapping
-    for i in range(Nx):
-        for j in range(Ny):
-
-            
-            if ix[i,j] < 0 or iy[i,j] < 0:
-                rdat[i,j] = 0.
-            else:
-                ind = (ix[i,j], iy[i,j])
-                rdat[i,j] = dat[ind]
-
-    return rdat # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-
-
-
-if __name__ == '__main__':
-
-    day = datetime.datetime(2011,6,6,12,30)
-
-    ir108, info = get_seviri_chan('IR_108', day, scan_type = 'hrs')

@@ -20,22 +20,21 @@ from scipy import interpolate
 
 
 def grib_cont_list(infile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+
     '''
     Creates a dictionary of the grib file content
 
-    USAGE:
-    =====
-    L = grib_cont_list(infile)
+
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-
-
-    OUPUT:
-    =====
-    L = dictionary of grib content
+    Returns
+    --------
+    L : dict
+        dictionary of grib content
          * short names are used as keys
          * list of long names and number of occurence are given as list
            for each key
@@ -76,24 +75,31 @@ def get_grib_field_lll(infile,var_name): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     '''
     Extracts longitude, latitude, level and one 2d or 3d-field from grib file 
 
-    USAGE:
-    =====
-    lon, lat, lev, var = get_grib_field_lll(infile,var_name)
+
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
+
+    var_name : str
+        short name of variable in infile
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-    var_name = short name of variable in infile
+    Returns
+    --------
+    lon : numpy array
+        longitude
 
+    lat : numpy array
+        latitude
+    
+    lev : list
+        level list
 
-    OUPUT:
-    =====
-    lon = longitude
-    lat = latitude
-    lev = level list
-    var = field of variable var_name
+    var : numpy array
+        field of variable var_name
     '''
+
 
 # open and read from COSMOS file -------------------------------------
     Indx = pygrib.index(infile,'shortName')
@@ -152,20 +158,20 @@ def get_grib_field(infile,var_name): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     '''
     Extracts one 2d or 3d-field from grib file 
 
-    USAGE:
-    =====
-    var = get_grib_field(infile,var_name)
+
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
+
+    var_name : str
+        short name of variable in infile
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-    var_name = short name of variable in infile
-
-
-    OUPUT:
-    =====
-    var = field of variable var_name
+    Returns
+    --------
+    var : numpy array
+        field of variable var_name
     '''
 
 
@@ -220,21 +226,22 @@ def get_field_from_indx(indx, var_name, lonlat = False):
     Reads field from grib file given the grib index.
 
 
-    USAGE:
-    =====
-    var = get_field_from_indx(indx, var_name, lonlat = False)
+    Parameters
+    ----------
+    indx : pygrib index object 
+        index for assessing variables in grib file (for 'shortName')
+
+    var_name : str
+        name of variable (shortName)
+
+    lonlat : bool, optional, default = False
+        option if longitude and latitude are also retrieved (default: False)
 
 
-    INPUT:
-    =====
-    indx: grib index (for 'shortName')
-    var_name: name of variable (shortName)
-    lonlat: option if longitude and latitude are also retrieved (default: False)
-
-
-    OUPUT:
-    =====
-    var: field of variable
+    Returns
+    --------
+    var : numpy array
+        field of variable
     '''
 
 
@@ -281,22 +288,23 @@ def get_fc_fields(cfile, var_list, lonlat = True):
     '''
     Reads a list of variables from grib file.
 
+    Parameters
+    ----------
+    cfile : str
+        grib filename (full path)
+    
+    var_list : list
+        list of variable names (shortName)
 
-    USAGE:
-    =====
-    var = get_fc_fields(cfile, var_list, lonlat = True)
+    lonlat : bool, optional, default = False
+        option if longitude and latitude are also retrieved (default: False)
 
 
-    INPUT:
-    =====
-    cfile: grib filename (full path)
-    var_list: list of variable names (shortName)
-    lonlat: option if longitude and latitude are also retrieved (default: True)
+    Returns
+    --------
+    var : dict of numpy arrays
+        dictionary of variable fields
 
-
-    OUPUT:
-    =====
-    var: dictionary of variable fields
     '''
 
 
@@ -325,20 +333,20 @@ def get_full_grib_field_info(infile,var_name): # LLLLLLLLLLLLLLLLLLLLL
     '''
     Prints all keys and their corresponding values for a grib1 field.
 
-    USAGE:
-    =====
-    grb_info = get_full_grib_field_info(infile,var_name)
+
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
+
+    var_name : str
+        short name of variable in infile
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-    var_name = short name of variable in infile
-
-
-    OUPUT:
-    =====
-    grb_info = dictionary of field keys and their values
+    Returns
+    --------
+    grb_info : dict
+        dictionary of field keys and their values
     '''
 
 
@@ -372,19 +380,16 @@ def get_grib_cont(infile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     '''
     Extracts of content of a whole grib file.
 
-    USAGE:
-    =====
-    cont = get_grib_cont(infile)
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-
-
-    OUPUT:
-    =====
-    var = dictionary of field data
+    Returns
+    --------
+    var : dict
+        dictionary of field data
           * short names are used as keys
           * the fields are attributed to each key
     '''
@@ -410,20 +415,20 @@ def mlev2pres(infile,var): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     
                       p = a + b * p_surf
 
-    USAGE:
-    =====
-    pres =  mlev2pres(infile,var)
+
+    Parameters
+    ----------
+    infile : str
+        input filename of the concerned grib1 file
+
+    var : str
+        short name of variable in infile
 
 
-    INPUT:
-    =====
-    infile = input filename of the concerned grib1 file
-    var = variable for which pressure levels are calculated
-
-
-    OUPUT:
-    =====
-    pres = pressure levels
+    Returns
+    --------
+    pres : numpy array
+        pressure levels
     '''
 
 
@@ -501,110 +506,6 @@ def mlev2pres(infile,var): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ######################################################################
 ######################################################################
 
-
-def calc_CTT(cfile,thresh=0.):
-
-    '''
-    Calculates the cloud top temperatures directly from grib forecast data.
-
-    Either the lowest temperature within a cloud masked by threshold <thresh>
-    or the surface /2m temperature is chosen. 
-
-    USAGE:
-    =====
-    CTT = calc_CTT(cfile,thresh=0d0)
-
-
-    INPUT:
-    =====
-    cfile = input filename of the concerned grib1 file
-    thresh = optional threshhold for combine [ppmv]
-
-
-    OUPUT:
-    =====
-    pres = pressure levels
-    '''
-    
-    # get temperature
-    T = get_grib_field(cfile,'T')
-    p = get_grib_field(cfile,'P')
-    q = get_grib_field(cfile,'QV')
-
-    # get mass density of gaseous air constiuents ........................
-    RL = 287.    # gas constant of dry air
-    RV = 461.5   # gas constant of water vapor
-    
-    R = RL + (RV - RL) * q  # gas constant of humide air
-
-    rho =  p / (R * T)
-
-
-    Nx,Ny,Nz = T.shape
-
-    # get surface temperature
-    try:
-        TB =  get_grib_field(cfile,'T_2M')
-    except:
-        TB = T[:,:,Nz-1]
-
-    # get cloud water mixing ratio
-    cw_keys = ['clwc','qc','QC']
-    for cw in cw_keys:
-        try:
-            qc = get_grib_field(cfile,cw)
-            HAVE_CW_PROPS = True
-        except:
-            HAVE_CW_PROPS = False
-
-    # get cloud water mixing ratio
-    ci_keys = ['ciwc','qi','QI']
-    for ci in ci_keys:
-        try:
-            qi = get_grib_field(cfile,ci)
-            HAVE_CI_PROPS = True
-        except:
-            HAVE_CI_PROPS = False
-
-    
-    if not HAVE_CW_PROPS or not HAVE_CI_PROPS:
-        print 'ERROR: no cloud properties found!'
-        return
-
-    # combine water and ice
-    qci = (qc + qi) * rho * 1e3
-
-    
-    # get masked pressure field
-    pcl = np.where(qci>thresh,p,1e12-p)
-    
-    
-    # index set of minimal pressure
-    lset = pcl.argmin(axis=2)
-
-
-    # get corresponding temperature
-    CTT = np.zeros((Nx,Ny))
-
-    for i in range(Nx):
-        for j in range(Ny):
-            
-            l = lset[i,j]
-            CTT[i,j] = T[i,j,l]
-
-
-    return CTT
-    
-######################################################################
-######################################################################
-
-
-       
-    
-
-######################################################################
-######################################################################
-
 def calc_COSMO_turning(lon, lat, lonN = -170., latN = 40.):
 
     '''
@@ -614,20 +515,20 @@ def calc_COSMO_turning(lon, lat, lonN = -170., latN = 40.):
     and e.g. horizontal wind vector with respect to this and not to 
     the geographic reference frame. 
 
-    USAGE:
-    =====
-    delta =  calc_COSMO_turning(lon, lat)
+
+    Parameters
+    ----------
+    lon : numpy array
+        longitude of grid point(s)
+
+    lat : numpy array
+        latitude of grid point(s)
 
 
-    INPUT:
-    =====
-    lon = longitude of grid point(s)
-    lat = latitude of grid point(s)
-
-
-    OUPUT:
-    =====
-    delta = angle used to rotate 2d vectors
+    Returns
+    --------
+    delta : numpy array
+        angle used to rotate 2d vectors
     '''
 
     # deg 2 rad tranformation
@@ -654,22 +555,26 @@ def turn_COSMO_winds(delta, u, v):
     Rotates the components of the wind vectors given in the
     reference frame of COSMO to the geographical reference frame.
 
-    USAGE:
-    =====
-    ug, vg =  turn_COSMO_winds(delta, u, v)
+
+    Parameters
+    ----------
+    delta : numpy array
+        rotation angle
+
+    u : numpy arary
+        wind in COSMOs x-direction 
+
+    v : numpy array
+        wind in COSMOs y-direction
 
 
-    INPUT:
-    =====
-    delta = rotation angle
-    u = wind in COSMOs x-direction 
-    v = wind in COSMOs y-direction
+    Returns
+    --------
+    ug : numpy arary
+       zonal wind
 
-
-    OUPUT:
-    =====
-    ug = zonal wind
-    vg = meridional wind
+    vg : numpy arary
+       meridional wind
     '''
 
     # initialize wind fields
@@ -698,25 +603,26 @@ def interpolate_to_plev(plev, p, var):
     a set of pressure levels.
 
 
-    USAGE:
-    =====
-    varlev = interpolate_to_plev(plev, p, var)
+    Parameters
+    ----------
+    plev : numpy array or list
+        sorted vector of pressure levels
+
+    p : numpy array
+        pressure field in the coordinate system of the variable
+
+    var : numpy array
+        variable which should be interpolated
 
 
-    INPUT:
-    =====
-    plev = sorted vector of pressure levels
-    p = pressure field in the coordinate system of the variable
-    var = variable which should be interpolated
+    Returns
+    --------
+    varlev : numpy array
+        variable interpolated linearly to given pressure levels
 
 
-    OUPUT:
-    =====
-    varlev = variable interpolated linearly to given pressure levels
-
-
-    COMMENT:
-    ========
+    Notes
+    ------
     This routine can also be used for the interpolation to arbitrary
     vertical level types, e.g. isentropic levels, when p and plev are
     replaced accordingly.

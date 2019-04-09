@@ -54,31 +54,28 @@ def COSMO_mean_vertical_levels(Nlev):
     model description of COSMO (see reference below).
 
 
-    USAGE:
-    =====
-    lev = COSMO_mean_vertical_levels(Nlev)
+    Parameters
+    ----------
+    Nlev : int
+        number of vertical levels, i.e.
+        
+        Nlev = 51 for intermediate half-levels (e.g. for w)
+        Nlev = 50 for main levels (e.g. for u)
 
 
-    INPUT:
-    =====
-    Nlev: number of vertical levels, i.e.
-          Nlev = 51 for intermediate half-levels (e.g. for w)
-          Nlev = 50 for main levels (e.g. for u)
-
-
-    OUPUT:
-    =====
-    lev: mean vertical COSMO-DE levels 
+    Returns
+    --------
+    lev : numpy array (1-dim)
+        mean vertical COSMO-DE levels 
 
            
-    REFERENCE:
-    =========
+    References
+    ----------
     M. Baldauf, J. Foerstner, S. Klink, T. Reinhardt, C. Schraff, A. Seifert und K. Stephan
     "Kurze Beschreibung des Lokal-Modells Kuerzestfrist COSMO-DE (LMK) und seiner Datenbanken
     auf dem Datenserver des DWD", Version 1.6, Stand: 31. 03. 2011
     
     Tabelle 1, Seite 29
-
 
     '''
 
@@ -101,37 +98,50 @@ def COSMO_mean_vertical_levels(Nlev):
 ######################################################################
 ######################################################################
 
-def ll2xy(lon, lat, lon0=10., lat0=50., R = 6380.):
+def ll2xy(lon, lat, lon0 = 10., lat0 = 50., R = 6380.):
 
     ''' 
     Transformation between longitude and latitude and local Cartesian coordinates
-    in west-east direction (x) and south-north direction (y).
+    in west-east direction (x) and south-north direction (y). The local projection 
+    is called "sinusoidal".
 
 
-    USAGE:
-    =====
-    x,y =  ll2xy(lon, lat, lon0=10., lat0=50., R = 6380.)
+    Parameters
+    ----------
+    lon : numpy array
+        longitude
+
+    lat : numpy array
+        latitude
+
+    lon0 : float, optional, default = 10.
+        arbitrary initial longitude for x = 0
+
+    lat0 : float, optional, default = 50.
+        arbitrary initial latitude for y = 0
+
+    R : float, optional, default = 6380.
+        approximation for the radius of Earth
     
 
-    INPUT:
-    =====
-    lon: longitude
-    lat: latitude
-    lon0: arbitrary initial longitude for x = 0 (OPTIONAL)
-    lat0: arbitrary initial latitude for y = 0 (OPTIONAL)
-    R: approximation for the radius of Earth (OPTIONAL)
-    
+    Returns
+    --------
+    x : numpy array
+        Cartesian coordinate in west-east direction (increasing towards the East)
 
-    OUPUT:
-    =====
-    x: Cartesian coordinate in west-east direction (increasing towards the East)
-    y: Cartesian coordinate in south-north direction (increasing towards the North)
+    y : numpy array
+        Cartesian coordinate in south-north direction (increasing towards the North)
 
     
-    COMMENT:
-    ========
+    Notes 
+    -----
     The unit of Earth's radius determines the units of x and y. 
     Default (km).
+
+
+    References
+    ----------
+    See https://en.wikipedia.org/wiki/Sinusoidal_projection for further info.
 
     '''
 
@@ -169,16 +179,20 @@ def ll2xyc(lon, lat, mlon = None, mlat = None, lon0 = 0, lat0 = 0.):
     lat : numpy array
         latitude
     
-    mlon : float
+    mlon : float, optional, default = None
         longitude center point of projection
 
-    mlat : float
+        if ``None`` then average of ``lon`` is used
+
+    mlat : float, optional, defaulft = None
         latitutde center point of projection
 
-    lon0 : float
+        if ``None`` then average of ``lat`` is used
+
+    lon0 : float, optional, default = 0.
         zero longitude (for x-offset)
 
-    lat0 : float
+    lat0 : float, optional, default = 0.
         zero latitude (for y-offset)
         
 
@@ -216,35 +230,50 @@ def ll2xyc(lon, lat, mlon = None, mlat = None, lon0 = 0, lat0 = 0.):
 
 
 def xy2ll(x, y, lon0=10., lat0=50., R = 6380):
+
     ''' 
     Transformation between local Cartesian coordinates in west-east direction (x) 
-    and south-north direction (y) and longitude and latitude.
+    and south-north direction (y) and longitude and latitude. This assumes a 
+    sinusoidal projection. Inversion of the function ``ll2xy``.
 
 
-    USAGE:
-    =====
-    lon, lat = xy2ll(x, y, lon0=10., lat0=50., R = 6380)
+
+    Parameters
+    ----------
+    x : numpy array
+        Cartesian coordinate in west-east direction (increasing towards the East)
+
+    y : numpy array
+        Cartesian coordinate in south-north direction (increasing towards the North)
+
+    lon0 : float, optional, default = 10.
+        arbitrary initial longitude for x = 0
+
+    lat0 : float, optional, default = 50.
+        arbitrary initial latitude for y = 0
+
+    R : float, optional, default = 6380.
+        approximation for the radius of Earth
     
 
-    INPUT:
-    =====
-    x: Cartesian coordinate in west-east direction (increasing towards the East)
-    y: Cartesian coordinate in south-north direction (increasing towards the North)
-    lon0: arbitrary initial longitude for x = 0 (OPTIONAL)
-    lat0: arbitrary initial latitude for y = 0 (OPTIONAL)
-    R: approximation for the radius of Earth (OPTIONAL)
-    
+    Returns
+    --------
+    lon : numpy array
+        longitude
 
-    OUPUT:
-    =====
-    lon: longitude
-    lat: latitude
+    lat : numpy array
+        latitude
 
     
-    COMMENT:
-    ========
+    Notes 
+    -----
     The unit of Earth's radius determines the units of x and y. 
     Default (km).
+
+
+    References
+    ----------
+    See https://en.wikipedia.org/wiki/Sinusoidal_projection for further info.
 
     '''
 
@@ -264,22 +293,30 @@ def xy2ll(x, y, lon0=10., lat0=50., R = 6380):
 
     return lon, lat
 
+
 ######################################################################
 ######################################################################
+
 
 def mid2edge_gridvector(x_mid, x_edge0):
     
     '''
     Converts an mid-point based grid vector into an edge-based grid vector.
     
-    INPUT
-    =====
-    x_mid: mid-point-based grid vector (length N)
-    x_edge0: left edge
+
+    Parameters
+    ----------
+    x_mid : numpy array (1-dim)
+        mid-point-based grid vector (length N)
+
+    x_edge0 : float
+        left edge
     
-    OUTPUT
-    ======
-    x_edge: edge-based grid vector
+
+    Returns
+    --------
+    x_edge : numpy array (1-dim)
+        edge-based grid vector (length N + 1)
     '''
     
     # get length of grid
@@ -314,19 +351,16 @@ def make_hrv_upscaling(v):
     interpolation. Edge values are determined by linear extrapolation.
    
 
-    USAGE:
-    =====
-    vhigh = make_hrv_upscaling(v)
+    Parameters
+    ----------
+    v : numpy array (2-dim)
+        2d variable field (Nrow, Ncols)
 
-    
-    INPUT
-    =====
-    v: 2d variable field (Nrow, Ncols)
 
-    
-    OUTPUT
-    ======
-    vhigh: 2d variable field with 3-times higher resolution (3*Nrows, 3*Ncols)
+    Returns
+    --------
+    vhigh : numpy array (2-dim)
+        variable field with 3-times higher resolution (3*Nrows, 3*Ncols)
     
     '''
 
@@ -377,20 +411,16 @@ def make_add_edge(var):
     and lower and upper row are linearily extrapolated from their neighbors.
    
 
-
-    USAGE:
-    =====
-    var_new = make_add_edge(var)
-
-    
-    INPUT
-    =====
-    var: 2d variable field (Nrow, Ncols)
+    Parameters
+    ----------
+    var : numpy array (2-dim)
+        2d variable field (Nrow, Ncols)
 
     
-    OUTPUT
-    ======
-    var_new: 2d variable field with added edge values (Nrows + 2, Ncols + 2)
+    Returns
+    --------
+    var_new : numpy array (2-dim)
+        2d variable field with added edge values (Nrows + 2, Ncols + 2)
     
     '''
     
@@ -440,22 +470,26 @@ def get_index(p, lon, lat):
     '''
     Given a point p the nearest grid point is returned.
 
-    USAGE:
-    =====
-    ir, ic = get_index(p, lon, lat)
-    
 
-    INPUT:
-    =====
-    p: point in the 2d grid
-    lon: grid values of the 1st dimension (can be longitude, x, etc.)
-    lat: grid values of the 2nd dimension (can be latitude, y, etc.)
-    
+    Parameters
+    ----------
+    p : numpy array
+        point in the 2d grid
 
-    OUPUT:
-    =====
-    ir: row index (the 1st)
-    ic: column index (the 2nd)
+    lon : numpy array (2-dim)
+        grid values of the 1st dimension (can be longitude, x, etc.)
+
+    lat : numpy array (2-dim)
+        grid values of the 2nd dimension (can be latitude, y, etc.)
+
+
+    Returns
+    --------
+    ir : numpy array (2-dim)
+        row index (the 1st)
+
+    ic : numpy array (2-dim)
+        column index (the 2nd)
     '''
 
     # get shapes of fields 
@@ -487,26 +521,31 @@ def interpolate_field_to_hor_pos(pos, lon, lat, field, **kwargs):
     Given a sequence of points (or just one) a field (2d or 3d) given a
     grid is interpolated to the new positions.
 
-
-    USAGE:
-    =====
-    f = interpolate_field_to_hor_pos(pos, lon, lat, field, **kwargs)
-    
-
-    INPUT:
-    =====
-    pos: sequence of points given as np.array((x,y))
+        
+    Parameters
+    ----------
+    pos : numpy array (2-dim) 
+         sequence of points given as np.array((x,y))
          where x and y can be n-dimensional 
-    lon: grid values of the 1st dimension (can be longitude, x, etc.)
-    lat: grid values of the 2nd dimension (can be latitude, y, etc.)
-    field: 2d or 3d field to be interpolated to pos
 
-    **kwargs: keyword arguments for the griddata routine of
-              the scipy.interpolate package can be passed through  
+    lon : numpy array (2-dim)
+        grid values of the 1st dimension (can be longitude, x, etc.)
 
-    OUPUT:
-    =====
-    f: field interpolated to the position sequence pos,
+    lat : numpy array (2-dim)
+        grid values of the 2nd dimension (can be latitude, y, etc.)
+
+    field : numpy array
+        2d or 3d field to be interpolated to pos
+
+    **kwargs : dict content
+        keyword arguments for the griddata routine of
+        the scipy.interpolate package can be passed through  
+
+
+    Returns
+    --------
+    f : numpy array 
+       field interpolated to the position sequence pos,
        f has the dimension n x Nlev, 
        where n is the dimension of pos, Nlev the vertical dimension
 
@@ -560,15 +599,23 @@ def make_index_set(nrows, ncols):
     This simple routine makes an 2d index set for given row and column
     number of a 2d field.
 
-    INPUT
-    =====
-    nrows: number of rows
-    ncols: number of columns
+
+    Parameters
+    ----------
+    nrows : int
+        number of rows
+
+    ncols : int
+        number of columns
     
-    OUTPUT
-    ======
-    ii: 2d field of rows indices
-    jj: 2d field of column indices
+    
+    Returns
+    -------
+    ii : numpy array, dtype = int
+        2d field of rows indices
+
+    jj : numpy array, dtype = int
+        2d field of column indices
     '''
     
     i = np.arange(0, nrows)
@@ -588,24 +635,33 @@ def create_interpolation_index(lon1, lat1, lon2, lat2, xy = False):
     Given georeference of two grids in lon and lat, an index is built to map 
     a field on grid 1 to grid 2.
 
-
-    USAGE:
-    =====
-    ir, ic = create_interpolation_index(lon1, lat1, lon2, lat2)
     
+    Parameters
+    ----------
+    lon1 : numpy array (2-dim) 
+        longitude of input grid 1
 
-    INPUT:
-    =====
-    lon1:  longitude of input grid 1
-    lat1:  latitude of input grid 1
-    lon2:  longitude of target grid 2
-    lat2:  latitude of target grid 2
+    lat1 : numpy array (2-dim) 
+        latitude of input grid 1
+
+    lon2 : numpy array (2-dim) 
+        longitude of target grid 2
+
+    lat2 : numpy array (2-dim) 
+        latitude of target grid 2
+
+    xy : bool, optional, default = False
+        switch if georef field are interpreted as local 
+        Cartesian coordinates: Then no internal transformation is used.
 
 
-    OUPUT:
-    =====
-    ir:  index field for transforming rows
-    ic:  index field for transforming columns
+    Returns
+    --------
+    ir : numpy array, 2-dim, dtype = int 
+        index field for transforming rows
+
+    ic :  numpy array, 2-dim, dtype = int 
+        index field for transforming columns
     '''
 
 
@@ -642,20 +698,25 @@ def curve_flow_filter(f, numberOfIterations = 5):
     Smoothing filter depending on isoline curvature. Interface for 
     curvature flow filter from simpleITK toolkit.
 
-    USAGE
-    =====
-    f_sm = curve_flow_filter(f, numberOfIterations = 5)
+
+    Parameters
+    ----------
+    f : numpy array (2-dim)
+        2d field to be filtered (smoothed)
+
+    numberOfIterations : int, optional, default = 5
+        number of iterations, increases smooting effect
 
 
-    INPUT
-    =====
-    f: 2d field
-    numberOfIterations: (optional) number of iterations, increases smooting effect
+    Returns
+    --------
+    f_sm : numpy array (2-dim)
+        smoothed 2d field
 
 
-    OUTPUT
-    ======
-    f_sm: smoothed 2d field
+    Notes
+    ------
+    Only works if SimpleITK is installed !!!
     '''
 
     img = SimpleITK.GetImageFromArray(f)
@@ -672,18 +733,33 @@ def curve_flow_filter(f, numberOfIterations = 5):
 def spline_smooting(x, y, s = 0.1, fixed_endpoints = True):
     
     '''
-    Smooth curve with smooting spline.
+    Smoothes a curve with smooting spline.
     
-    INPUT
-    =====
-    x: abscissa values
-    y: ordinate values
-    s: smooting parameter (optional, default:0.1)
-    fixed_endpoints: switch, if endpoinds should be hold fixed
     
-    OUTPUT
-    ======
-    y_smooth: smoothed version of y
+    Parameters
+    ----------
+    x : numpy array (1-dim)
+        abscissa values
+
+    y : numpy array (1-dim)
+        ordinate values
+
+    s : float, optional, default = 0.1
+        smooting parameter 
+
+    fixed_endpoints : nool, optional, default = True
+        switch, if endpoinds should be hold fixed
+    
+
+    Returns
+    --------
+    y_smooth : numpy array (1-dim)
+        smoothed version of y
+
+
+    Notes
+    ------
+    Uses the function ``scipy.interpolate.UnivariateSpline``.
     '''
    
     # check for nan values
@@ -716,30 +792,38 @@ def spline_smooting(x, y, s = 0.1, fixed_endpoints = True):
 def remap_field(lon, lat, f, dr = 0.5):
 
     '''
-    Do nearest nearbor remapping on equi-distant
+    Do nearest nearbor remapping on a simple equi-distant
     local cartesian coordiante grid.
     
-    Uses gradient flow filter for pixel edge
+    Uses curvature flow filter for smoothing and pixel edge
     correction.
 
-    USAGE
-    =====
-    xnew, ynew, fint = remap_field(lon, lat, f, dr = 0.5)
+
+    Parameters
+    ----------
+    lon : numpy array, (2-dim)
+        longitude
+
+    lat : numpy array, (2-dim)
+        latitude
+    
+    f : numpy array, (2-dim)
+        2d field to be interpolated
+
+    dr : float, optional, default = 0.5
+        grid spacing in km
 
 
-    INPUT
-    =====
-    lon: longitude
-    lat: latitutde
-    f: 2d field
-    dr: (optional) grid spacing in km
+    Returns
+    --------
+    xnew : numpy array, (2-dim)
+        regridded, equi-distant x-coordinate in km
 
+    ynew : numpy array, (2-dim)
+        regridded, equi-distant y-coordinate in km
 
-    OUTPUT
-    ======
-    xnew: regridded, equi-distant x-coordinate in km
-    ynew: regridded, equi-distant y-coordinate in km
-    fint: remapped field
+    fint : numpy array, (2-dim)
+        remapped field
     
     '''
 
@@ -770,28 +854,43 @@ def make_vert_cut(p1, p2, lon, lat, vg, **kwargs):
     Makes a horizontal - vertical cut through a 3d field.
 
 
-    USAGE:
-    =====
-    s, lo, la, v = make_vert_cut(p1, p2, lon, lat, vg, **kwargs)
+    Parameters
+    ----------
+    p1 : list or numpy array
+       1st end of the cutting line (lon, lat)
+
+    p2 : list or numpy array
+       2nd end of the cutting line (lon, lat)
+
+    lon : numpy array (2-dim)
+        longitude
+
+    lat : numpy array (2-dim)
+        latitude
+
+    vg : numpy array (3-dim)
+        3d field to be interpolated
+
+    **kwargs: dict content
+         keyword arguments for the griddata routine of
+         the scipy.interpolate package can be passed through  
+
+
+    Returns
+    --------
+    s : numpy array (1-dim)
+        distance of km from one to the other end of the cutting line
+
+    lo : numpy array (1-dim)
+        longitude along the cut
+
+    la : numpy array (1-dim)
+        latitude along the cut
+
+    v : numpy array (2-dim)
+        field interpolated to the cutting line
     
-
-    INPUT:
-    =====
-    p1: 1st end of the cutting line
-    p2: 2nd end of the cutting line
-    lon: longitude
-    lat: longitude
-    vg: 3d field to be interpolated
-
-    **kwargs: keyword arguments for the griddata routine of
-              the scipy.interpolate package can be passed through  
-
-    OUPUT:
-    =====
-    s: distance of km from one to the other end of the cutting line
-    lo: longitude along the cut
-    la: latitude along the cut
-    v: field interpolated to the cutting line
+        Vertical levels are kept.
 
     '''
 
@@ -860,20 +959,31 @@ def simple_pixel_area(lon, lat, xy = False, uncertainty = False):
     The grid point is placed at each of the for corners of the grid box
     and the corresponding average area ist calculated.
 
-    USAGE
-    =====
-    a =  pixel_area(lon,lat)
 
-    
-    INPUT
-    =====
-    lon: longitude
-    lat: latitutde
+    Parameters
+    ----------
+    lon : numpy array (2-dim)
+        longitude
 
+    lat : numpy array (2-dim)
+        latitude
     
-    OUTPUT
-    ======
-    a: grid box area
+    xy : bool, optional, default = False
+        switch if ``lon`` & ``lat`` are interpreted as local Cartesian coordinates
+
+    uncertainty : bool, optional, default = False
+        switch if std of pixel area is output
+    
+        Deviation are caused by effects of the not-rectangular grid.
+    
+
+    Returns
+    --------
+    a : numpy array (2-dim)
+        grid box area
+
+    a : numpy array (2-dim), optional
+        standard deviation of grid box area, if ``uncertainty == True``
     
     '''
 
@@ -934,21 +1044,26 @@ def i2iset(v,i):
     
     It is assumed that the array was flattened in C-mode.
 
-    USAGE
-    =====
-    iset = i2iset(v,i)
 
+    Parameters
+    ----------
+    v : numpy array (n-dim)
+        field which determines the rank and shape
 
-    INPUT
-    =====
-    v: field which determines the rank and shape
-    i: input index which points to the position in v.flatten()
+    i : int
+        input index which points to the position in v.flatten()
 
     
-    OUTPUT
-    ======
-    iset: index set which points to the position in v
+    Returns
+    --------
+    iset : tuple
+        index set which points to the position in v
 
+
+    Notes
+    ------
+    This routine helps you to locate a maximum in a n-dimensional array
+    using e.g. the ``np.argmax`` function.
     '''
    
 
@@ -977,24 +1092,25 @@ def i2iset(v,i):
 
 
 def ldiff(var, axis = -1):
+
     '''
     Calculates difference of a field at adjacent levels. Now, wrapper
-    for numpy.diff with default on last axis.
+    for ``numpy.diff`` with default on last axis.
 
 
-    USAGE:
-    =====
-    dvar = ldiff(var, axis = -1.)
+    Parameters
+    ----------
+    var : numpy array (n-dim where n = [1,2,3])
+        field; 1d, 2d or 3d array
 
+    axis : int, optional, default = -1
+        axis used for layer avering
     
-    INPUT
-    =====
-    var: field; 1d, 2d or 3d array
-
     
-    OUTPUT
-    ======
-    dvar: level difference
+    Returns
+    -------
+    dvar : numpy array (n-dim where n = [1,2,3])
+        level difference
     
     '''
 
@@ -1011,19 +1127,20 @@ def lmean(var, axis = -1):
     '''
     Calculates the layer mean of a field.
 
-    USAGE:
-    =====
-    varm = lmean(var)
 
-    
-    INPUT
-    =====
-    var: field; 1d, 2d or 3d array
+    Parameters
+    ----------
+    var : numpy array (n-dim where n = [1,2,3])
+        field; 1d, 2d or 3d array
 
+    axis : int, optional, default = -1
+        axis used for layer avering
     
-    OUTPUT
-    ======
-    varm: layer mean
+    
+    Returns
+    -------
+    varm : numpy array (n-dim where n = [1,2,3])
+        layer mean
     
     '''
 
@@ -1051,29 +1168,28 @@ def lmean(var, axis = -1):
 
 
 
-def cutout_fields(fin , slices, vaxis = 0):
+def cutout_fields(fin, slices, vaxis = 0):
 
     '''
     Cuts out a field or a list of similar fields given row and column slices.
 
 
-    USAGE:
-    =====
-    fout = cutout_fields(fin , slices)
+    Parameters
+    ----------
+    fin : 2d or 3d numpy array or list of fields
+        the fields to be cut out
 
-    
-    INPUT
-    =====
-    fin: 2d or 3d field or list of fields - last two dimension are consider
-    slice: tuple such that ((row1, row2), (col1, col2))
+    slices : tuple or list
+        region slice such that the cutout is done as ((row1, row2), (col1, col2))
 
-    vaxis: for 3d fields, axis which is still varying (optional, default = 0)
+    vaxis: int, optional, default = 0
+        for 3d fields, axis which is still varying
     
 
-    
-    OUTPUT
-    ======
-    fout: resulting cutout (possibly a list of cutted fields)
+    Returns
+    --------
+    fout : 2d or 3d numpy array or list of fields
+        resulting cutout (possibly a list of cutted fields)
     
     '''
 
@@ -1112,7 +1228,26 @@ def cutout_fields(fin , slices, vaxis = 0):
 def cutout_field4box(f, ind, bsize, **kwargs):
 
     '''
-    Cuts out a field based on center pix index and box size
+    Cuts out a field based on center pix index and box size.
+
+
+    Parameters
+    ----------
+    f : 2d or 3d numpy array
+        the field to be cut out
+
+    ind : tuple or list
+        center index of horizontal cutout
+
+    bsize : int
+        size of the quadratic cutout box
+
+
+    Returns
+    --------
+    fcut : 2d or 3d numpy array
+        resulting quadratic cutout 
+
     '''
 
     # extract the vaxis keyword if there
@@ -1211,17 +1346,33 @@ def cutout_field4box(f, ind, bsize, **kwargs):
 def tube_cutout4box(v3d, i0, boxsize):
 
     '''
-    Performs tube cutout with given index set.
+    Performs tube cutout with given index set. The center index might not
+    be constant.
 
-    INPUT
-    =====
-    v3d: 3d field, 1st dimension is time
-    i0: (irvec, icvec) index tuple, (row index vector, co index vector)
-    boxsize: boxsize
 
-    OUTPUT
-    ======
-    vtube: 3d tube
+    Parameters
+    ----------
+    v3d : numpy array (3-dim)
+        3d field, 1st dimension is time (or variable)
+
+    i0 : list or numpy array (2-dim)
+        center indices
+        (irvec, icvec) index tuple, (row index vector, co index vector)
+
+    boxsize : int
+        size of the quadratic cutout box
+
+
+    Returns
+    --------
+    vtube : numpy array (3-dim)
+        3d tube, quadratic cutout in the last two dimensions
+    
+
+    Notes
+    ------
+    This function can be used top make vertical cutouts, but a transpose command
+    has to be applied before and after.
     '''
 
     # get number of time steps
@@ -1257,16 +1408,22 @@ def cutout_cluster(c, nc,
     Makes a cutout of a categorial field c for an object of class / number nc.
 
 
-    INPUT
-    =====
-    c: 2d categorial field
-    nc: category number / class which is chosen
-    nedge: optional, number of edge pixels included
+    Parameters
+    ----------
+    c : numpy array, 2-dim, dtype = int
+        2d categorial field
+
+    nc : int
+        category number / class which is chosen
+
+    nedge : int, optional, default = 30
+        number of edge pixels added / included 
 
 
-    OUTPUT
-    =====
-    ccut: cutout of categorial field c
+    Returns
+    --------
+    ccut : numpy array, 2-dim, dtype = int 
+        cutout of categorial field c
     '''
 
 

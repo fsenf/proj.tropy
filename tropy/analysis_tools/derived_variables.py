@@ -16,23 +16,32 @@ def calc_lwp(p, T, qv,  qc, g = 9.8, axis = -1):
     Calculates the liquid water path.
 
 
-    USAGE
-    =====
-    lwp = calc_lwp(p, T, qv,  qc, g = 9.8, axis = -1)
+    Parameters
+    ----------
+    p : numpy array
+        atmospheric pressure [hPa]
 
+    T : numpy array
+        temperature [K]
 
-    INPUT
-    =====
-    p: atmospheric pressure [hPa]
-    T: temperature [K]
-    qv: water vapor mixing ratio [kg / kg]
-    qc: liquid water mixing ratio [kg / kg]
+    qv : numpy array
+        water vapor mixing ratio [kg / kg]
+
+    qc : numpy array
+        liquid water mixing ratio [kg / kg]
 
     
-    OUTPUT
-    ======
-    lwp: liquid water path [g / m**2]
+    Returns
+    --------
+    lwp : numpy array
+        liquid water path [g / m**2]
 
+
+    Notes
+    ------
+    * hydrostatic approximation is used to convert vertical integration from
+      pressure to height levels
+    * impact of condesate mass on air density is ignored.
     '''
     
     # pressure units conversion (hPa --> Pa) !!!!
