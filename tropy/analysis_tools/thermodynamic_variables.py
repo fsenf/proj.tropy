@@ -35,9 +35,18 @@ import numpy as np
 def thermodynamic_constants():
     
     '''
-    Description:
-    ============
-    Sets a lot of thermodynamic constants.
+    Sets some thermodynamic constants.
+
+
+    Parameters
+    ----------
+    None
+
+    
+    Returns
+    --------
+    const : dict
+        set of thermodynamic constans saved in dictionary
     
     '''
 
@@ -61,21 +70,21 @@ def thermodynamic_constants():
 def moist_gas_constant(r):
     
     '''
-    Description:
-    ===========
     Calculates gas constant of moist air.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+    Parameters
+    ----------
+    r :  float or numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
     
-    Return:
-    =======
-    R_m: gas constant of moist air [J / kg / K]
-
+    Returns
+    --------
+    R_m : float or numpy array
+        gas constant of moist air [J / kg / K]
     '''
+
 
     # get constants
     c = thermodynamic_constants()
@@ -121,21 +130,25 @@ def moist_specific_heat(r):
 def dry_air_density(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates dry air density.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    rho_d: dry air density in [kg / m**3]
+    Returns
+    --------
+    rho_d : numpy array
+        dry air density in [kg / m**3]
 
     '''
 
@@ -155,22 +168,27 @@ def dry_air_density(r, p, T):
 def total_density(r, r_w, p, T):
 
     '''
-    Description:
-    ===========
     Calculates total density of moist air with hydrometeors.
 
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    r: mixing ratio of condensed water i.e. condensed water mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    r_w : numpy array
+        mixing ratio of condensed water i.e. condensed water mass per dry air mass in [kg / kg]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    rho_d: dry air density in [kg / m**3]
+    Returns
+    --------
+    rho_d : numpy array
+        dry air density in [kg / m**3]
 
     '''
 
@@ -187,21 +205,24 @@ def total_density(r, r_w, p, T):
 def absolute_humidity(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates absolute humidity.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
-    
-    Return:
-    =======
-    rho_v: absolute humidity / m**3]
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
+
+    Returns
+    --------
+    rho_v : numpy array
+        absolute humidity / m**3]
 
     '''
 
@@ -220,19 +241,19 @@ def absolute_humidity(r, p, T):
 def specific_humidity(r):
 
     '''
-    Description:
-    ===========
     Calculates specific humidity.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
     
-    Return:
-    =======
-    q: specific humidity i.e. vapor mass per moist air mass [kg / kg] 
+    Returns
+    --------
+    q : numpy array
+        specific humidity i.e. vapor mass per moist air mass [kg / kg] 
 
     '''
 
@@ -247,21 +268,25 @@ def specific_humidity(r):
 def water_vapor_pressure(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates water vapor pressure.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    e : water vapor pressure in [Pa]
+    Returns
+    --------
+    e : numpy array
+        water vapor pressure in [Pa]
 
     '''
 
@@ -284,20 +309,20 @@ def water_vapor_pressure(r, p, T):
 def saturation_pressure(T):
 
     '''
-    Description:
-    ===========
     Calculates saturation water vapor pressure 
     after Bolton (1980) MWR 108, p.1046, eq. (10)
 
 
-    Argument:
-    =========
-    T: temperature [K]
+    Parameters
+    ----------
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    es : water vapor pressure in [Pa]
+    Returns
+    --------
+    es : numpy array
+         water vapor pressure in [Pa]
 
     '''
     
@@ -316,19 +341,35 @@ def saturation_pressure(T):
 def saturation_over_ice(T, method = 'PK'):
     
     '''
-    Description:
-    ===========
     Calculates saturation water vapor pressure over ice.
 
 
-    Argument:
-    =========
-    T: temperature [K]
+    Parameters
+    ----------
+    T : numpy array
+        temperature [K]
+
+    method : str, optional, default = 'PK'
+        use an equation which approximates the vapor pressure over ice
+        method in ['PK', 'Murphy']
+    
+    Returns
+    --------
+    es : numpy array
+        water vapor pressure in [Pa]
+
+
+    Notes
+    ------
+    'PK' refers to Pruppacher and Klett (1997)
+    'Murphy' refers to Murphy and Koop (2005) eq. (7)
+
+
+    References
+    ----------
+    Murphy, D. M., and T. Koop (2005), Review of the vapour pressures of ice and supercooled water for atmospheric applications, Quart. J. Roy. Meteor. Soc., 131(608), 1539–1565, doi:10.1256/qj.04.94.
 
     
-    Return:
-    =======
-    es : water vapor pressure in [Pa]
 
     '''
 
@@ -354,21 +395,25 @@ def saturation_over_ice(T, method = 'PK'):
 def relative_humidity(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates relative humidity.
 
+    
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    H: relative humidity in [%]
+    Returns
+    --------
+    H : numpy array
+        relative humidity in [%]
 
     '''
 
@@ -387,24 +432,28 @@ def relative_humidity(r, p, T):
 
 
 def dew_point(r, p, T):
+
     '''
-    Description:
-    ===========
     Calculates dew point temperature
     after Markowski book p 13 eq (2.25)
 
 
-    Arguments:
-    ==========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
 
-    
-    Return:
-    =======
-    Td: dew point temperature in [K]
+    Returns
+    --------
+    Td : numpy array
+        dew point temperature in [K]
 
     '''
     
@@ -466,22 +515,28 @@ def H2r(hrel, p, T):
 def watermass_fraction2rw(qw, r):
 
     '''
-    Description:
-    ===========
     Converts water mass fraction to condensed water mixing ratio.
 
 
-    Argument:
-    =========
-    qw: condensed water mass fraction [kg / kg]
-    r: mixing ration of water vapor [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    qw : numpy array
+        condensed water mass fraction [kg / kg]
+
+    r : numpy array
+        mixing ration of water vapor [kg / kg]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    rw: condensed water mixing ratio  [kg / kg]
+    Returns
+    --------
+    rw : numpy array
+        condensed water mixing ratio  [kg / kg]
 
     '''
 
@@ -496,22 +551,26 @@ def watermass_fraction2rw(qw, r):
 def both_mass_fractions2mixing_ratios(qv, qw):
 
     '''
-    Description:
-    ===========
     Converts water and the vapor mass fraction to 
     condensed water and vapor mixing ratio.
 
+    
+    Parameters
+    ----------
+    qv : numpy array
+        water vapor mass fraction [kg / kg]
 
-    Argument:
-    =========
-    qv: water vapor mass fraction [kg / kg]
-    qw: condensed water mass fraction [kg / kg]
+    qw : numpy array
+        condensed water mass fraction [kg / kg]
 
     
-    Return:
-    =======
-    r:  water vapor mixing ratio  [kg / kg]
-    rw: condensed water mixing ratio  [kg / kg]
+    Returns
+    --------
+    r :  numpy array
+        water vapor mixing ratio  [kg / kg]
+
+    rw : numpy array
+        condensed water mixing ratio  [kg / kg]
 
     '''
     
@@ -529,23 +588,30 @@ def both_mass_fractions2mixing_ratios(qv, qw):
 def lifting_condensation_level_temperature(r, p, T, eq = 15):
 
     '''
-    Description:
-    ===========
     Calculates lifting condensation level temperature.
     after Bolton (1980) MWR 108, p.1046, eq. (15), (21) or (22)
 
+    
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
-    Arguments:
-    ==========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    p : numpy array
+        total gas pressure [Pa]
 
+    T : numpy array
+        temperature [K]
+
+    eq : int, optional, default = 15
+        which eq. of Bolton (1980) to be chosen 
+       eq in [15, 21, 22]
 
     
-    Return:
-    =======
-    TL: lifting condensation level temperature in [K]
+    Returns
+    --------
+    TL : numpy array
+        lifting condensation level temperature in [K]
 
     '''
     
@@ -577,22 +643,25 @@ def lifting_condensation_level_temperature(r, p, T, eq = 15):
 def dry_air_potential_temperature(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates dry air potential temperature.
 
 
-    Arguments:
-    ==========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    theta_d: dry air potential temperature (K)
+    Returns
+    --------
+    theta_d : numpy array
+        dry air potential temperature (K)
     
     '''
 
@@ -613,22 +682,25 @@ def dry_air_potential_temperature(r, p, T):
 def moist_potential_temperature(r, p, T):
 
     '''
-    Description:
-    ===========
     Calculates moist air potential temperature.
 
 
-    Arguments:
-    ==========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    theta_m: moist air potential temperature (K)
+    Returns
+    --------
+    theta_m : numpy array
+        moist air potential temperature (K)
     
     '''
 
@@ -650,8 +722,6 @@ def moist_potential_temperature(r, p, T):
 def equivalent_potential_temperature(r, p, T, eq = 15):
 
     '''
-    Description:
-    ===========
     Calculates equivalent potential temperature.
     after Bolton (1980) MWR 108, p.1046, eq. (43) 
 
@@ -660,17 +730,26 @@ def equivalent_potential_temperature(r, p, T, eq = 15):
     also using either one of (15), (21) or (22)
 
 
-    Arguments:
-    ==========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
+
+    eq : int, optional, default = 15
+        which eq. of Bolton (1980) to be chosen for lifting condensation level temperature
+        eq in [15, 21, 22]
 
     
-    Return:
-    =======
-    theta_E: 
+    Returns
+    --------
+    theta_E : numpy array
+        equivalent potential temperature
 
     '''
 

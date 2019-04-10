@@ -1482,22 +1482,22 @@ def region2slice(lon, lat, region):
     a slicing ((row1, row2), (col1, col2)) than accomodates the region.
 
 
-    USAGE:
-    =====
-    slice = region2slice(lon, lat, region)
+    Parameters
+    ----------
+    lon : numpy array (2-dim)
+        longitude
 
-    
-    INPUT
-    =====
-    lon: longitude
-    lat: latitude
-    region:  ((lon1,lon2),(lat1, lat2)) 
+    lat : numpy array (2-dim)
+        latitude
+
+    region : tuple of two tubles
+        ((lon1, lon2), (lat1, lat2)) 
     
 
-    
-    OUTPUT
-    ======
-    slice = ((row1, row2), (col1, col2))
+    Returns
+    --------
+    slice : tuple of two tubles
+        region slice for cuuting a field ((row1, row2), (col1, col2))
     
     '''
 
@@ -1524,40 +1524,37 @@ def low2hres_region(region):
     calculated.
 
 
-    USAGE:
-    =====
-    hrv_region = low2hres_region(region)
+    Parameters
+    ----------
+    region : tuple of two tubles
+        region slice for cuuting a field ((row1, row2), (col1, col2))
 
     
-    INPUT
-    =====
-    region : region as  ((row1, row2), (col1, col2))
-    
-
-    
-    OUTPUT
-    ======
+    Returns
+    --------
     hrv_region: corresponding HRV region as ((row1, row2), (col1, col2))
     
-    '''
 
-    # calculate HRV region
-    # ====================
-    # It is assumed that the hrv region is a dependent variable which 
-    # depends on the low res region attribute
-    # That means: Given the low res region cutout hrv region is determined 
-    # as corresponding cutout which 
-    # (i) exactly fits with the low res region and 
-    # (ii) refers to the artifical hrv full disk of 11136 x 11136
-    #
-    # low res pixel with the index (I,J) = (0,0)
-    # has a high res pixel with index (i_m, j_m) = (2,2) in the middle
-    # and (i_u, j_u) = (1,1) in the upper corner
-    # see doc "MSG Level 1.5 Image Data Format Description", Fig.8
-    # 
-    #  which then leads to the relation between the low res pixel (I,J)
-    # and its corresponding upper corner high res pixel (i_u, j_u):
-    #  (i_u, j_u) = 3 * (I, J ) + 1
+    Notes
+    ------
+
+    Calculation
+    
+    It is assumed that the hrv region is a dependent variable which 
+    depends on the low res region attribute
+    That means: Given the low res region cutout hrv region is determined 
+    as corresponding cutout which 
+      (i) exactly fits with the low res region and 
+      (ii) refers to the artifical hrv full disk of 11136 x 11136
+    
+    low res pixel with the index (I,J) = (0,0)
+    has a high res pixel with index (i_m, j_m) = (2,2) in the middle
+    and (i_u, j_u) = (1,1) in the upper corner
+    see doc "MSG Level 1.5 Image Data Format Description", Fig.8
+    which then leads to the relation between the low res pixel (I,J)
+    and its corresponding upper corner high res pixel (i_u, j_u):
+    (i_u, j_u) = 3 * (I, J ) + 1
+    '''
         
         
     (r1, r2), (c1, c2) = region 
