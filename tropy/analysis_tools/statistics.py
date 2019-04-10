@@ -20,440 +20,27 @@ import grid_and_interpolation as gi
 ######################################################################
 
 
-######################################################################
-######################################################################
-
-# 
-# ERROR HERE: OLS regression does not allow for variations in 
-#             independent variable!
-#
-# def get_fit_range(func, x, y,
-#                   perc = [16, 50, 84], 
-#                   xerr = 0, 
-#                   yerr = 0, 
-#                   Nsample = 100):
-
-    
-#     ''' 
-#     Calculates percentile values of possible fitting curve using a bootstrap
-#     approach.
-
-#     (x,y) are interpreted as mean values and error bars as standard deviations of
-#     2d Gaussian distribution per point and the fit is repeated for random draws
-#     out of these. After Nsampe fits, the range of possible fits is analyzed for their
-#     percentiles.
-
-
-#     USAGE:
-#     =====
-#     pfit = get_fit_range(func, x, y)
-
-
-#     INPUT:
-#     =====
-#     func: fitting function func(x, *args), args: parameters of the function
-#     x: independent values
-#     y: dependent values
-
-
-#     OUPUT:
-#     =====
-#     pfit: percentiles of possible fit curves obtained from bootstrapping
-
-#     '''
-    
-
-#     # get dimension ..................................................
-#     Nsize = x.shape[0]
-
-
-
-#     # init output ....................................................
-#     xout = np.linspace(x.min(), x.max(), Nsize)
-#     yfit = []
-
-
-#     # loop over random realizations ----------------------------------
-#     for n in range(Nsample):
-        
-#         # randomize values ...........................................
-#         xnew = x + np.abs(xerr) * np.random.randn(Nsize)
-#         ynew = y + np.abs(yerr) * np.random.randn(Nsize)
-
-
-#         # do the fit with scipy ......................................
-#         popt, pcov = scipy.optimize.curve_fit(func, xnew, ynew)
-
-        
-#         # collect fitted values ......................................
-#         yfit.append( func(xout, *popt) ) 
-
-
-#     # make numpy array ...............................................
-#     yfit = np.row_stack(yfit)
-#     # ================================================================
-
-
-#     # return percentiles of fitted functions
-#     return xout, np.percentile(yfit, perc, axis = 0)
-
-
-######################################################################
-######################################################################
-
-def symmetric_linear_fit(x, y, 
-                         reg_type = 'robust',
-                         xerr = 1.,
-                         yerr = 1.,
-                         add_constant = True,
-                         Nsample = 1000,
-                         output_all = False):
-
-    # select either y = ax OR y = ax + b
-    if add_constant:
-        X = sm.add_constant(x)
-        Y = sm.add_constant(y)
-    else:
-        X = x
-        Y = y
-
-
-    if reg_type == 'robust':
-        # do fit minimizing y-residuals
-        yfit = sm.RLM(y, X).fit()
-
-        # do fit minimizing y-residuals
-        xfit = sm.RLM(x, Y).fit()
-
-        # get parameter covariance
-        pcovy =  yfit.bcov_scaled
-        pcovx =  xfit.bcov_scaled
-
-    elif reg_type == 'weighted':
-
-        # assume that error is standard deviation
-        xvar = xerr**2
-        yvar = yerr**2
-
-        # do fit minimizing y-residuals
-        yfit = sm.WLS(y, X, weights = 1./ yvar).fit()
-
-        # do fit minimizing y-residuals
-        xfit = sm.WLS(x, Y, weights = 1./ xvar).fit()
-
-        # get parameter covariance
-        pcovy =  yfit.cov_params()
-        pcovx =  xfit.cov_params()
-        
-        
-    pmy = yfit.params
-    pmx = xfit.params
-
-    
-    # generate parameter set
-    ypars = np.random.multivariate_normal(pmy, pcovy, Nsample)
-    xpars = np.random.multivariate_normal(pmx, pcovx, Nsample)
- 
-
-    # calculate arithmetic average for linear fit curve
-    a1 = ypars[:,-1]
-    alpha2 = xpars[:,-1]
-    a2 = np.ma.divide(1, alpha2)
-    a = 0.5 * (a1 + a2)
-
-    
-    if add_constant:
-        b1 = ypars[:, 0]
-        beta2 = xpars[:,0]
-
-
-        b2 = -beta2 * a2
-        b = 0.5 * (b1 + b2)
-
-
-        pm = np.array([b.mean(), a.mean()] ) 
-        pcov = np.ma.cov(b, a)
-
-    else:
-        pm = np.array([a.mean()])
-        pcov = np.array([a.var()]).reshape(1,1)
-
-    if output_all:
-        return pm, pcov, yfit.params, yfit.bcov_scaled, xfit.params, xfit.bcov_scaled
-    else:
-        return pm, pcov
-
-    
-######################################################################
-######################################################################
-
-
-
-def para_bootstrapp_func_range(func, x, pm, pcov, 
-                               perc = [5, 50, 95],
-                               Nsample = 1000 ):
-
-
-    '''
-    Calculates percentile values of a function func(params, x) where the parameter set p
-    is varied as multivariate normal distribution.
-    
-
-    USAGE:
-    =====
-    frange =  para_bootstrapp_func_range(func, x, pm, pcov)
-
-
-    INPUT:
-    =====
-    func: fitting function func(params, x), params: parameters of the function ! ARGS HAVE BEEN TURNED !
-    x: function variables
-    pm: mean value of function parameters
-    pcov: covaraince matrix of function parameters
-
-
-    OUPUT:
-    =====
-    frange: percentiles of possible function curves obtained from bootstrapping
-    
-    '''
-
-
-    # generate random sample the parameter values ....................
-    p_sample = np.random.multivariate_normal(pm, pcov, Nsample)
-
-
-    yset = []
-
-    # loop over random realizations ----------------------------------
-    for n in range(Nsample):
-        
-
-        # select parameters from sample set ..........................
-        p = p_sample[n]
-
-        # do fitting .................................................
-        y = func(p, x)
-
-        # collect fitted values ......................................
-        yset.append( y )
-
-
-    # make numpy array ...............................................
-    yset = np.row_stack(yset)
-    # ================================================================
-
-
-    # return percentiles for function
-    return  np.percentile(yset, perc, axis = 0)
-
-
-######################################################################
-######################################################################
-
-
-
-def get_fit_range(func, x, y,
-                  perc = [5, 50, 95], 
-                  xerr = 1, 
-                  yerr = 1, 
-                  p0 = None,
-                  reg_type = 'ortho_dist',
-                  outlier_thresh = 3.,
-                  Nsample = 1000):
-
-    
-    ''' 
-    Calculates percentile values of possible fitting curve using a orthogonal
-    distance regression.
-
-    (x,y) are interpreted as mean values and error bars as standard deviations of
-    2d Gaussian distribution per point. The range of possible fits is analyzed for their
-    percentiles.
-
-
-    USAGE:
-    =====
-    pfit = get_fit_range(func, x, y)
-
-
-    INPUT:
-    =====
-    func: fitting function func(args, x), args: parameters of the function ! ARGS HAVE BEEN TURNED !
-    x: independent values
-    y: dependent values
-
-
-    OUPUT:
-    =====
-    pfit: percentiles of possible fit curves obtained from bootstrapping
-
-    '''
-    
-
-
-    # make the (linear) fit ------------------------------------------
-    if reg_type == 'ortho_dist':
-        myres = odrfit_with_outlier_removal(func, x, y,
-                                            xerr = xerr, 
-                                            yerr = yerr, 
-                                            outlier_thresh = outlier_thresh,
-                                            p0 = p0)
-
-
-        # average parameters
-        pm = myres.beta 
-        pcov = myres.cov_beta
-
-
-    print
-    print 'fit parameters'
-    print '=============='
-    for i, bm in enumerate(pm):
-        print 'para %d = %f +- %f' % (i, bm, myres.sd_beta[i])
-    # ================================================================
-
-
-
-    # get fit range via parameter bootstrapping ---------------------- 
-
-    # get dimension ..................................................
-    Nsize = x.shape[0]
-
-    # init output ....................................................
-    xout = np.linspace(x.min(), x.max(), Nsize)
-
-
-    # 
-    yfit = para_bootstrapp_func_range(func, xout, pm, pcov, 
-                                   perc = perc,
-                                   Nsample = Nsample)
-    # ================================================================
-
-
-
-    return  xout, yfit
-
-
-######################################################################
-######################################################################
-
-def linear_func(p, x):
-
-    n, m = p
-
-    return m*x + n
-
-
-######################################################################
-######################################################################
-
-
-def linear_func_no_const(p, x):
-
-    return p*x
-
-
-######################################################################
-######################################################################
-
-def get_linear_fit_range(x, y,
-                         perc = [5, 50, 95], 
-                         xerr = 1, 
-                         yerr = 1, 
-                         reg_type = 'robust',
-                         add_constant = True,
-                         Nsample = 1000):
-
-    
-    ''' 
-    Calculates percentile values of possible linear fitting curve using either robust
-    or weight least-squares regression.
-
-    (x,y) are interpreted as mean values and error bars as standard deviations of
-    2d Gaussian distribution per point. The range of possible fits is analyzed for their
-    percentiles.
-
-
-    USAGE:
-    =====
-    yfit = get_linear_fit_range(x, y)
-
-
-    INPUT:
-    =====
-    x: independent values
-    y: dependent values
-
-
-    OUPUT:
-    =====
-    yfit: percentiles of possible fit curves obtained from bootstrapping
-
-    '''
-    
-
-
-    # make the (linear) fit ------------------------------------------
-    pm, pcov =  symmetric_linear_fit(x, y, 
-                                     reg_type = reg_type, 
-                                     add_constant = add_constant,
-                                     xerr = xerr,
-                                     yerr = yerr,
-                                     Nsample = Nsample)
-                                     
-
-    print
-    print 'fit parameters'
-    print '=============='
-    for i, bm in enumerate(pm):
-        print 'para %d = %f +- %f' % (i, bm, np.sqrt(np.diag(pcov))[i])
-    # ================================================================
-
-
-
-    # get fit range via parameter bootstrapping ---------------------- 
-
-    # get dimension ..................................................
-    Nsize = x.shape[0]
-
-    # init output ....................................................
-    xout = np.linspace(x.min(), x.max(), Nsize)
-
-
-    # 
-    if add_constant:
-        f = linear_func
-    else:
-        f = linear_func_no_const
-
-    yfit = para_bootstrapp_func_range(f, xout, pm, pcov, 
-                                   perc = perc,
-                                   Nsample = Nsample)
-    # ================================================================
-
-
-
-    return  xout, yfit
-
-
-######################################################################
-######################################################################
-
 
 def get_outlier_from_residuals(e, thresh = 3.):
 
     '''
     Calculate outliers from residuals using percentile-based
     standardization.
-    
-    INPUT
-    =====
-    e: input residuals
 
-    OUTPUT
-    ======
-    m: outlier mask
+
+    Parameters
+    ----------
+    e : numpy array
+        input residuals
+
+    thresh : float, optional, default = 3.
+        value of residual (standardized) at which outliers are identified
+
+
+    Returns
+    --------
+    m : numpy array
+        outlier mask
     '''
 
     # get percentiles 
@@ -486,20 +73,38 @@ def odrfit_with_outlier_removal(func, x, y,
     percentiles.
 
 
-    USAGE:
-    =====
-    fit_result = odrfit_with_outlier_removal(func, x, y)
+    Parameters
+    ----------
+    func : function
+        fitting function func(args, x), args: parameters of the function 
+        ! ARGS HAVE BEEN TURNED !
 
-    INPUT:
-    =====
-    func: fitting function func(args, x), args: parameters of the function ! ARGS HAVE BEEN TURNED !
-    x: independent values
-    y: dependent values
+    x : numpy array, 1-dim
+        independent values
 
+    y : numpy array, 1-dim
+        dependent values
 
-    OUPUT:
-    =====
-    fit_result: result of the ODR fit
+    xerr : float or numpy array (1-dim), optional, default = 0.
+        standard deviation of x
+
+    yerr : float or numpy array (1-dim), optional, default = 0.
+        standard deviation of y
+
+    n_iter : int, optional, default = 10
+        numbers of iteration used for outlier removal
+
+    outlier_thresh : float, optional, default = 3.
+        threshold for outlier removal (standardized fit residuals)
+
+    p0 : list or tuple, optional, default = None
+        first guess of fitted parameters (for increased convergence)
+    
+
+    Returns
+    --------
+    fit_result : `` scipy.odr.ODR``
+        result of the ODR fit
 
     '''
     
@@ -562,20 +167,34 @@ def correlation_bootstrap(x, y,
     percentiles.
 
 
-    USAGE:
-    =====
-    corr = correlation_bootstrap(x, y)
+    Parameters
+    ----------
+    x : numpy array, 1-dim
+        independent values
+
+    y : numpy array, 1-dim
+        dependent values
+
+    perc : list or numpy array (1-dim), optional, default = [2.5, 50, 97.5]
+        list of percentiles for which correlation is estimated
+    
+    xerr : float or numpy array (1-dim), optional, default = 0.
+        standard deviation of x
+
+    yerr : float or numpy array (1-dim), optional, default = 0.
+        standard deviation of y
+
+    Nsample : int, optional, default = 1000
+        size of bottstrap sample
+
+    corr : func, optional, default = ``scipy.stats.pearsonr``
+        function object used for correlation calculation
 
 
-    INPUT:
-    =====
-    x: independent values
-    y: dependent values
-
-
-    OUPUT:
-    =====
-    corr: percentiles of possible correlation obtained from bootstrapping
+    Returns
+    --------
+    corr : numpy array, 1-dim
+        percentiles of possible correlation obtained from bootstrapping
 
     '''
     
@@ -619,6 +238,38 @@ def cond_perc_simple(v1, v2, x1, p = [10, 25, 50, 75, 90], sig = 0, medsize = 0)
 
     Input are v1 (T) and v2 (Re) and percentiles of v2 conditioned 
     on intervals of v1 given by x1 are calculated.
+
+
+    Parameters
+    ----------
+    v1 : numpy array
+        sample of 1st variable of bi-variate distribution
+
+    v2 : numpy array
+        sample of 2nd variable of bi-variate distribution
+
+    x1 : numpy array
+        intervals at which 1st variable is gathered
+    
+    p : list, optional, default = [10, 25, 50, 75, 90]
+        percentiles of 2nd variables which will be calculated for
+        each interval [ x1[i], x1[i + 1] )
+
+    sig : float, optional, default = 0.
+        sigma for Gaussian filter to smooth percentile curves
+        (not applied for sig == 0)
+
+    medsize : int, optional, default = 0
+        footprint size of median filter to smooth percentile curves
+        (not applied for sig != 0  OR medsize == 0)
+
+
+    Returns
+    --------
+    v2p : numpy array
+        percentile statistics of variable ``v2`` conditioned 
+        on different ``x1`` intervals
+    
     '''
 
     # number of intervals 
@@ -629,7 +280,7 @@ def cond_perc_simple(v1, v2, x1, p = [10, 25, 50, 75, 90], sig = 0, medsize = 0)
     # collect the percentiles by selective masking
     for i in range(Ninterval):
 
-        m = np.logical_and(v1 > x1[i], v1 < x1[i + 1])
+        m = np.logical_and(v1 >= x1[i], v1 < x1[i + 1])
 
         try:
             vp = np.percentile(v2[m], p)
@@ -703,16 +354,30 @@ def KStest(x, y, Nx_eff = None, Ny_eff = None):
     if p-value is smaller than a threshold (typically 0.05 or 0.01).
 
 
-    INPUT
-    =====
-    x: 1st sample array
-    y: 2nd sample array
-    Nmax: optional, maximum lag 
+    Parameters
+    ----------
+    x : numpy array
+        sample of 1st variable
+    
+    y : numpy array 
+        sample of 2nd variable
 
-    OUTPUT
-    ======
-    D: KS test statistic
-    pval: p-value
+    Nx_eff : int, optional, default = None
+        number of effective degrees of freedom of variable x
+        set to size of x if Nx_eff == None
+
+    Ny_eff : int, optional, default = None
+        number of effective degrees of freedom of variable y
+        set to size of y if Ny_eff == None
+
+
+    Returns
+    --------
+    D : float
+       KS test statistic
+
+    pval : float
+       p-value
     '''
 
     # remove invalid values first ....................................
@@ -756,15 +421,24 @@ def crosscorr(x, y, Nmax = None):
     '''
     Calculates time-lagged crosscorrelation function of masked array.
 
-    INPUT
-    =====
-    x: 1st masked input array, evaluated at t + tau
-    y: 2nd masked input array
-    Nmax: optional, maximum lag 
 
-    OUTPUT
-    ======
-    c: autocorrelation function for lag 0 ... Nmax, 
+    Parameters
+    ----------
+    x : numpy array
+        1st masked input array, evaluated at t + tau
+
+    y : numpy array
+        2nd masked input array
+
+    Nmax : int, optional, default = None
+        maximum lag 
+        Nmax is set to len(x) - 1 if Nmax == None
+
+
+    Returns
+    --------
+    c : numpy array
+        autocorrelation function for lag 0 ... Nmax, 
 
     '''
     
@@ -799,16 +473,22 @@ def rank_transformation(f, normalize = True, gamma = 1.):
     the ranks of the individual field values are returned.
 
 
-    INPUT
-    =====
-    f: field
-    normalize: optional, option if the rank field should be normalized to one
-    gamma: optional, gamma correction factor
+    Parameters
+    ----------
+    f : numpy array (n-dim)
+        field to be transformed
+
+    normalize : bool, optional, default = True
+        option if the rank field should be normalized to one
+
+    gamma : float, optional, default = 1.
+        gamma correction factor
 
 
-    OUTPUT
-    ======
-    f: field ranks
+    Returns
+    --------
+    f : numpy array (n-dim)
+        field ranks
     '''
 
 
@@ -841,15 +521,23 @@ def fdistrib_mapping(fin, fmap, keep_range = False):
     Performs a transformation of field fin to have the same distribution
     as fmap.
 
-    INPUT
-    =====
-    fin: input field
-    fmap: field from which distribution is taken
+    
+    Parameters
+    ----------
+    fin : numpy array (n-dim)
+        input field
+
+    fmap : numpy array (n-dim)
+        field from which distribution is taken
+
+    keep_range : bool, optional, default = False
+        switch if output field is scaled to input range (with min-max transformation)
 
 
-    OUTPUT
-    ======
-    fout: transformed field fin
+    Returns
+    --------
+    fout : numpy array (n-dim)
+        transformed field fin
     '''
 
 
@@ -887,14 +575,21 @@ def cumsum_data_fraction(h, divide_by_total_sum = True):
     The function uses iso-lines of equal density and maps the fraction
     of data enclosed by these lines onto it.
 
-    INPUT
-    =====
-    h : histogram / density
+
+    Parameters
+    ----------
+    h : numpy array (n-dim)
+        histogram / density or other variable for which cumsum makes sense
+
+    divide_by_total_sum : bool, optional, default = True
+        switch if cumsum field should be divided by total sum
+        this generates a relative field with range (0, 1)
 
 
-    OUTPUT
-    ======
-    f : data fraction field
+    Returns
+    --------
+    f : numpy array (n-dim)
+        data fraction field
     '''
 
 
@@ -932,14 +627,27 @@ def draw_from_empirical_dist(bins, hist, Nsamp = 100, discrete_version = False):
     '''
     Draw random number from an empirical distribution. Implemented for 2d histograms.
     
-    INPUT
-    ======
-    bins: list of bins edges (2dim)
-    hist: histogram values (either absolute frequencies or relative)
-    
-    OUTPUT
-    ======
-    rvalues: random values (2d) that are distributes like hist
+
+    Parameters
+    ----------
+    bins : list of two numpy arrays 
+        bins edges (2dim)
+
+    hist : numpy array (2-dim)
+        histogram values (either absolute frequencies or relative)
+
+    Nsamp : int, optional, default = 100
+        number of random samples that are drawn
+
+    discrete_version : bool, optional, default = False
+        if True: samples can only be placed at bin midpoints
+        if False: samples are uniformly distributed within each bin
+
+
+    Returns
+    --------
+    rvalues : list of two numpy arrays
+        random values (2d) that are distributed like hist
     '''
     
     
@@ -998,15 +706,24 @@ def draw_from_empirical_1ddist(bins, hist, Nsamp = 100):
     '''
     Draw random number from an empirical distribution. Implemented for 1d histograms.
     
+
+    Parameters
+    ----------
+    bins : numpy array
+        bins edges (1dim)
+
+    hist : numpy array (1-dim)
+        histogram values (either absolute frequencies or relative)
+
+    Nsamp : int, optional, default = 100
+        number of random samples that are drawn
+
+
+    Returns
+    --------
+    rvalues : numpy array
+        random values  that are distributed like hist
     
-    INPUT
-    ======
-    bins: list of bins edges (1dim)
-    hist: histogram values (either absolute frequencies or relative)
-    
-    OUTPUT
-    ======
-    rvalues: random values (2d) that are distributes like hist
     '''
 
 
@@ -1102,3 +819,429 @@ if __name__ == '__main__':
     for i in range(5):
         pl.plot( Rperc[i] , Tm, c = cs[i], lw = 3)
     pl.ylim(300, 230)
+
+
+
+
+
+######################################################################
+# THIS STUFF IS EITHER OUTDATED OR NOT PROOFED
+######################################################################
+
+# 
+# ERROR HERE: OLS regression does not allow for variations in 
+#             independent variable!
+#
+# def get_fit_range(func, x, y,
+#                   perc = [16, 50, 84], 
+#                   xerr = 0, 
+#                   yerr = 0, 
+#                   Nsample = 100):
+
+    
+#     ''' 
+#     Calculates percentile values of possible fitting curve using a bootstrap
+#     approach.
+
+#     (x,y) are interpreted as mean values and error bars as standard deviations of
+#     2d Gaussian distribution per point and the fit is repeated for random draws
+#     out of these. After Nsampe fits, the range of possible fits is analyzed for their
+#     percentiles.
+
+
+#     USAGE:
+#     =====
+#     pfit = get_fit_range(func, x, y)
+
+
+#     INPUT:
+#     =====
+#     func: fitting function func(x, *args), args: parameters of the function
+#     x: independent values
+#     y: dependent values
+
+
+#     OUPUT:
+#     =====
+#     pfit: percentiles of possible fit curves obtained from bootstrapping
+
+#     '''
+    
+
+#     # get dimension ..................................................
+#     Nsize = x.shape[0]
+
+
+
+#     # init output ....................................................
+#     xout = np.linspace(x.min(), x.max(), Nsize)
+#     yfit = []
+
+
+#     # loop over random realizations ----------------------------------
+#     for n in range(Nsample):
+        
+#         # randomize values ...........................................
+#         xnew = x + np.abs(xerr) * np.random.randn(Nsize)
+#         ynew = y + np.abs(yerr) * np.random.randn(Nsize)
+
+
+#         # do the fit with scipy ......................................
+#         popt, pcov = scipy.optimize.curve_fit(func, xnew, ynew)
+
+        
+#         # collect fitted values ......................................
+#         yfit.append( func(xout, *popt) ) 
+
+
+#     # make numpy array ...............................................
+#     yfit = np.row_stack(yfit)
+#     # ================================================================
+
+
+#     # return percentiles of fitted functions
+#     return xout, np.percentile(yfit, perc, axis = 0)
+
+
+######################################################################
+######################################################################
+
+# def symmetric_linear_fit(x, y, 
+#                          reg_type = 'robust',
+#                          xerr = 1.,
+#                          yerr = 1.,
+#                          add_constant = True,
+#                          Nsample = 1000,
+#                          output_all = False):
+
+#     # select either y = ax OR y = ax + b
+#     if add_constant:
+#         X = sm.add_constant(x)
+#         Y = sm.add_constant(y)
+#     else:
+#         X = x
+#         Y = y
+
+
+#     if reg_type == 'robust':
+#         # do fit minimizing y-residuals
+#         yfit = sm.RLM(y, X).fit()
+
+#         # do fit minimizing y-residuals
+#         xfit = sm.RLM(x, Y).fit()
+
+#         # get parameter covariance
+#         pcovy =  yfit.bcov_scaled
+#         pcovx =  xfit.bcov_scaled
+
+#     elif reg_type == 'weighted':
+
+#         # assume that error is standard deviation
+#         xvar = xerr**2
+#         yvar = yerr**2
+
+#         # do fit minimizing y-residuals
+#         yfit = sm.WLS(y, X, weights = 1./ yvar).fit()
+
+#         # do fit minimizing y-residuals
+#         xfit = sm.WLS(x, Y, weights = 1./ xvar).fit()
+
+#         # get parameter covariance
+#         pcovy =  yfit.cov_params()
+#         pcovx =  xfit.cov_params()
+        
+        
+#     pmy = yfit.params
+#     pmx = xfit.params
+
+    
+#     # generate parameter set
+#     ypars = np.random.multivariate_normal(pmy, pcovy, Nsample)
+#     xpars = np.random.multivariate_normal(pmx, pcovx, Nsample)
+ 
+
+#     # calculate arithmetic average for linear fit curve
+#     a1 = ypars[:,-1]
+#     alpha2 = xpars[:,-1]
+#     a2 = np.ma.divide(1, alpha2)
+#     a = 0.5 * (a1 + a2)
+
+    
+#     if add_constant:
+#         b1 = ypars[:, 0]
+#         beta2 = xpars[:,0]
+
+
+#         b2 = -beta2 * a2
+#         b = 0.5 * (b1 + b2)
+
+
+#         pm = np.array([b.mean(), a.mean()] ) 
+#         pcov = np.ma.cov(b, a)
+
+#     else:
+#         pm = np.array([a.mean()])
+#         pcov = np.array([a.var()]).reshape(1,1)
+
+#     if output_all:
+#         return pm, pcov, yfit.params, yfit.bcov_scaled, xfit.params, xfit.bcov_scaled
+#     else:
+#         return pm, pcov
+
+    
+# ######################################################################
+# ######################################################################
+
+
+
+# def para_bootstrapp_func_range(func, x, pm, pcov, 
+#                                perc = [5, 50, 95],
+#                                Nsample = 1000 ):
+
+
+#     '''
+#     Calculates percentile values of a function func(params, x) where the parameter set p
+#     is varied as multivariate normal distribution.
+    
+
+#     USAGE:
+#     =====
+#     frange =  para_bootstrapp_func_range(func, x, pm, pcov)
+
+
+#     INPUT:
+#     =====
+#     func: fitting function func(params, x), params: parameters of the function ! ARGS HAVE BEEN TURNED !
+#     x: function variables
+#     pm: mean value of function parameters
+#     pcov: covaraince matrix of function parameters
+
+
+#     OUPUT:
+#     =====
+#     frange: percentiles of possible function curves obtained from bootstrapping
+    
+#     '''
+
+
+#     # generate random sample the parameter values ....................
+#     p_sample = np.random.multivariate_normal(pm, pcov, Nsample)
+
+
+#     yset = []
+
+#     # loop over random realizations ----------------------------------
+#     for n in range(Nsample):
+        
+
+#         # select parameters from sample set ..........................
+#         p = p_sample[n]
+
+#         # do fitting .................................................
+#         y = func(p, x)
+
+#         # collect fitted values ......................................
+#         yset.append( y )
+
+
+#     # make numpy array ...............................................
+#     yset = np.row_stack(yset)
+#     # ================================================================
+
+
+#     # return percentiles for function
+#     return  np.percentile(yset, perc, axis = 0)
+
+
+# ######################################################################
+# ######################################################################
+
+
+
+# def get_fit_range(func, x, y,
+#                   perc = [5, 50, 95], 
+#                   xerr = 1, 
+#                   yerr = 1, 
+#                   p0 = None,
+#                   reg_type = 'ortho_dist',
+#                   outlier_thresh = 3.,
+#                   Nsample = 1000):
+
+    
+#     ''' 
+#     Calculates percentile values of possible fitting curve using a orthogonal
+#     distance regression.
+
+#     (x,y) are interpreted as mean values and error bars as standard deviations of
+#     2d Gaussian distribution per point. The range of possible fits is analyzed for their
+#     percentiles.
+
+
+#     USAGE:
+#     =====
+#     pfit = get_fit_range(func, x, y)
+
+
+#     INPUT:
+#     =====
+#     func: fitting function func(args, x), args: parameters of the function ! ARGS HAVE BEEN TURNED !
+#     x: independent values
+#     y: dependent values
+
+
+#     OUPUT:
+#     =====
+#     pfit: percentiles of possible fit curves obtained from bootstrapping
+
+#     '''
+    
+
+
+#     # make the (linear) fit ------------------------------------------
+#     if reg_type == 'ortho_dist':
+#         myres = odrfit_with_outlier_removal(func, x, y,
+#                                             xerr = xerr, 
+#                                             yerr = yerr, 
+#                                             outlier_thresh = outlier_thresh,
+#                                             p0 = p0)
+
+
+#         # average parameters
+#         pm = myres.beta 
+#         pcov = myres.cov_beta
+
+
+#     print
+#     print 'fit parameters'
+#     print '=============='
+#     for i, bm in enumerate(pm):
+#         print 'para %d = %f +- %f' % (i, bm, myres.sd_beta[i])
+#     # ================================================================
+
+
+
+#     # get fit range via parameter bootstrapping ---------------------- 
+
+#     # get dimension ..................................................
+#     Nsize = x.shape[0]
+
+#     # init output ....................................................
+#     xout = np.linspace(x.min(), x.max(), Nsize)
+
+
+#     # 
+#     yfit = para_bootstrapp_func_range(func, xout, pm, pcov, 
+#                                    perc = perc,
+#                                    Nsample = Nsample)
+#     # ================================================================
+
+
+
+#     return  xout, yfit
+
+
+# ######################################################################
+# ######################################################################
+
+# def linear_func(p, x):
+
+#     n, m = p
+
+#     return m*x + n
+
+
+# ######################################################################
+# ######################################################################
+
+
+# def linear_func_no_const(p, x):
+
+#     return p*x
+
+
+# ######################################################################
+# ######################################################################
+
+# def get_linear_fit_range(x, y,
+#                          perc = [5, 50, 95], 
+#                          xerr = 1, 
+#                          yerr = 1, 
+#                          reg_type = 'robust',
+#                          add_constant = True,
+#                          Nsample = 1000):
+
+    
+#     ''' 
+#     Calculates percentile values of possible linear fitting curve using either robust
+#     or weight least-squares regression.
+
+#     (x,y) are interpreted as mean values and error bars as standard deviations of
+#     2d Gaussian distribution per point. The range of possible fits is analyzed for their
+#     percentiles.
+
+
+#     USAGE:
+#     =====
+#     yfit = get_linear_fit_range(x, y)
+
+
+#     INPUT:
+#     =====
+#     x: independent values
+#     y: dependent values
+
+
+#     OUPUT:
+#     =====
+#     yfit: percentiles of possible fit curves obtained from bootstrapping
+
+#     '''
+    
+
+
+#     # make the (linear) fit ------------------------------------------
+#     pm, pcov =  symmetric_linear_fit(x, y, 
+#                                      reg_type = reg_type, 
+#                                      add_constant = add_constant,
+#                                      xerr = xerr,
+#                                      yerr = yerr,
+#                                      Nsample = Nsample)
+                                     
+
+#     print
+#     print 'fit parameters'
+#     print '=============='
+#     for i, bm in enumerate(pm):
+#         print 'para %d = %f +- %f' % (i, bm, np.sqrt(np.diag(pcov))[i])
+#     # ================================================================
+
+
+
+#     # get fit range via parameter bootstrapping ---------------------- 
+
+#     # get dimension ..................................................
+#     Nsize = x.shape[0]
+
+#     # init output ....................................................
+#     xout = np.linspace(x.min(), x.max(), Nsize)
+
+
+#     # 
+#     if add_constant:
+#         f = linear_func
+#     else:
+#         f = linear_func_no_const
+
+#     yfit = para_bootstrapp_func_range(f, xout, pm, pcov, 
+#                                    perc = perc,
+#                                    Nsample = Nsample)
+#     # ================================================================
+
+
+
+#     return  xout, yfit
+
+
+######################################################################
+######################################################################
+
