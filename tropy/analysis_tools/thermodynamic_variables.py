@@ -100,19 +100,19 @@ def moist_gas_constant(r):
 def moist_specific_heat(r):
     
     '''
-    Description:
-    ===========
     Calculates specific heat at constant pressure of moist air.
 
 
-    Arguments:
-    =========
-    r: mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
+    Parameters
+    ----------
+    r : numpy array
+        mixing ratio i.e. vapor mass per dry air mass in [kg / kg]
 
     
-    Return:
-    =======
-    c_pm: specific heat at constant pressure of moist air
+    Returns
+    --------
+    c_pm : numpy array
+        specific heat at constant pressure of moist air
 
     '''
 
@@ -367,8 +367,7 @@ def saturation_over_ice(T, method = 'PK'):
 
     References
     ----------
-    Murphy, D. M., and T. Koop (2005), Review of the vapour pressures of ice and supercooled water for atmospheric applications, Quart. J. Roy. Meteor. Soc., 131(608), 1539–1565, doi:10.1256/qj.04.94.
-
+    Murphy, D. M., and T. Koop (2005), Review of the vapour pressures of ice and supercooled water for atmospheric applications, Quart. J. Roy. Meteor. Soc., 131(608), 1539-1565, doi:10.1256/qj.04.94.
     
 
     '''
@@ -471,22 +470,27 @@ def dew_point(r, p, T):
 
 
 def H2r(hrel, p, T):
+
     '''
-    Description:
-    ===========
     Converts relative humidity H into mixing ratio r.
 
 
-    Argument:
-    =========
-    hrel: relative humidity in [%]
-    p: total gas pressure [Pa]
-    T: temperature [K]
+    Parameters
+    ----------
+    hrel : numpy array
+        relative humidity in [%]
+
+    p : numpy array
+        total gas pressure [Pa]
+
+    T : numpy array
+        temperature [K]
 
     
-    Return:
-    =======
-    es : water vapor pressure in [Pa]
+    Returns
+    --------
+    es : numpy array
+        water vapor pressure in [Pa]
 
     '''
 
@@ -605,7 +609,7 @@ def lifting_condensation_level_temperature(r, p, T, eq = 15):
 
     eq : int, optional, default = 15
         which eq. of Bolton (1980) to be chosen 
-       eq in [15, 21, 22]
+        eq in [15, 21, 22]
 
     
     Returns

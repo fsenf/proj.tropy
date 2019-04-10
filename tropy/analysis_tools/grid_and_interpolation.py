@@ -1544,6 +1544,7 @@ def low2hres_region(region):
     depends on the low res region attribute
     That means: Given the low res region cutout hrv region is determined 
     as corresponding cutout which 
+
       (i) exactly fits with the low res region and 
       (ii) refers to the artifical hrv full disk of 11136 x 11136
     

@@ -313,14 +313,20 @@ def autocorr(x, Nmax = None):
     '''
     Calculates autocorrelation function of masked array.
 
-    INPUT
-    =====
-    x: masked input array
-    Nmax: optional, maximum lag 
+    Parameters
+    ----------
+    x : numpy array
+        sample of 1st variable
 
-    OUTPUT
-    ======
-    c: autocorrelation function for lag 0 ... Nmax
+    Nmax : int, optional, default = None
+        maximum lag 
+        Nmax is set to len(x) - 1 if Nmax == None
+
+
+    Returns
+    --------
+    c : numpy array
+        autocorrelation function for lag 0 ... Nmax, 
     '''
     
     N = len(x)

@@ -63,7 +63,6 @@ def displacement_from_opt_flow(f1, f2,
 
     Parameters
     ----------
-
     f1 : numpy array, 2dim
          field for past time step
 
@@ -74,12 +73,10 @@ def displacement_from_opt_flow(f1, f2,
          method selected for optical flow calculations
          possible options: 'farneback' and 'tvl1'
 
-
     kwargs : dict
         parameters for opencv optical flow algorithm 
         if not given, default is taken from  _farnebaeck_default_parameters
-    
-    
+ 
 
     Returns
     --------
@@ -117,7 +114,6 @@ def displacement_from_opt_flow_farneback(f1, f2,
 
     Parameters
     ----------
-
     f1 : numpy array, 2dim
          field for past time step
 
@@ -278,16 +274,21 @@ def morph_trans_opt_flow(f, flow, method = 'forward'):
     '''
     Applies morphological transformation of field f given a displacement 
     field.
-    
-    INPUT
-    =====
-    f: 2d field that is transformed (source)
-    flow: displacement vector between source and target stage
+ 
+   
+    Parameters
+    ----------
+    f : numpy array
+        2d field that is transformed (source)
+
+    flow : numpy array
+        displacement vector between source and target stage
     
 
-    OUTPUT
-    ======
-    ftrans: transformed field
+    Returns
+    --------
+    ftrans : numpy array
+        transformed field
     
     '''
 
@@ -334,24 +335,45 @@ def flow_velocity(lon, lat, f3d,
     Calculates flow field for Lagrangian displacements of tracers
     in the field.
 
-    INPUT
-    =====
-    lon: longitude
-    lat: latidute
-    f3d: 3d fields (time on 1st axis)
-    dt: optional, time interval in minutes
-    vmin: optional, lower bound of fields for rescaling
-    vmax: optional, upper bound of fields for rescaling
+
+    Parameters
+    ----------
+    lon : numpy array
+         longitude
+
+    lat : numpy array
+         latitude
+
+    f3d : numpy array
+         3d fields (time on 1st axis)
+
+    dt : float, optional, default = 5.
+         time interval in minutes
+
+    flow_input : numpy array, optional, default = None
+         predefined flow field for u/v calculation
+         not use if None
+
+    vmin : float, optional, default = 0.
+         lower bound of fields for rescaling
+         needed for flow calculation
+
+    vmax : float, optional, default = 1.
+         upper bound of fields for rescaling
+         needed for flow calculation
+
+    
+    Returns
+    --------
+    u : numpy array
+        zonal velocity, 
+
+    v : numpy array
+        meridional velocity 
 
 
-    OUTPUT
-    ======
-    u: zonal velocity, 
-    v: meridional velocity 
-
-
-    COMMENTS
-    ========
+    Notes
+    ------
     Velocities are derived from displacements between subsequent time slots
     and hence, time dimension is ntimes - 1.
 
@@ -397,14 +419,25 @@ def displacement_vector(tracer_field,
     '''
     Calculates displacement vector for several times.
 
-    INPUT
-    =====
-    tracer_field: 3d fields (time on 1st axis)
 
+    Parameters
+    ----------
+    tracer_field : numpy array
+        3d fields (time on 1st axis)
 
-    OUTPUT
-    ======
-    flow: displacement vector
+    vmin : float, optional, default = 0.
+        lower bound of fields for rescaling
+        needed for flow calculation
+
+    vmax : float, optional, default = 1.
+        upper bound of fields for rescaling
+        needed for flow calculation
+
+    
+    Returns
+    --------
+    flow : numpy array
+        displacement vector
 
     '''
 
@@ -449,18 +482,41 @@ def Lagrangian_change(f3d,
     Calculates Lagrangian change of a field using possibly another
     field to generate optical flow.
 
-    INPUT
-    =====
-    f3d: 3d fields (time on 1st axis)
+
+    Parameters
+    ----------
+    f3d : numpy array
+        the field (time on 1st axis) for which Lagrangian change is calculated
+
+    tracer_field : numpy array, optional, default = None
+        the field (time on 1st axis) for which displacement is derived
+        if None: displacement is derievd from ``f3d``
+
+    sigma_gauss : float, optional, default = 1.
+        sigma for Gaussian smoothing for Lagrangian change fields
+
+    flow_input : numpy array, optional, default = None
+        predefined flow field for u/v calculation
+         
+        if None: flow is derived from either ``f3d`` or ``tracer_field``
+
+    vmin : float, optional, default = 0.
+        lower bound of fields for rescaling
+        needed for flow calculation
+
+    vmax : float, optional, default = 1.
+        upper bound of fields for rescaling
+        needed for flow calculation
+
+    
+    Returns
+    --------
+    df: numpy array
+        Lagrangian change of field ``f3d``
 
 
-    OUTPUT
-    ======
-    df: Lagrangian change of field f
-
-
-    COMMENTS
-    ========
+    Notes
+    ------
     Lagrangian changes are derived from displacements between subsequent time slots
     and hence, time dimension is ntimes - 1.
 
