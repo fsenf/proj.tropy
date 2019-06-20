@@ -7,7 +7,7 @@ from numpy.distutils.core import setup, Extension
 #f2py -c -m --f90flags='-O3 -fPIC' _f90_bit_conversion_altair bit_conversion.f90
 e1 = Extension( '_f90_bit_conversion', 
                 sources = ['tropy/io_tools/bit_conversion.f90',],
-                extra_f90_compile_args = ['-O3 -fPIC'], )
+                extra_f90_compile_args = ['-fPIC'], )
 
 setup(name='tropy',
       version = __version__,
