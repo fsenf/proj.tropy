@@ -40,8 +40,8 @@ def grib_cont_list(infile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
            for each key
     '''
 
-    print infile
-    print '==========================================================='
+    print(infile)
+    print('===========================================================')
 # open input file ....................................................
     gf=pygrib.open(infile)
     gf.seek(0)
@@ -109,7 +109,7 @@ def get_grib_field_lll(infile,var_name): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     try:
         Cont=Indx.select(shortName=var_name)
     except:
-        print 'ERROR: variable '+var_name + ' not in ' + infile
+        print(('ERROR: variable '+var_name + ' not in ' + infile))
         return
 
 
@@ -313,15 +313,15 @@ def get_fc_fields(cfile, var_list, lonlat = True):
     var = {}
      
     for vname in var_list:
-        print '... reading %s' % vname
+        print(('... reading %s' % vname))
 
         try:
-	    if lonlat and not var.has_key('lon'):
+	    if lonlat and 'lon' not in var:
                var['lon'], var['lat'], var[vname] = get_field_from_indx(indx, vname, lonlat=True)
             else:
                var[vname] = get_field_from_indx(indx, vname, lonlat=False)
         except:
-            print '%s not in %s' %(vname, cfile)
+            print(('%s not in %s' %(vname, cfile)))
 
     return var 
 
@@ -363,9 +363,9 @@ def get_full_grib_field_info(infile,var_name): # LLLLLLLLLLLLLLLLLLLLL
     # start with info dict
     grb_info={}
 
-    for key in f.keys():
+    for key in list(f.keys()):
         grb_info[key] = f[key]
-        print key,'  ',f[key]
+        print((key,'  ',f[key]))
     
     return grb_info # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
@@ -483,9 +483,9 @@ def mlev2pres(infile,var): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 
     # little check
     if a[0] != 0. or a[-1] != 0. or b[0] != 0. or b[-1] != 1.:
-        print 'Warning: Coefficient Check failed!'
-        print 'a = ', a
-        print 'b = ', b
+        print('Warning: Coefficient Check failed!')
+        print(('a = ', a))
+        print(('b = ', b))
         
     pres = np.zeros([Nx,Ny,Nz])
 

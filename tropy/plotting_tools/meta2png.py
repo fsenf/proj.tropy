@@ -22,7 +22,7 @@ def meta2png(fname, meta):
     meta = PngImagePlugin.PngInfo()
 
     # copy metadata into new object
-    for k,v in im.info.iteritems():
+    for k,v in im.info.items():
         if k in reserved: continue
         meta.add_text(k, v, 0)
 
@@ -49,7 +49,7 @@ class pngsave(object):
 
         fig = kwargs.pop('fig', pl.gcf())
 
-        print '... save image to ', fname
+        print('... save image to ', fname)
 
         fig.savefig(fname, **kwargs)
 

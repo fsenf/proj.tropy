@@ -22,7 +22,7 @@ import numpy as np
 import datetime as dt
 import pylab as pl
 # import Image
-from msevi_config import _predefined_regions, _narrow_channels,\
+from .msevi_config import _predefined_regions, _narrow_channels,\
     _channel_config, _calibration_constants, _hdf_cutout_regions,\
     _arch_config
 # use pyorbital from pytroll group for sun zenith angle calculations
@@ -131,11 +131,11 @@ class MSevi(object):
             self.reg_name = region
             reg_type = region + '-' + self.scan_type
  
-            if _predefined_regions.has_key(reg_type):
+            if reg_type in _predefined_regions:
                 self.region = _predefined_regions[reg_type]
   
             else:
-                print 'unknown region';return # sys.exit()
+                print('unknown region');return # sys.exit()
 
         # calculate HRV region
         # ====================
@@ -201,9 +201,9 @@ class MSevi(object):
                 new_chan_list.append(ch)
 
             else:
-                print 'ERROR: Channel name is wrong!'
-                print '       Use one of these:'
-                print sorted(_channel_config.keys())
+                print('ERROR: Channel name is wrong!')
+                print('       Use one of these:')
+                print(sorted(_channel_config.keys()))
                 return
 
         # create for additional channels to be loaded
@@ -244,12 +244,12 @@ class MSevi(object):
                 self.load_hrit(list_for_load, **kwargs)
 
         else:
-            print chan_list, 'is already loaded!'
+            print(chan_list, 'is already loaded!')
         #=============================================================
 
 
         #--- [3] book-keeping of loaded channels ---------------------
-        self.chan_list = self.rad.keys()
+        self.chan_list = list(self.rad.keys())
         self.chan_list.sort()
         #=============================================================
 
@@ -281,7 +281,7 @@ class MSevi(object):
         if not within_hdf_region:
             raise IOError
         else:
-            print 'Region suggests use of hdf file' 
+            print('Region suggests use of hdf file') 
         #=============================================================
 
 
@@ -308,7 +308,7 @@ class MSevi(object):
         # get sat_type from prolog file ..............................
         if self.sat_type == 'Unknown':
             
-            ch_name = self.rad.keys()[0]
+            ch_name = list(self.rad.keys())[0]
             
             # now I try to get the name of the attribute which 
             # specifies the satellite id, this is a bit more 
@@ -569,10 +569,10 @@ class MSevi(object):
         
         d =  self.__dict__
 
-        if d.has_key('lon') and d.has_key('lat'):
+        if 'lon' in d and 'lat' in d:
             self.szen = pyorbital.astronomy.sun_zenith_angle(self.time, self.lon, self.lat)
         
-        if d.has_key('hlon') and d.has_key('hlat'):
+        if 'hlon' in d and 'hlat' in d:
             self.hszen = pyorbital.astronomy.sun_zenith_angle(self.time, self.hlon, self.hlat)
 
 
@@ -608,7 +608,7 @@ class MSevi(object):
            elif type(chan) == type([]):
                work_list = chan
         else:
-           work_list = f0.keys()
+           work_list = list(f0.keys())
         # =============================================================
  
  
@@ -648,7 +648,7 @@ class MSevi(object):
            elif type(chan) == type([]):
                work_list = chan
         else:
-           work_list = A.keys()
+           work_list = list(A.keys())
         # =============================================================
  
  

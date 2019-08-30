@@ -2,9 +2,9 @@
 
 import numpy as np
 import h5py
-import file_status
+from . import file_status
 import time
-from data_settings import settings
+from .data_settings import settings
 
 ######################################################################
 ######################################################################
@@ -26,7 +26,7 @@ class Dataset(object):
 
         if type(setting) == type({}):
 
-            for k in setting.keys():
+            for k in list(setting.keys()):
                 self.__dict__[k] = setting[k]
 
         if data == None:
@@ -86,7 +86,7 @@ class Dataset(object):
             return self.array()
 
         else:
-            print 'Dataset has name: ', self.name
+            print('Dataset has name: ', self.name)
             return
 
     # ----------------------------------------------------------------
@@ -166,10 +166,10 @@ class Dataset(object):
             self.data = np.array(d)
             
             # get attributes
-            for a in d.attrs.keys():
+            for a in list(d.attrs.keys()):
                 self.__dict__[a] = d.attrs[a]
         except:
-            print 'dataset does not exist'
+            print('dataset does not exist')
  
 
         hfile.close()
@@ -183,7 +183,7 @@ class Dataset(object):
 
         no_attrs = [ 'data']
 
-        keys = self.__dict__.keys()
+        keys = list(self.__dict__.keys())
 
         for na in no_attrs:
             keys.remove(na)
@@ -208,7 +208,7 @@ class DataCollection(dict):
         dset = Dataset(vname, data = array, setting = setting)
         
         if subpath != None:
-            if not self.has_key(subpath):
+            if subpath not in self:
                 self[subpath] = {}
 
 
@@ -232,10 +232,10 @@ class DataCollection(dict):
     def list(self):
         
         l = []
-        for k in self.keys():
+        for k in list(self.keys()):
             
             if type(self[k]) == type({}):
-                for vname in self[k].keys():
+                for vname in list(self[k].keys()):
                     l.append([vname, self[k][vname], k])
 
             else:

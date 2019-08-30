@@ -15,10 +15,10 @@ import sys, os, glob
 import numpy as np
 import h5py
 import datetime
-import commands
+import subprocess
 # ====================================================================
 
-import io_tools.netcdf as ncio
+from . import io_tools.netcdf as ncio
 
 
 ######################################################################
@@ -66,8 +66,8 @@ def get_highres_cma(t, region = 'de',
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     # ================================================================
 
@@ -164,8 +164,8 @@ def get_berendes_prod(prod, t,
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     # ================================================================
 
@@ -270,7 +270,7 @@ def prod_reference(prod): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     try:
         name = prod_list[prod]
     except:
-        print 'no file associated with product'
+        print('no file associated with product')
         return
 
     return name # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
@@ -358,15 +358,15 @@ def get_nwcsaf_prod(prod, day,
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     
     # check product name .............................................
     prodname = prod_reference(prod)
 
     if not prodname:
-        print 'ERROR: key %s is not available!' % prod
+        print('ERROR: key %s is not available!' % prod)
         return
     # ================================================================
 
@@ -395,15 +395,15 @@ def get_nwcsaf_prod(prod, day,
     if pfile_list:
         prod_file = pfile_list[0]
     else:
-        print 'ERROR: ', prod_file,' does not exist!'
+        print('ERROR: ', prod_file,' does not exist!')
         return None
     # ================================================================
 
 
 # I/O ----------------------------------------------------------------
     if not h5py.is_hdf5(prod_file):
-        print 'ERROR: searched for ',prod_file
-        print 'No hdf-file available!'
+        print('ERROR: searched for ',prod_file)
+        print('No hdf-file available!')
         return
 
 # open files .........................................................
@@ -528,8 +528,8 @@ def get_cmsaf_prod(prod, day,
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     # ================================================================
 
@@ -569,7 +569,7 @@ def get_cmsaf_prod(prod, day,
     if pfile_list:
         prod_file = pfile_list[0]
     else:
-        print 'ERROR: ', prod_file,' does not exist!'
+        print('ERROR: ', prod_file,' does not exist!')
         return None
     # ================================================================
 
@@ -577,8 +577,8 @@ def get_cmsaf_prod(prod, day,
 # I/O
 # ====
     if not h5py.is_hdf5(prod_file):
-        print 'ERROR: searched for ', prod_file
-        print 'No hdf-file available!'
+        print('ERROR: searched for ', prod_file)
+        print('No hdf-file available!')
         return
 
 # open files .........................................................
@@ -657,14 +657,14 @@ def list_cmsaf_prod(day, arch='none'): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 # I/O
 # ====
     if not h5py.is_hdf5(prod_file):
-        print 'ERROR: searched for ', prod_file
-        print 'No hdf-file available!'
+        print('ERROR: searched for ', prod_file)
+        print('No hdf-file available!')
         return
 
 # open files .........................................................
     fprod = h5py.File(prod_file,"r")
 
-    L = fprod.keys()
+    L = list(fprod.keys())
     
     fprod.close()
 
@@ -726,8 +726,8 @@ def get_seviri_chan(ch_name, day,
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     # ================================================================
 
@@ -753,7 +753,7 @@ def get_seviri_chan(ch_name, day,
     if hfile_list:
         hfile = hfile_list[0]
     else:
-        print 'ERROR: ', hfile,' does not exist!'
+        print('ERROR: ', hfile,' does not exist!')
         return None
     # ================================================================
 
@@ -761,7 +761,7 @@ def get_seviri_chan(ch_name, day,
     # I/O ------------------------------------------------------------
     # check if hdf file exists 
     if not h5py.is_hdf5(hfile):
-        print 'No hdf-file available!'
+        print('No hdf-file available!')
         return None
     
     
@@ -848,8 +848,8 @@ def get_cos_zen(day,
     scan =  scan_type.lower()
 
     if not scan in ('rss', 'pzs'):
-        print 'ERROR: scan_type %s not available'
-        print '       use either "rss" or "pzs"'
+        print('ERROR: scan_type %s not available')
+        print('       use either "rss" or "pzs"')
         return None
     # ================================================================
 
@@ -875,7 +875,7 @@ def get_cos_zen(day,
     if hfile_list:
         hfile = hfile_list[0]
     else:
-        print 'ERROR: ', hfile,' does not exist!'
+        print('ERROR: ', hfile,' does not exist!')
         return None
     # ================================================================
 
@@ -955,7 +955,7 @@ def get_msg_sat_zen(day, sat_type = 'rss'):
 
     # check if hdf file exists 
     if not h5py.is_hdf5(rssfile):
-        print 'No hdf-file available!'
+        print('No hdf-file available!')
         return
     
     
@@ -1140,7 +1140,7 @@ def get_msg_lsm(region,  scan_type = 'rss', arch_dir = 'none'):
         pass
 
     else:
-        print 'UNKNOWN REGION!'
+        print('UNKNOWN REGION!')
 
 
     return lsm # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
@@ -1226,7 +1226,7 @@ def get_msg_lon_lat(region, scan_type='rss', arch_dir = 'none'): # LLLLLLLLLLLLL
     elif region == 'full':
         pass
     else:
-        print 'UNKNOWN REGION!'
+        print('UNKNOWN REGION!')
 
     return lon, lat # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 
@@ -1257,8 +1257,8 @@ def channel_segment_sets(set_name):
 
 
     # standard segment range
-    eu_segs = range(7,9)
-    full_segs = range(1,9)
+    eu_segs = list(range(7,9))
+    full_segs = list(range(1,9))
 
     sets = {}
 
@@ -1269,7 +1269,7 @@ def channel_segment_sets(set_name):
     sets['eu'] = {'VIS006':eu_segs, 'VIS008':eu_segs, 'IR_016':eu_segs,\
                     'IR_039':eu_segs, 'WV_062':eu_segs, 'WV_073':eu_segs, 'IR_087':eu_segs, \
                   '  IR_097':eu_segs, 'IR_108':eu_segs, 'IR_120':eu_segs, 'IR_134':eu_segs,
-                    'HRV':range(20,24)}
+                    'HRV':list(range(20,24))}
 
     sets['nc-eu'] = {'VIS006':eu_segs, 'VIS008':eu_segs, 'IR_016':eu_segs}
 
@@ -1284,7 +1284,7 @@ def channel_segment_sets(set_name):
     sets['full'] = {'VIS006':full_segs, 'VIS008':full_segs, 'IR_016':full_segs,\
                     'IR_039':full_segs, 'WV_062':full_segs, 'WV_073':full_segs, 'IR_087':full_segs, \
                   '  IR_097':full_segs, 'IR_108':full_segs, 'IR_120':full_segs, 'IR_134':full_segs,
-                    'HRV':range(1,24)}
+                    'HRV':list(range(1,24))}
 
     
     sets['nc-full'] = {'VIS006':full_segs, 'VIS008':full_segs, 'IR_016':full_segs}
@@ -1292,12 +1292,12 @@ def channel_segment_sets(set_name):
     sets['ir108-full'] = { 'IR_108':full_segs }
 
     
-    if sets.has_key(set_name):
+    if set_name in sets:
         chan_seg = sets[set_name]
     else:
-        print 'ERROR: unknown channel-segment set!'
-        print '   available keys:'
-        print sets.keys()
+        print('ERROR: unknown channel-segment set!')
+        print('   available keys:')
+        print(list(sets.keys()))
         chan_seg = None
         
     
@@ -1347,7 +1347,7 @@ def get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'pzs' ,
     # get the right satellite specification
     if scan_type not in ('rss', 'hrs'):
 #        raise ValueError
-        print 'ERROR: ',scan_type,' is not a valid scan_type option' 
+        print('ERROR: ',scan_type,' is not a valid scan_type option') 
         return None
 
     # set default archive directory
@@ -1376,7 +1376,7 @@ def get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'pzs' ,
     if arch_file_list:
         arch_file = arch_file_list[0]
     else:
-        print 'ERROR: ', filename_template,' does not exist!'
+        print('ERROR: ', filename_template,' does not exist!')
         return None
 
 
@@ -1384,8 +1384,8 @@ def get_HRIT_from_arch(day, chan_set = 'nc-full', scan_type = 'pzs' ,
     tar_com = 'tar -tf '+ arch_file
 
     # get content list of tar file
-    cont_list = commands.getoutput(tar_com).split()
-    print cont_list
+    cont_list = subprocess.getoutput(tar_com).split()
+    print(cont_list)
     
     # get channel-segment list for requested set
     chan_seg = channel_segment_sets(chan_set)
@@ -1464,7 +1464,7 @@ def read_rad_from_hdf(hfile): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 
     # test if file exists
     if not h5py.is_hdf5(hfile):
-        print 'No hdf-file available!'
+        print('No hdf-file available!')
         return
 
     hf = h5py.File(hfile,'r')

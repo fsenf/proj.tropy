@@ -31,7 +31,7 @@ if __name__ == '__main__':
     
     fname = 'test.h5'
 
-    print test(fname)
+    print(test(fname))
 
     
     

@@ -152,7 +152,7 @@ def make_map(lon, lat, mp = None, xy = None, region = 'germ', flex_kws = None,
 
 
     else:
-        print 'ERROR: unknown map region'
+        print('ERROR: unknown map region')
         sys.exit()
 
 
@@ -185,7 +185,7 @@ def make_map(lon, lat, mp = None, xy = None, region = 'germ', flex_kws = None,
                 patches.append( Polygon(np.array(shape), True) )
 
             if  shnum >= 353 and shnum <= 365:
-                x, y = zip(*shape) 
+                x, y = list(zip(*shape)) 
                 mp.plot(x, y, marker = None, color = 'k', lw = 0.5)
                     
 

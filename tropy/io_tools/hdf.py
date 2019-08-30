@@ -106,7 +106,7 @@ def save_dict_cont(f, d):
 
    """ Recursively saves nested dictionaries."""
 
-   for key, value in d.iteritems():
+   for key, value in d.items():
 
        if isinstance(value, dict):
            
@@ -157,7 +157,7 @@ def read_var_from_hdf(fname, vname, subpath = None):
     '''
 
     
-    print '.. open ', fname
+    print('.. open ', fname)
     f = h5py.File(fname, 'r')
 
     # handle groups and subgroups
@@ -225,7 +225,7 @@ def read_dict_cont(f, d):
    group_type = h5py._hl.group.Group
 
 
-   for key, value in f.iteritems():
+   for key, value in f.items():
 
        if isinstance(value, group_type):
            
@@ -258,7 +258,7 @@ def dict_merge(a, b):
     if not isinstance(b, dict):
         return b
     result = copy.deepcopy(a)
-    for k, v in b.iteritems():
+    for k, v in b.items():
         if k in result and isinstance(result[k], dict):
                 result[k] = dict_merge(result[k], v)
         else:
@@ -373,8 +373,8 @@ def get_seviri_chan(chan_list, day,
         scan =  scan_type.lower()
 
         if not scan in ('rss', 'pzs'):
-            print 'ERROR: scan_type %s not available'
-            print '       use either "rss" or "pzs"'
+            print('ERROR: scan_type %s not available')
+            print('       use either "rss" or "pzs"')
             return None
 
 
@@ -405,7 +405,7 @@ def get_seviri_chan(chan_list, day,
     if hfile_list:
         hfile = hfile_list[0]
     else:
-        print 'ERROR: ', hfile,' does not exist!'
+        print('ERROR: ', hfile,' does not exist!')
         raise IOError
     # ================================================================
 
@@ -414,7 +414,7 @@ def get_seviri_chan(chan_list, day,
     # I/O ------------------------------------------------------------
     # check if hdf file exists 
     if not h5py.is_hdf5(hfile):
-        print 'No hdf-file available!'
+        print('No hdf-file available!')
         raise IOError
     
     
@@ -427,8 +427,8 @@ def get_seviri_chan(chan_list, day,
     for ch in chan_list:
         fimg = f['l15_images']
         image_name = 'image_' + ch.lower()
-        if image_name not in fimg.keys():
-            print image_name,' not in ',fimg.keys()
+        if image_name not in list(fimg.keys()):
+            print(image_name,' not in ',list(fimg.keys()))
             raise KeyError 
         counts[ch] = fimg[image_name].value
 
@@ -444,7 +444,7 @@ def get_seviri_chan(chan_list, day,
             info[ch_name] = info_line
             
         rad = {}
-        for ch in counts.keys():
+        for ch in list(counts.keys()):
             ch_name = ch.lower()
             offset = info[ch_name]['cal_offset']
             slope = info[ch_name]['cal_slope']
@@ -466,7 +466,7 @@ def get_seviri_chan(chan_list, day,
         attr = {}
         # get general file attributes
         attr['general'] = {}
-        for k in f.attrs.keys():
+        for k in list(f.attrs.keys()):
             attr['general'][k] = f.attrs[k]
 
         # and get additional meta data from images attributes
@@ -476,7 +476,7 @@ def get_seviri_chan(chan_list, day,
             
             attr[ch] = {}
             
-            for k in im.attrs.keys():
+            for k in list(im.attrs.keys()):
                 attr[ch][k] = im.attrs[k]
             
         meta['attributes'] = attr

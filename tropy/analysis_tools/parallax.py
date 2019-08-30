@@ -3,7 +3,7 @@
 import sys, os, glob, copy
 import numpy as np
 
-import grid_and_interpolation as gi
+from . import grid_and_interpolation as gi
 import datetime, time
 import scipy.ndimage
 
@@ -43,7 +43,7 @@ def parallax_correct_on_radolan(lon, lat, cth, f,
 
     # do smoothing ---------------------------------------------------
     if smoothing or gauss_sig != 0:
-        print '..use cth smoothing with sigma', gauss_sig
+        print('..use cth smoothing with sigma', gauss_sig)
         cth_sm =  scipy.ndimage.percentile_filter(cth, 90, size = 4 * gauss_sig)
         cth_sm =  scipy.ndimage.gaussian_filter(cth_sm, gauss_sig)
     else:
@@ -236,7 +236,7 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
     fout = copy.copy(f)
 
     if verbose:
-        print '... start with %d Nan values' % len(f[f == NaN])
+        print('... start with %d Nan values' % len(f[f == NaN]))
 
     fmin = NaN
     nint = 1
@@ -264,7 +264,7 @@ def sequential_hole_filling(f, NaN = -9999, Nmax = 20,
         nint += 1
 
     if verbose:
-        print '... end with %d Nan values' % len(fout[fout == NaN])
+        print('... end with %d Nan values' % len(fout[fout == NaN]))
     
     return fout 
 

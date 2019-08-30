@@ -34,7 +34,7 @@ import skimage.feature
 import skimage.measure
 import mahotas as mh
 
-import grid_and_interpolation as gi
+from . import grid_and_interpolation as gi
 
 ######################################################################
 # (1) Single Threshold Clustering
@@ -184,7 +184,7 @@ def watershed_clustering(f, thresh,
     if type(marker_field) == type(np.array([])):
 
         markers = marker_field
-        print '...take predefined marker field'
+        print('...take predefined marker field')
 
     elif marker_method == 'brute_force_local_max': 
 
@@ -441,7 +441,7 @@ def watershed_merge_clustering(f, thresh,
     # get lists of connected clusters
     connected_clusters = connected_sequences2pairlists( merging_clusters )
     
-    for nmerge in connected_clusters.keys():
+    for nmerge in list(connected_clusters.keys()):
 
         # list of clusters that should be merged
         mlist =  connected_clusters[nmerge]
@@ -566,7 +566,7 @@ def markers_from_iterative_shrinking(mask,
         # get maximum distance-to-background per object ------------------
         dmax = scipy.ndimage.measurements.maximum(d, 
                                                   labels = c, 
-                                                  index=range(c.max()+1))
+                                                  index=list(range(c.max()+1)))
         # ================================================================
 
 
@@ -935,7 +935,7 @@ def remove_clustersize_outside(c,
     # get pixel sums per object
     psum = scipy.ndimage.measurements.sum(mask, 
                 labels = c,  
-                index = range( c.max()+1))
+                index = list(range( c.max()+1)))
 
     # how is pixel sum sorted? Biggest first ...
     isort = psum.argsort()[::-1]
@@ -1074,7 +1074,7 @@ def percentiles_from_cluster(f, c, p = [25, 50, 75], index = None):
 
     # set index
     if index == None:
-        index = range(1, len(slices) + 1)
+        index = list(range(1, len(slices) + 1))
 
     # loop over slices ...............................................
 

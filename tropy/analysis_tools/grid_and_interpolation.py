@@ -32,7 +32,7 @@ import scipy.interpolate
 try:
     import SimpleITK
 except:
-    print 'SimpleITK not available.'
+    print('SimpleITK not available.')
 
 
 ######################################################################
@@ -576,7 +576,7 @@ def interpolate_field_to_hor_pos(pos, lon, lat, field, **kwargs):
     
     # horizontal interpolation ...........................................
 #    print 'Do horizontal interpolation'
-    if not kwargs.has_key('method'):
+    if 'method' not in kwargs:
         kwargs['method'] = 'nearest'
     
     fout = griddata(Pin,fin,Pout, **kwargs)
@@ -936,7 +936,7 @@ def make_vert_cut(p1, p2, lon, lat, vg, **kwargs):
 
     
     # do interpolation -----------------------------------------------
-    if not kwargs.has_key('method'):
+    if 'method' not in kwargs:
         kwargs['method'] = 'nearest'
     v = interpolate_field_to_hor_pos(pos, xg, yg, vg, **kwargs)
     # ================================================================
@@ -988,7 +988,7 @@ def simple_pixel_area(lon, lat, xy = False, uncertainty = False):
     '''
 
     if not np.rank(lon) == 2 and not np.rank(lat) == 2:
-        print 'ERROR: please only use 2d matrices for lon and lat'
+        print('ERROR: please only use 2d matrices for lon and lat')
         sys.exit(0)
 
     # convert lon,lat into Cartesian coordinates
@@ -1575,14 +1575,14 @@ if __name__ == '__main__':
     test = np.arange(25).reshape(( 5, 5)).astype(np.int)
 
     c = cutout_field4box(test, (2,2), 15)
-    print c
-    print c.shape
+    print(c)
+    print(c.shape)
 
 
     test = np.arange(25*2).reshape((5, 5, 2)).astype(np.int)
 
     c = cutout_field4box(test, (2,2), 7, vaxis = 2)
-    print c[:,:,0]
-    print
-    print c[:,:,1]
-    print c.shape
+    print(c[:,:,0])
+    print()
+    print(c[:,:,1])
+    print(c.shape)

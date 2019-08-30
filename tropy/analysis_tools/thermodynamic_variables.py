@@ -637,7 +637,7 @@ def lifting_condensation_level_temperature(r, p, T, eq = 15):
         
         TL = 1./ ( 1 / ( T - 55.) - np.log( hrel / 100.) / 2840.) + 55.
     else:
-        print 'wrong equation number'
+        print('wrong equation number')
 
     return TL
 
@@ -793,16 +793,16 @@ if __name__ == '__main__':
     T = 30 + 273.15
     r = hrel2qv(100., p, T)
 
-    print dry_air_density(r, p, T)
-    print absolute_humidity(r, p, T)
-    print water_vapor_pressure(r, p, T)
-    print saturation_pressure(T)
-    print dew_point(r, p, T)
+    print(dry_air_density(r, p, T))
+    print(absolute_humidity(r, p, T))
+    print(water_vapor_pressure(r, p, T))
+    print(saturation_pressure(T))
+    print(dew_point(r, p, T))
     hrel = relative_humidity(r, p, T)
-    print hrel2qv(hrel, p, T)
+    print(hrel2qv(hrel, p, T))
     
-    print lifting_condensation_level_temperature(r, p, T, eq = 15)
-    print lifting_condensation_level_temperature(r, p, T, eq = 21)
-    print lifting_condensation_level_temperature(r, p, T, eq = 22)
-    print equivalent_potential_temperature(r, p, T)
+    print(lifting_condensation_level_temperature(r, p, T, eq = 15))
+    print(lifting_condensation_level_temperature(r, p, T, eq = 21))
+    print(lifting_condensation_level_temperature(r, p, T, eq = 22))
+    print(equivalent_potential_temperature(r, p, T))
 

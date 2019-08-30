@@ -3,7 +3,7 @@
 # load libraries -----------------------------------------------------
 import sys, os, glob
 
-from msevi import MSevi
+from .msevi import MSevi
 import numpy as np
 import datetime as dt
 import scipy.ndimage
@@ -61,7 +61,7 @@ class MSeviRGB(MSevi):
 
     def __repr__(self):
        return super(MSeviRGB, self).__repr__() + \
-             'RGB-Images:      %s'  % str(self.images.keys()) 
+             'RGB-Images:      %s'  % str(list(self.images.keys())) 
  
 #####################################################################
 
@@ -208,7 +208,7 @@ class MSeviRGB(MSevi):
             required_images = ['nc_hrv', 'col_108']
             
             for im in required_images:
-                if not self.images.has_key(im):
+                if im not in self.images:
                     self.create_rgb(im, **kwargs)
 
             img_h = self.images['nc_hrv']
@@ -237,7 +237,7 @@ class MSeviRGB(MSevi):
             required_images = ['pytroll_nc', 'ir_natcol']
             
             for im in required_images:
-                if not self.images.has_key(im):
+                if im not in self.images:
                     self.create_rgb(im, **kwargs)
 
             img_vis = self.images['pytroll_nc']
@@ -342,10 +342,10 @@ class MSeviRGB(MSevi):
             # calculate brightness temperature .......................
             self.rad2bt(required_channels)
 
-            if not self.__dict__.has_key('lsm'):
+            if 'lsm' not in self.__dict__:
                 self.landsea()
 
-            if not self.__dict__.has_key('lon'):
+            if 'lon' not in self.__dict__:
                 self.lonlat()
 
             # prepare masking ........................................
@@ -623,7 +623,7 @@ class MSeviRGB(MSevi):
         # time stamps ------------------------------------------------
         if tstamp:
             if rgb_job == 'all':
-                for rgb in self.images.keys():
+                for rgb in list(self.images.keys()):
                     self.time_stamp(rgb)
     
             else:
@@ -636,24 +636,24 @@ class MSeviRGB(MSevi):
 
     def show(self, rgb_str,**kwargs):
         
-        if not kwargs.has_key('command'):
+        if 'command' not in kwargs:
             kwargs['command'] = 'display'
 
         overlay = kwargs.pop('overlay', False)
 
 
         if not type(rgb_str) == type(''):
-            print 'Use only one rgb-type string as argument'
+            print('Use only one rgb-type string as argument')
             return
 
-        if not self.images.has_key(rgb_str):
+        if rgb_str not in self.images:
             self.create_rgb(rgb_str, **kwargs)
 
         if overlay:
             self.overlay()
 
         if rgb_str == 'all':
-            for rgb in self.images.keys():
+            for rgb in list(self.images.keys()):
                 self.images[rgb].show(**kwargs)
         
         else:
@@ -675,7 +675,7 @@ class MSeviRGB(MSevi):
 
             o = Image.open(ofile)
 
-            for rgb_str in self.images.keys():
+            for rgb_str in list(self.images.keys()):
                 i = self.images[rgb_str].resize((2400,1800)).convert(mode='RGBA')
                 self.images[rgb_str] = Image.composite(o,i,o)
 
@@ -694,7 +694,7 @@ class MSeviRGB(MSevi):
 
 
         # check if images exist --------------------------------------
-        if not self.images.has_key(rgb_str):
+        if rgb_str not in self.images:
             self.create_rgb(rgb_str, **kwargs)
         # ============================================================
 
@@ -703,7 +703,7 @@ class MSeviRGB(MSevi):
         # do the save for all rgb images -----------------------------
         if rgb_str == 'all':
 
-            for rgb in self.images.keys():
+            for rgb in list(self.images.keys()):
 
                 self.save(rgb, **kwargs)
 
@@ -718,7 +718,7 @@ class MSeviRGB(MSevi):
 
 
         # get picture filename ---------------------------------------
-        if not kwargs.has_key('filename'):
+        if 'filename' not in kwargs:
             fname = default_name 
         else:
             fname = kwargs['filename']
@@ -726,7 +726,7 @@ class MSeviRGB(MSevi):
         # ============================================================
 
         # get picture directory --------------------------------------
-        if not kwargs.has_key('pic_dir'):
+        if 'pic_dir' not in kwargs:
             pic_dir ='.'
         else:
             pic_dir = kwargs['pic_dir']    
@@ -738,7 +738,7 @@ class MSeviRGB(MSevi):
         
         fname = pic_dir + '/' + fname
 
-        print 'image saved in ',fname
+        print('image saved in ',fname)
         self.images[rgb_str].save(fname, **kwargs)
             
         return

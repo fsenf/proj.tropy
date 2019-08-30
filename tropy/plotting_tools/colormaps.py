@@ -42,8 +42,8 @@ def colorname_based_cmap(colname,
     col_dict = pl.matplotlib.colors.cnames
 
     # check if color is known
-    if not col_dict.has_key(cname):
-        print 'the color name is not available'
+    if cname not in col_dict:
+        print('the color name is not available')
 
         raise NameError
 

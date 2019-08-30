@@ -1,5 +1,5 @@
 import sys
-from shaded import shaded
+from .shaded import shaded
 import numpy as np
 import pylab as py
 
@@ -75,7 +75,7 @@ def compare(*args, **kwargs):
 
     '''
 
-    if kwargs.has_key('georef'):
+    if 'georef' in kwargs:
         georef = True
         del kwargs['georef']
     else:

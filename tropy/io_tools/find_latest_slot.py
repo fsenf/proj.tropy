@@ -49,7 +49,7 @@ def find_latest_file(directory, partial_file_name):
     
  
     # remove all file names that don't match partial_file_name string
-    files = filter(lambda x: x.find(partial_file_name) > -1, files)
+    files = [x for x in files if x.find(partial_file_name) > -1]
 
     if not files:
         return None
@@ -127,7 +127,7 @@ def find_latest_slot_oldarch(scan_type='hrs', arch_dir = None, time_string = Non
             date -=datetime.timedelta(days=1)
     # ================================================================
 
-    print 'latest file:', search_path + latest_file
+    print('latest file:', search_path + latest_file)
 
     # properties of arch file ----------------------------------------
 
@@ -145,6 +145,6 @@ def find_latest_slot_oldarch(scan_type='hrs', arch_dir = None, time_string = Non
 
 if __name__ == '__main__':
     
-    print find_latest_slot(scan_type = 'hrs')
-    print find_latest_slot(scan_type = 'rss')
+    print(find_latest_slot(scan_type = 'hrs'))
+    print(find_latest_slot(scan_type = 'rss'))
 

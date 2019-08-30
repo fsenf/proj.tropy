@@ -19,4 +19,4 @@ except:
         else:
             from _f90_bit_conversion_altair  import bit_conversion
     except:
-        print 'bit_conversion error'
+        print('bit_conversion error')

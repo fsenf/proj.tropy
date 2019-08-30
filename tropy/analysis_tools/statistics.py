@@ -7,7 +7,7 @@ import scipy.optimize, scipy.ndimage, scipy.stats, scipy.odr
 import sklearn.preprocessing
 import statsmodels.api as sm
 
-import grid_and_interpolation as gi
+from . import grid_and_interpolation as gi
 
 ######################################################################
 ######################################################################
@@ -123,7 +123,7 @@ def odrfit_with_outlier_removal(func, x, y,
 
     while n < n_iter: 
 
-        print 'number of iteration', n
+        print('number of iteration', n)
         mydata = scipy.odr.RealData(x[m], y[m], sx = xerr[m], sy = yerr[m])
         myodr = scipy.odr.ODR(mydata, mod, beta0 = p0)
         myres = myodr.run()

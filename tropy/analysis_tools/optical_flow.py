@@ -8,8 +8,8 @@ import datetime
 import cv2
 import scipy.ndimage
 
-import grid_and_interpolation as gi
-import statistics as stats
+from . import grid_and_interpolation as gi
+from . import statistics as stats
 
 
 ######################################################################

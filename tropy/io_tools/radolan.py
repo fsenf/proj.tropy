@@ -277,10 +277,10 @@ class Radolan(object):
         
         # test filename existence somehow ...
         flist = glob.glob(fname + '*')
-        print flist 
+        print(flist) 
             
         if len(flist ) == 0:
-            print 'ERROR: file %s does not exist' % fname
+            print('ERROR: file %s does not exist' % fname)
             sys.exit()
 
         if len(flist) == 1:

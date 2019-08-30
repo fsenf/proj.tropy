@@ -128,7 +128,7 @@ def shaded(x, y, z, *args, **kwargs):
 
     # get levels for the non-linear colormap -------------------------
     # from keyword ...................................................
-    if kwargs.has_key('levels') and not  kwargs.has_key('lev_depth'):
+    if 'levels' in kwargs and 'lev_depth' not in kwargs:
         clev = kwargs['levels']
 
 
@@ -142,7 +142,7 @@ def shaded(x, y, z, *args, **kwargs):
     else:
 
 
-        if kwargs.has_key('lev_depth'):
+        if 'lev_depth' in kwargs:
             depth = kwargs['lev_depth']
         else:
             # default value 
@@ -164,7 +164,7 @@ def shaded(x, y, z, *args, **kwargs):
             
         
     # get the current colormap ---------------------------------------
-    if kwargs.has_key('cmap'):
+    if 'cmap' in kwargs:
         cmap =  kwargs['cmap']
     else:
         # default is set to jet !
@@ -178,7 +178,7 @@ def shaded(x, y, z, *args, **kwargs):
     # ================================================================
 
     # range of colors ------------------------------------------------
-    if not kwargs.has_key('extend'):
+    if 'extend' not in kwargs:
         kwargs['extend'] = 'both'
     # ================================================================
     

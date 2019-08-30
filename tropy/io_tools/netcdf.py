@@ -18,7 +18,7 @@ import numpy as np
 import netCDF4
 import datetime
 
-import hdf as hio
+from . import hdf as hio
 
 from tropy.standard_config import *
 
@@ -63,14 +63,14 @@ def save_icon_georef(fname, geopath = None):
 
     geo = read_icon_georef(fname)
 
-    for k in geo.keys():
+    for k in list(geo.keys()):
         geo[k] = reshape_icon_fields( geo[k] )
 
     if geopath == None:
         geopath = os.environ['LOCAL_DATA_PATH'] + '/icon/aux'
 
     gname = '%s/icon_coarse_georef.h5' % geopath
-    print '... save georef to %s' % gname
+    print('... save georef to %s' % gname)
     hio.save_dict2hdf(gname, geo)
 
     return
@@ -217,7 +217,7 @@ def save_icon_time_reference(fname, outfile = None):
 
     tstamp = os.path.splitext(fname)[0].split('_')[-1]
 
-    print tstamp
+    print(tstamp)
 
     times = {}
     ntimes = read_icon_dimension(fname, 'time')
@@ -230,7 +230,7 @@ def save_icon_time_reference(fname, outfile = None):
     if outfile == None:
         outfile = '%s/icon/aux/icon_coarse_timeref.h5' % os.environ['LOCAL_DATA_PATH']
 
-    print '... save timeref to %s' % outfile
+    print('... save timeref to %s' % outfile)
     hio.update_dict_in_hdf(outfile, times)
 
 
@@ -242,12 +242,12 @@ def save_icon_time_reference(fname, outfile = None):
 
 if __name__ == '__main__':
   
-    print 'start input test'
+    print('start input test')
 
     try:
         fname = sys.argv[1]
     except:
-        print 'ERROR: no input file given!'
+        print('ERROR: no input file given!')
 
     # save_icon_georef(fname)
  

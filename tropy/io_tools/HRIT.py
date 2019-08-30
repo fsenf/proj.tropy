@@ -16,10 +16,10 @@ import sys, os, glob
 import numpy as np
 import h5py
 import datetime
-import commands
+import subprocess
 import array
 import struct
-import bit_conversion as bc
+from . import bit_conversion as bc
 import time
 # ====================================================================
 
@@ -194,16 +194,16 @@ def read_HRIT_seg_data(hrit_file): # LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
     h2_comp_flag.fromfile(hf, 1)
 
     if h2_comp_flag[0] != 0:
-        print 'ERROR: only uncompressed data can be retrieved'
+        print('ERROR: only uncompressed data can be retrieved')
         return
     # ================================================================
 
 
     # check dimensions -----------------------------------------------
     if NB*NC*NL != n1_data_length :
-        print 'dimension error!'
-        print  NB*NC*NL
-        print n1_data_length
+        print('dimension error!')
+        print(NB*NC*NL)
+        print(n1_data_length)
         return
     else:
         Ndat = n1_data_length
@@ -301,16 +301,16 @@ def write_HRIT_seg_data(seg_data, hrit_file): # LLLLLLLLLLLLLLLLLLLLLL
     h2_comp_flag.fromfile(hf, 1)
 
     if h2_comp_flag[0] != 0:
-        print 'ERROR: only uncompressed data can be retrieved'
+        print('ERROR: only uncompressed data can be retrieved')
         return
     # ================================================================
 
 
     # check dimensions -----------------------------------------------
     if NB*NC*NL != n1_data_length :
-        print 'dimension error!'
-        print  NB*NC*NL
-        print n1_data_length
+        print('dimension error!')
+        print(NB*NC*NL)
+        print(n1_data_length)
         return
     else:
         Ndat = n1_data_length
@@ -450,7 +450,7 @@ def combine_segments(seg_dict, missing = -1):
 
     
     # get the ste of keys
-    ks = seg_dict.keys()
+    ks = list(seg_dict.keys())
 
     # and sort them
     ks.sort()
@@ -572,8 +572,8 @@ def channel_segment_sets(set_name):
 
 
     # standard segment range
-    eu_segs = range(7,9)
-    full_segs = range(1,9)
+    eu_segs = list(range(7,9))
+    full_segs = list(range(1,9))
 
     sets = {}
 
@@ -584,7 +584,7 @@ def channel_segment_sets(set_name):
     sets['eu'] = {'VIS006':eu_segs, 'VIS008':eu_segs, 'IR_016':eu_segs,\
                     'IR_039':eu_segs, 'WV_062':eu_segs, 'WV_073':eu_segs, 'IR_087':eu_segs, \
                   '  IR_097':eu_segs, 'IR_108':eu_segs, 'IR_120':eu_segs, 'IR_134':eu_segs,
-                    'HRV':range(20,24)}
+                    'HRV':list(range(20,24))}
 
     sets['nc-eu'] = {'VIS006':eu_segs, 'VIS008':eu_segs, 'IR_016':eu_segs}
 
@@ -600,7 +600,7 @@ def channel_segment_sets(set_name):
     sets['full'] = {'VIS006':full_segs, 'VIS008':full_segs, 'IR_016':full_segs,\
                     'IR_039':full_segs, 'WV_062':full_segs, 'WV_073':full_segs, 'IR_087':full_segs, \
                   '  IR_097':full_segs, 'IR_108':full_segs, 'IR_120':full_segs, 'IR_134':full_segs,
-                    'HRV':range(1,24)}
+                    'HRV':list(range(1,24))}
 
     
     sets['nc-full'] = {'VIS006':full_segs, 'VIS008':full_segs, 'IR_016':full_segs}
@@ -608,12 +608,12 @@ def channel_segment_sets(set_name):
     sets['ir108-full'] = { 'IR_108':full_segs }
 
     
-    if sets.has_key(set_name):
+    if set_name in sets:
         chan_seg = sets[set_name]
     else:
-        print 'ERROR: unknown channel-segment set!'
-        print '   available keys:'
-        print sets.keys()
+        print('ERROR: unknown channel-segment set!')
+        print('   available keys:')
+        print(list(sets.keys()))
         chan_seg = None
         
     
@@ -689,7 +689,7 @@ def get_HRIT_from_arch(day, chan_seg =  channel_segment_sets('nc-full'),
     # get the right satellite specification
         if scan_type not in ('rss', 'pzs', 'hrs'):
             #        raise ValueError
-            print 'ERROR: ',scan_type,' is not a valid scan_type option' 
+            print('ERROR: ',scan_type,' is not a valid scan_type option') 
             return None
 
     # set default archive directory
@@ -715,7 +715,7 @@ def get_HRIT_from_arch(day, chan_seg =  channel_segment_sets('nc-full'),
     if arch_file_list:
         arch_file = arch_file_list[0]
     else:
-        print 'ERROR: ', filename_template,' does not exist!'
+        print('ERROR: ', filename_template,' does not exist!')
         return None
     # ================================================================
 
@@ -727,7 +727,7 @@ def get_HRIT_from_arch(day, chan_seg =  channel_segment_sets('nc-full'),
     # build tar command of reading content
     tar_com = 'tar -tf '+ arch_file
 
-    cont_list = commands.getoutput(tar_com).split()
+    cont_list = subprocess.getoutput(tar_com).split()
 #    print cont_list
     
 
@@ -843,14 +843,14 @@ def read_HRIT_data(day, chan_seg, calibrate=True, scan_type = 'pzs', \
 
            if hchan_seg:
                hrit_file = hchan_seg[0]
-               print '... reading ', hrit_file
+               print('... reading ', hrit_file)
                chan_data[ch][seg] = read_HRIT_seg_data(hrit_file)
            else:
-               print '... missing segment %s of channel %s' % (seg, ch)
+               print('... missing segment %s of channel %s' % (seg, ch))
                chan_data[ch][seg] = -np.ones(standard_seg)
 
-    print 
-    print 'Combine segments'
+    print() 
+    print('Combine segments')
     # combine all segments to a "full" images 
     combined = {}
     for ch in chan_seg:
@@ -865,8 +865,8 @@ def read_HRIT_data(day, chan_seg, calibrate=True, scan_type = 'pzs', \
 
 
     if calibrate:
-        print                        
-        print 'Do calibration'  
+        print()                        
+        print('Do calibration')  
         slope, offset = read_slope_offset_from_prolog(pro_file)
 
         for ch in chan_seg:

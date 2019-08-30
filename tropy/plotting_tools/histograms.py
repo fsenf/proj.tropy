@@ -31,7 +31,7 @@ def hist2d_scatter( x, y, bins=200, bubbles=True, **kwargs ):
     '''
 
 
-    if kwargs.has_key('cmap'):
+    if 'cmap' in kwargs:
         cmap = kwargs['cmap']
         del kwargs['cmap']
     else:
@@ -207,7 +207,7 @@ def percentiles_from_hist(xe, ye, h, p = [25, 50, 75], axis = 0, sig  = 0):
         # indexing stuff!!!!
         
         # for axis = 1
-        i0 = range(imax.shape[0])
+        i0 = list(range(imax.shape[0]))
 
         hmask = hr[i0, imax] < 0
         
@@ -420,7 +420,7 @@ def conditioned_hist(h, axis = 0):
 
 if __name__ == '__main__':
 
-    print 'test'
+    print('test')
 
     rstate = np.random.get_state()
     np.random.set_state(rstate)
