@@ -18,7 +18,7 @@ import datetime
 import subprocess
 # ====================================================================
 
-from . import io_tools.netcdf as ncio
+import tropy.io_tools.netcdf as ncio
 
 
 ######################################################################
