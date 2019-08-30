@@ -32,7 +32,7 @@ import tropy.MSGtools as MSGtools
 import tropy.io_tools.HRIT as hio
 import tropy.io_tools.hdf as iohdf
 from tropy.io_tools.find_latest_slot import find_latest_slot
-from tropy.analysis_tools.make_hrv_upscaling import make_hrv_upscaling
+from tropy.analysis_tools.grid_and_interpolation import make_hrv_upscaling
 
 
 # ====================================================================
