@@ -440,7 +440,7 @@ def get_seviri_chan(chan_list, day,
 
         info = {}
         for info_line in ch_info_all:
-            ch_name = info_line['name'].lower()
+            ch_name = str( info_line['name'], 'utf-8' ).lower()
             info[ch_name] = info_line
             
         rad = {}
