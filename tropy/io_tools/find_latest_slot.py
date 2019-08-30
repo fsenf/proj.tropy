@@ -83,7 +83,7 @@ def find_latest_slot(scan_type='rss', arch_dir = None, time_string = None, arch_
         return find_latest_slot_oldarch(scan_type = scan_type, 
                                         arch_dir = '{arch_dir}/msevi_{scan_type}/l15_hrit/'.format(**c), 
                                         time_string = _arch_config['time_string'])
-	    
+         
 
 
 ######################################################################

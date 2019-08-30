@@ -41,7 +41,7 @@ from tropy.analysis_tools.make_hrv_upscaling import make_hrv_upscaling
 
 class MSevi(object):
     ''' 
-	Container for MSG SEVIRI data. 
+     Container for MSG SEVIRI data. 
     '''
 
 
@@ -435,14 +435,14 @@ class MSevi(object):
         arch_dir = _arch_config['arch_dir'].format(**d)
 
         if data_type == 'hdf':
-	    subpath = _arch_config['hdf_subpath'].format(**d)
-	    fname = _arch_config['hdf_fname'].format(**d)
+         subpath = _arch_config['hdf_subpath'].format(**d)
+         fname = _arch_config['hdf_fname'].format(**d)
 
         elif data_type == 'hrit':
             subpath = _arch_config['hrit_subpath'].format(**d)
-	    fname = _arch_config['hrit_tarname'].format(**d)
+         fname = _arch_config['hrit_tarname'].format(**d)
     
-	    
+         
 
         return '%s/%s/%s' % (arch_dir, subpath, fname)
 
@@ -703,15 +703,15 @@ def low2hres(region):
 if __name__ == '__main__':
 
         cin = { \
-    	'time' : dt.datetime(2012,5,23,12,0), \
+         'time' : dt.datetime(2012,5,23,12,0), \
         'region': 'eu',\
-    	'scan_type' : 'pzs',\
+         'scan_type' : 'pzs',\
         'chan_list' : ['VIS008'],\
     #['VIS006', 'VIS008','IR_016']
              }
     
-        cin.update( {	'time' : dt.datetime(2013,6,20,12,0), \
-    	'scan_type' : 'rss',\
+        cin.update( {     'time' : dt.datetime(2013,6,20,12,0), \
+         'scan_type' : 'rss',\
                     })
 
         scene = MSevi(**cin)

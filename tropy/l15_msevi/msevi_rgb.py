@@ -24,7 +24,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 class MSeviRGB(MSevi):
     ''' 
-	Container for MSG SEVIRI RGB images. 
+     Container for MSG SEVIRI RGB images. 
     '''
 
 
@@ -799,9 +799,9 @@ def to255(d, gamma = 1.0):
 if __name__ == '__main__':
 
     cin = { \
-	'time' : 'now',\
+     'time' : 'now',\
 #        'time': dt.datetime(2015,9,1,8,0),\
-	'scan_type' : 'rss',\
+     'scan_type' : 'rss',\
         'rgb_type':'pytroll_nc',\
         'region':'eu'\
 #        'region': 'germ'\

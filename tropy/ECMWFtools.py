@@ -316,7 +316,7 @@ def get_fc_fields(cfile, var_list, lonlat = True):
         print(('... reading %s' % vname))
 
         try:
-	    if lonlat and 'lon' not in var:
+         if lonlat and 'lon' not in var:
                var['lon'], var['lat'], var[vname] = get_field_from_indx(indx, vname, lonlat=True)
             else:
                var[vname] = get_field_from_indx(indx, vname, lonlat=False)
