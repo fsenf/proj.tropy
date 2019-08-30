@@ -4,7 +4,7 @@ import os
 
 # first try platform independent solution
 try:
-    from _f90_bit_conversion import bit_conversion
+    from ._f90_bit_conversion import bit_conversion
 except:
 
     try:

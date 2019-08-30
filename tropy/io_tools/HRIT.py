@@ -407,7 +407,8 @@ def read_slope_offset_from_prolog(pro_file, NJUMP = 386993+72): # LLLLLLLLLLLLLL
 
     # read slope
     slope_offset_le = array.array('d')
-    slope_offset_le.read(hf,24)
+    # slope_offset_le.read(hf,24)
+    slope_offset_le.fromfile(hf,24)
     slope_offset = np.array(struct.unpack_from('>24d',slope_offset_le),'float').reshape(12,2)
 
     slope={}
