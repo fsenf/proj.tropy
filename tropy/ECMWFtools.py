@@ -313,15 +313,16 @@ def get_fc_fields(cfile, var_list, lonlat = True):
     var = {}
      
     for vname in var_list:
-        print(('... reading %s' % vname))
+        print('... reading %s' % vname )
 
         try:
-         if lonlat and 'lon' not in var:
-               var['lon'], var['lat'], var[vname] = get_field_from_indx(indx, vname, lonlat=True)
-            else:
-               var[vname] = get_field_from_indx(indx, vname, lonlat=False)
+        if lonlat and 'lon' not in var:
+            var['lon'], var['lat'], var[vname] = get_field_from_indx(indx, vname, lonlat=True)
+        else:
+            var[vname] = get_field_from_indx(indx, vname, lonlat=False)
+
         except:
-            print(('%s not in %s' %(vname, cfile)))
+            print('%s not in %s' %(vname, cfile))
 
     return var 
 

@@ -435,12 +435,12 @@ class MSevi(object):
         arch_dir = _arch_config['arch_dir'].format(**d)
 
         if data_type == 'hdf':
-         subpath = _arch_config['hdf_subpath'].format(**d)
-         fname = _arch_config['hdf_fname'].format(**d)
+            subpath = _arch_config['hdf_subpath'].format(**d)
+            fname = _arch_config['hdf_fname'].format(**d)
 
         elif data_type == 'hrit':
             subpath = _arch_config['hrit_subpath'].format(**d)
-         fname = _arch_config['hrit_tarname'].format(**d)
+            fname = _arch_config['hrit_tarname'].format(**d)
     
          
 

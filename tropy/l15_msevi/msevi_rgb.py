@@ -44,7 +44,7 @@ class MSeviRGB(MSevi):
         if msevi:
             # write content of MSevi instance on MSeviRBG 
             for att in msevi.__dict__:
-               self.__setattr__(att, msevi.__dict__[att])
+                self.__setattr__(att, msevi.__dict__[att])
 
         else:
             # if no MSevi instance is imported then initialize MSeviRGB
