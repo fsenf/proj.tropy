@@ -24,7 +24,7 @@ git clone https://github.com/fsenf/proj.tropy.git
 Try to install it locally via `pip`
 
 ```
-pip install .
+pip install --upgrade .
 ```
 
 ## Problems
