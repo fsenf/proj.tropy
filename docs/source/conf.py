@@ -24,9 +24,9 @@ copyright = u'2019, Fabian Senf'
 author = u'Fabian Senf'
 
 # The short X.Y version
-version = u''
+version = u'v0.4'
 # The full version, including alpha/beta/rc tags
-release = u'v0.1'
+release = u'v0.4_devel01'
 
 
 # -- General configuration ---------------------------------------------------
@@ -39,6 +39,7 @@ release = u'v0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.napoleon',
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -79,7 +80,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
