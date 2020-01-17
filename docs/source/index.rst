@@ -9,10 +9,10 @@ Welcome to tropy's documentation!
 
 Main task are:
 
- * input of datasets
- * regridding & filtering
- * segmentation & optical flow applications
- * calculation of derived variables
+* input of datasets
+* regridding & filtering
+* segmentation & optical flow applications
+* calculation of derived variables
 
 Tutorial can be found here: <https://tropy-tutorials.readthedocs.io/en/latest/>
 
