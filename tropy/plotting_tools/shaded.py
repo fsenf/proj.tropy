@@ -14,11 +14,30 @@ from matplotlib.colors import LinearSegmentedColormap
 ######################################################################
 
 class nlcmap(LinearSegmentedColormap):
-    """A nonlinear colormap"""
+    """
+    A nonlinear colormap class.
+    
+    Derived from the matplotlib.colors.LinearSegmentedColormap 
+    """
     
     name = 'nlcmap'
     
     def __init__(self, cmap, levels):
+
+        '''
+        Setting up a non-linear colormap.
+
+
+        Parameters
+        ----------
+        cmap : matplotlib.cmap
+            a matplotlib colormap, e.g. matplotlib.cm.jet
+
+        levels : list or np.array
+            list of values where different colors should appear
+        '''
+
+
         self.cmap = cmap
         self.monochrome = self.cmap.monochrome
         self.levels = np.asarray(levels, dtype='float64')
@@ -28,9 +47,24 @@ class nlcmap(LinearSegmentedColormap):
 
         self._x = (self.levels - lmin) / (lmax - lmin)
         self._y = np.linspace(0.0, 1.0, len(self.levels))
-    
+
+    # ==================================================
+
     def __call__(self, xi, **kwargs): 
-        """docstring for fname"""
+
+        '''
+        Applying the color mapping.
+
+        
+        Parameters
+        ----------
+        xi : np.array
+            values mapped into color space
+        **kwargs : dict
+            optional arguments passed to the cmap instance
+        
+        '''
+
         yi = py.stineman_interp(xi, self._x, self._y)
         return self.cmap(yi, **kwargs)
 
