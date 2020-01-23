@@ -3,4 +3,3 @@ sphinx_rtd_theme
 numpy
 h5py
 matplotlib
-pylab
