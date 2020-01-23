@@ -149,23 +149,45 @@ def shaded(x, y, z, *args, **kwargs):
     '''
     The function shaded is a wrapper for the pylab function contourf.
 
+
     In addition to contourf, shaded can plot filled contours for which
     a non-linear colormap is used.
 
-    keywords:
-    ========
-    levels: numpy array of color / contour levels
 
-    lev_depth: gives the depth of an automatically generated level set,
-               i.e. an initial base (e.g. [1,2,3,5] ) that contains
-               the maximum value of the field (e.g. 4.3) is downscaled
-               by 10**-1, ..., 10**-lev_depth.
+    Parameters
+    ----------
+    x : np.array 
+        x-values passed to `plt.contourf`
 
-               Example:
-               Given lev_depth = 2, for a positive field with maximum 4.3
-               a level set [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5]
-               is generated.
+    y : np.array 
+        y-values passed to `plt.contourf`
+
+    z : np.array 
+        z-values passed to `plt.contourf` (color value)
+
+    *args : list
+        other positional arguments passed to `plt.contourf`
+
+    **kwargs : dict
+        other optional arguments passed to `plt.contourf`
+
+        special keywords:
+ 
+        * 'levels' : numpy array of color / contour levels
+
+        * 'lev_depth' : gives the depth of an automatically generated level set
+          i.e. an initial base (e.g. [1,2,3,5] ) that contains
+          the maximum value of the field (e.g. 4.3) is downscaled
+          by 10**-1, ..., 10**-lev_depth.
+
+          Example:
+          Given lev_depth = 2, for a positive field with maximum 4.3
+          a level set [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5]
+          is generated.
       
+    Returns
+    --------
+    pl.contourf instance
     '''
 
     # get level set from arguments if needed -------------------------
