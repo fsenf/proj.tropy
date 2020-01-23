@@ -80,8 +80,37 @@ class nlcmap(LinearSegmentedColormap):
 
 def set_levs(nmax, depth, largest = 5, sym = True, sign = True, zmax = 'None'):
 
-    # nmax: exponent of maximum number
-    # depth: number of iterations used down to scales of 10**(nmax - depth)
+    '''
+    Makes a non-linear level set based on pre-defined numbers.
+
+    
+    Parameters
+    ----------
+    nmax : int
+        exponent of maximum number
+
+    depth : int
+        number of iterations used down to scales of 10**(nmax - depth)
+
+    sym : {True, False}, optional
+        switch if levels are symmetric around origin
+
+    sign : {True, False}, optional
+        switches sign if negative
+
+    zmax : float, optional, default = 'none'
+        limiter for levels, |levs| > zmax are not allowed
+
+    
+    Returns
+    --------
+    levs : np.array
+        set of non-linear levels
+    
+    '''
+
+    # nmax: 
+    # depth: 
 
     # base
     if largest == 5:
