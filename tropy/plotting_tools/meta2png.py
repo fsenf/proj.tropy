@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+'''
+Module designed to write an Author Name and the Soruce Filename 
+into the Meta-Data of an PNG file saved with matplotlib.
+'''
+
+
 import sys, os
 from PIL import Image, PngImagePlugin
 import pylab as pl
@@ -9,6 +15,22 @@ import pylab as pl
 
 
 def meta2png(fname, meta):
+
+    '''
+    Saves meta data into image file.
+
+
+    Parameters
+    ----------
+    fname : str
+        name of png file
+
+    meta : dict
+        collection of extra meta data to be stored in image file
+
+
+    
+    '''
 
     # add meta data to image
     im = Image.open(fname)
@@ -37,6 +59,16 @@ def meta2png(fname, meta):
 class pngsave(object):
     '''
     That class is designed to save pylab figures in png and add meta data.
+
+
+    Parameters
+    ----------
+    *args : list
+        other positional arguments passed to `plt.savefig`
+
+    **kwargs : dict
+        other optional arguments passed to `plt.savefig``
+        
     '''
  
     def __init__(self, *args, **kwargs):
