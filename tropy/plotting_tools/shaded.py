@@ -1,9 +1,9 @@
 #!/usr/bin/python
-"""
-nlcmap - a nonlinear cmap from specified levels
 
-Copyright (c) 2006-2007, Robert Hetland <hetland@tamu.edu>
-Release under MIT license.
+"""
+A module to make shaded plots.
+
+It contains a function for non-linear colormaps.
 """
 
 import pylab as py
@@ -14,10 +14,25 @@ from matplotlib.colors import LinearSegmentedColormap
 ######################################################################
 
 class nlcmap(LinearSegmentedColormap):
+    
     """
     A nonlinear colormap class.
     
+    Parameters
+    ----------
+    cmap : matplotlib.cmap
+        a matplotlib colormap, e.g. matplotlib.cm.jet
+    
+    levels : list or np.array
+        list of values where different colors should appear
+
+
+    Notes
+    -----
     Derived from the matplotlib.colors.LinearSegmentedColormap 
+    
+    Copyright (c) 2006-2007, Robert Hetland <hetland@tamu.edu>
+    Release under MIT license.
     """
     
     name = 'nlcmap'
@@ -26,15 +41,6 @@ class nlcmap(LinearSegmentedColormap):
 
         '''
         Setting up a non-linear colormap.
-
-
-        Parameters
-        ----------
-        cmap : matplotlib.cmap
-            a matplotlib colormap, e.g. matplotlib.cm.jet
-
-        levels : list or np.array
-            list of values where different colors should appear
         '''
 
 
@@ -170,7 +176,7 @@ def shaded(x, y, z, *args, **kwargs):
 
     # NOTE: 
     # =====
-    # if the lev_depth keyword is setted it will overwrite any
+    # if the lev_depth keyword is set it will overwrite any
     # level information given additionally
 
     else:
