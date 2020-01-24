@@ -9,7 +9,7 @@ It contains a function for non-linear colormaps.
 import pylab as py
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
-from scipy.interpolate import interp
+from scipy.interpolate import interp1d
 
 ######################################################################
 ######################################################################
@@ -72,7 +72,7 @@ class nlcmap(LinearSegmentedColormap):
         
         '''
 
-        yi = interp(xi, self._x, self._y)
+        yi = interp1d(xi, self._x, self._y)
         return self.cmap(yi, **kwargs)
 
 ######################################################################
