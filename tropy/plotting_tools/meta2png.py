@@ -130,7 +130,7 @@ class pngsave(object):
         meta = {'Author': self.author }
 
         if self.source == 'Auto':
-            if is_notebook:
+            if self.is_notebook:
                 meta['Source'] =  get_notebook_name()
             else:
                 meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
