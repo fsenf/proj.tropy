@@ -102,7 +102,7 @@ class pngsave(object):
         # getting the author attribute
         self.author = kwargs.pop('author', 'Fabian Senf')
         self.source = kwargs.pop('source', 'Auto')
-        self.is_notebook = kwargs('notebook', False )
+        self.is_notebook = kwargs.pop('notebook', False )
 
         self.__call__(*args, **kwargs)
 
