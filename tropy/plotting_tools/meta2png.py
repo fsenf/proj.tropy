@@ -9,8 +9,6 @@ into the Meta-Data of an PNG file saved with matplotlib.
 import sys, os
 from PIL import Image, PngImagePlugin
 import pylab as pl
-from IPython.core.display import Javascript
-from IPython.display import display
 
 ######################################################################
 ######################################################################
