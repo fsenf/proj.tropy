@@ -25,6 +25,7 @@ def get_notebook_name():
     display(Javascript('IPython.notebook.kernel.execute("theNotebook = " + \
     "\'"+IPython.notebook.notebook_name+"\'");'))
     #
+
     nb_full_path = os.path.join(os.getcwd(), theNotebook)
     
     return os.path.join(os.getcwd(), theNotebook)
