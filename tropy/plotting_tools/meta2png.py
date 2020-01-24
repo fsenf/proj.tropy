@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Module designed to write an Author Name and the Soruce Filename 
+Module designed to write an Author Name and the Source Filename 
 into the Meta-Data of an PNG file saved with matplotlib.
 '''
 
@@ -73,9 +73,13 @@ class pngsave(object):
  
     def __init__(self, *args, **kwargs):
 
+        # getting the author attribute
+        self.author = kwargs.pop('author', 'Fabian Senf')
+
         self.__call__(*args, **kwargs)
 
         return
+
 
     def __call__(self, fname, **kwargs):
 
@@ -90,8 +94,12 @@ class pngsave(object):
 
 
     def meta(self):
-        
-        meta = {'Author': 'Fabian Senf'}
+
+        '''
+        Set the meta data, esp. the Author name and Source file information.
+        '''
+
+        meta = {'Author': self.author }
         meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
 
         return meta
