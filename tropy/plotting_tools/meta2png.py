@@ -15,24 +15,6 @@ from IPython.display import display
 ######################################################################
 ######################################################################
 
-def get_notebook_name():
-    """
-    Returns the name of the current notebook as a string
-    
-    From From https://mail.scipy.org/pipermail/ipython-dev/2014-June/014096.html
-    """
-
-    display(Javascript('IPython.notebook.kernel.execute("theNotebook = " + \
-    "\'"+IPython.notebook.notebook_name+"\'");'))
-    #
-
-    nb_full_path = os.path.join(os.getcwd(), theNotebook)
-    
-    return os.path.join(os.getcwd(), theNotebook)
-
-######################################################################
-######################################################################
-
 
 def meta2png(fname, meta):
 
