@@ -9,6 +9,7 @@ It contains a function for non-linear colormaps.
 import pylab as py
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.mlab import stineman_interp
 
 ######################################################################
 ######################################################################
@@ -71,7 +72,7 @@ class nlcmap(LinearSegmentedColormap):
         
         '''
 
-        yi = py.stineman_interp(xi, self._x, self._y)
+        yi = stineman_interp(xi, self._x, self._y)
         return self.cmap(yi, **kwargs)
 
 ######################################################################
