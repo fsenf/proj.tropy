@@ -9,24 +9,32 @@ import tropy.analysis_tools.grid_and_interpolation as gi
 ######################################################################
 ######################################################################
 
-def hist2d_scatter( x, y, bins=200, bubbles=True, **kwargs ):
+def hist2d_scatter( x, y, bins=200,**kwargs ):
 
     '''
     A 2d histogram is constructed and displayed as
     scatter plot.
 
-    USAGE
-    =====
-    shist2d_scatter( x, y, bins=200, bubbles=True )
+    
+    Parameters
+    ----------
+    x : np.array
+        1st data vector
 
+    y : np.array
+        2nd data vector
     
-    INPUT
-    =====
-    x, y : numpy arrays which define two input quantities for the histogram
-    
-    OUTPUT
-    ======
-    hxy, xs, ys: frequence of occurence and x-y grid
+
+    Returns
+    -------
+    hxy : np.array
+        frequency of occurence
+
+    xs : np.array
+        x-part of histogram grid (edge values)
+
+    ys : np.array
+        y-part of histogram grid (edge values)
 
     '''
 
@@ -64,19 +72,30 @@ def ave_sig_from_hist(xe, ye, h):
 
     '''
     Use output from the numpy 2d histogram routine 
-    to calculate y-mean and standrad deviations
+    to calculate y-mean and standard deviations
     along y direction.
 
 
-    INPUT
-    =====
-    xe: edge values of x variable
-    ye: edge values of y variable
-    h: occurence rates (relative or absolute)
+    Parameters
+    ----------
+    xe : np.array
+        x-part of histogram grid (edge values)
 
-    OUTPUT
-    ======
-    yave, ysig: mean and std of y weigthed by h along y-direction
+    ye : np.array
+        y-part of histogram grid (edge values)
+
+    h : np.array
+        frequency of occurence
+
+
+    Returns
+    -------
+    yave : np.array
+        mean  of y weigthed by h along y-direction
+
+    ysig :  np.array
+        standard deviation  of y weigthed by h along y-direction
+
     '''
 
 
@@ -105,15 +124,22 @@ def max_from_hist(xe, ye, h):
     to calculate y-positions where maximum occurences are located.
 
 
-    INPUT
-    =====
-    xe: edge values of x variable
-    ye: edge values of y variable
-    h: occurence rates (relative or absolute)
+    Parameters
+    ----------
+    xe : np.array
+        x-part of histogram grid (edge values)
 
-    OUTPUT
-    ======
-    ymax: y-position where h is maximal along y-direction
+    ye : np.array
+        y-part of histogram grid (edge values)
+
+    h : np.array
+        frequency of occurence
+
+
+    Returns
+    -------
+    ymax :  np.array
+        y-position where h is maximal along y-direction
     '''
 
     norm1, dum  = np.meshgrid(h.sum(axis=1), np.ones(h.shape[1]))
@@ -139,16 +165,33 @@ def percentiles_from_hist(xe, ye, h, p = [25, 50, 75], axis = 0, sig  = 0):
     based on relative occurence rates.
 
 
-    INPUT
-    =====
-    xe: edge values of x variable
-    ye: edge values of y variable
-    h: occurence rates (relative or absolute)
-    p: list of percentiles values (from 0 to 100)
+    Parameters
+    ----------
+    xe : np.array
+        x-part of histogram grid (edge values)
 
-    OUTPUT
-    ======
-    yperc: list of arrays containing the percentiles
+    ye : np.array
+        y-part of histogram grid (edge values)
+
+    h : np.array
+        frequency of occurence
+
+    p : list, optional, default = [25, 50, 75]
+        list of percentile values to be calculated (in 100th)
+
+    axis : {0, 1}, optional
+        axis along which the calculations are peformed
+
+    sig : float, optional, default = 0
+        signa of a Gaussian filter apllied to the histogram in advance
+        
+        Should be non-negative.
+
+
+    Returns
+    -------
+    yperc : np.array
+        list of arrays containing the percentiles
     '''
     
     # normalization
@@ -236,29 +279,37 @@ def plot_cond_hist(xe, ye, h, ax,
                    axis = 0, logscale = True, **kwargs):
 
     '''
-    Use output from the numpy 2d histogram routine 
-    to calculate percentiles of the y variable
-    based on relative occurence rates.
+    Plot conditioned histogram (marginal distribution).
 
 
-    INPUT
-    =====
-    xe: edge values of x variable
-    ye: edge values of y variable
-    h: occurence rates (relative or absolute)
-    ax: axis object where to plot the hist
+    Parameters
+    ----------
+    xe : np.array
+        x-part of histogram grid (edge values)
 
-    optional:
-    ========
-    axis: the axis used for normalizeation (default: 0)
-    logscale: if h is plotted in logarithmic scale (default: True)
-    **kwargs: pcolormesh keywords
+    ye : np.array
+        y-part of histogram grid (edge values)
+
+    h : np.array
+        frequency of occurence
+    
+    ax : plt.axes instance
+       a current axes where the plot is placed in 
+
+    axis : {0, 1}, optional
+        axis along which the calculations are peformed
+
+    logscale : {True, False}, optional
+        if histogram is plotted with logarithmic colorscale
+
+    **kwargs : dict
+        further optional keywords passed to plt.pcolormesh
 
 
+    Returns
+    -------
+    pcm : plt.pcolormesh instance
 
-    OUTPUT
-    ======
-    pcm pcolormesh object
     '''
 
     # calculate norm
@@ -298,29 +349,30 @@ def plot_cond_hist(xe, ye, h, ax,
 def plot_hist_median_and_intervals(xe, ye, h, ax):
 
     '''
-    Use output from the numpy 2d histogram routine 
-    to calculate percentiles and maximum, etc.
-    and plot it onto on axes object.
+    Plot histogram with median and IQR. (axis = 1, fixed).
 
 
-    INPUT
-    =====
-    xe: edge values of x variable
-    ye: edge values of y variable
-    h: occurence rates (relative or absolute)
-    ax: axis object where to plot the hist
+    Parameters
+    ----------
+    xe : np.array
+        x-part of histogram grid (edge values)
 
-    optional:
-    ========
-    **kwargs: plot keywords
+    ye : np.array
+        y-part of histogram grid (edge values)
+
+    h : np.array
+        frequency of occurence
+    
+    ax : plt.axes instance
+       a current axes where the plot is placed in 
 
 
+    Returns
+    -------
+    ax : plt.axes instance
+       a current axes where the plot is placed in 
 
-    OUTPUT
-    ======
-    ax: axes object
     '''
-
  
     yave, ysig = ave_sig_from_hist(xe, ye, h)
     ymax =  max_from_hist(xe, ye, h)
@@ -356,6 +408,30 @@ def hist3d(v1, v2, v3, bins):
     It additionally generates the average bin values with the same 3d shape 
     as histogram itself.
 
+    
+    Parameters
+    ----------
+    v1 : np.array
+        1st data vector
+
+    v2 : np.array
+        2nd data vector
+
+    v3 : np.array
+        3rd data vector
+    
+    bins : list of 3 np.arrays
+        bins argument passed to the np.histogramdd function
+
+
+    Returns
+    -------
+    bins3d : list of 3dim np.array
+        mesh of bin edges
+    
+    h : np.array
+        absolute histogram counts
+
     '''
 
     h, bs = np.histogramdd([v1, v2, v3], bins)
@@ -377,6 +453,28 @@ def hist3d(v1, v2, v3, bins):
 
 def axis_average_from_hist3d(bins3d, h, axis = 0):
 
+    '''
+    Calculates the average of a 3-dim histogram along a selected axis.
+    
+
+    Parameters
+    ----------
+    bins3d : list of 3dim np.array
+        mesh of bin edges
+    
+    h : np.array
+        absolute histogram counts
+
+    axis : {0, 1}, optional
+        axis along which the calculations are peformed
+
+
+    Returns
+    -------
+    ave : np.array
+        conditional average field
+
+    '''
 
     y = bins3d[axis]
 
@@ -394,8 +492,18 @@ def conditioned_hist(h, axis = 0):
     '''
     Make conditioned histogram. 
 
-
     Prob per bin (not PDF!!!).
+
+    Parameters
+    ----------
+    h : np.array
+        absolute frequency of occurence
+ 
+
+    Returns
+    -------
+    np.array
+        "normalized" frequency
 
     '''
 
