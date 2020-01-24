@@ -52,11 +52,3 @@ tropy.plotting\_tools.shaded module
    :undoc-members:
    :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: tropy.plotting_tools
-   :members:
-   :undoc-members:
-   :show-inheritance:
