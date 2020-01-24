@@ -1,5 +1,18 @@
 #!/bin/env python
 
+
+'''
+Module for histogram calculations and plotting.
+
+Histogram calculations include
+* partial normalization to get marginal distributions
+* conditional averages, standard deviations and percentiles
+
+
+Histogram plotting is for
+* conditioned histograms with averages or percentiles
+'''
+
 import numpy as np
 import pylab as pl
 import scipy.ndimage
