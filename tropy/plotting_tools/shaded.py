@@ -93,6 +93,9 @@ def set_levs(nmax, depth, largest = 5, sym = True, sign = True, zmax = 'None'):
     depth : int
         number of iterations used down to scales of 10**(nmax - depth)
 
+    largest : {5, 8}, optional
+        set the largest number in the base array either to 5 or 8
+
     sym : {True, False}, optional
         switch if levels are symmetric around origin
 
@@ -247,7 +250,7 @@ def shaded(x, y, z, *args, **kwargs):
                                        np.log(largest_in_base)) / np.log(10))
 
 
-        kwargs['levels'] = set_levs(imax, depth, \
+        kwargs['levels'] = set_levs(imax, depth + 1, \
                                         sign = IS_POSITIVE, \
                                         largest = largest_in_base, \
                                         sym = IS_SYMMETRIC,\
