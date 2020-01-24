@@ -92,15 +92,17 @@ class pngsave(object):
         
         'source' : Specify your source filename if needed,
                    if not set, it tries to automatically find the filename
-        
+
+        'notebook' : {False, True} if you are working in a notebook
     '''
  
+
     def __init__(self, *args, **kwargs):
 
         # getting the author attribute
         self.author = kwargs.pop('author', 'Fabian Senf')
         self.source = kwargs.pop('source', 'Auto')
-
+        self.is_notebook = kwargs('notebook', False )
 
         self.__call__(*args, **kwargs)
 
@@ -128,7 +130,11 @@ class pngsave(object):
         meta = {'Author': self.author }
 
         if self.source == 'Auto':
-            meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
+            if is_notebook:
+                meta['Source'] =  get_notebook_name()
+            else:
+                meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
+                
         else:
             meta['Source'] = self.source
 
