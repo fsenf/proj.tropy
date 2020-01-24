@@ -68,6 +68,11 @@ class pngsave(object):
 
     **kwargs : dict
         other optional arguments passed to `plt.savefig``
+
+        'author' : Place yeur name into author keyword 
+        
+        'source' : Specify your source filename if needed,
+                   if not set, it tries to automatically find the filename
         
     '''
  
