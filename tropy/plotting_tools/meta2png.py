@@ -75,6 +75,8 @@ class pngsave(object):
 
         # getting the author attribute
         self.author = kwargs.pop('author', 'Fabian Senf')
+        self.source = kwargs.pop('source', 'Auto')
+
 
         self.__call__(*args, **kwargs)
 
@@ -100,7 +102,11 @@ class pngsave(object):
         '''
 
         meta = {'Author': self.author }
-        meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
+
+        if self.source == 'Auto':
+            meta['Source'] =  '{cwd}/{sname}'.format(cwd = os.getcwd(), sname =  sys.argv[0])
+        else:
+            meta['Source'] = self.source
 
         return meta
 
