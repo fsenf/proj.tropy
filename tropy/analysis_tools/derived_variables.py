@@ -2,7 +2,7 @@
 
 import sys, os
 
-import tropy.ECMWFtools as ECMWFtools
+#import tropy.ECMWFtools as ECMWFtools
 import numpy as np
 from .grid_and_interpolation import ldiff, lmean
 
