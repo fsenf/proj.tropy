@@ -4,3 +4,9 @@ numpy
 h5py
 matplotlib
 scipy
+Image
+netCDF4
+pyorbital
+scikit-learn
+scikit-image
+statsmodels
