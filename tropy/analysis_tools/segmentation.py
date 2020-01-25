@@ -32,7 +32,10 @@ import scipy.ndimage
 import skimage.morphology
 import skimage.feature
 import skimage.measure
-import mahotas as mh
+try:
+    import mahotas as mh
+except:
+    print('mahotas package not available - do not use mahotas options')
 
 from . import grid_and_interpolation as gi
 
