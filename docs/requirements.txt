@@ -10,3 +10,4 @@ pyorbital
 scikit-learn
 scikit-image
 statsmodels
+opencv-python
