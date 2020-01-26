@@ -2,6 +2,8 @@ Functions Overview
 -------------------
 .. toctree::
    tropy.functions.analysis_tools
+   tropy.functions.io_tools
+
 
 
 Subpackages
