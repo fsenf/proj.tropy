@@ -18,7 +18,7 @@ Tutorial can be found here: <https://tropy-tutorials.readthedocs.io/en/latest/>
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: API Reference:
 
    tropy
 
