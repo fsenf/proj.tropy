@@ -1,10 +1,7 @@
-tropy package
-=============
-
 Functions Overview
 -------------------
 .. toctree::
-   tropy.functions
+   tropy.functions.analysis_tools
 
 
 Subpackages
