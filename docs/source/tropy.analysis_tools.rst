@@ -1,5 +1,5 @@
-API reference: tropy.analysis\_tools
-====================================
+tropy.analysis\_tools
+=====================
 The `tropy.analysis` package is a collection of tools for 
 dedicated analysis of scientific data. It has been especially
 used to explore atmospheric data, but the application to other
