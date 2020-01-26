@@ -1,6 +1,12 @@
 tropy package
 =============
 
+Functions Overview
+-------------------
+.. toctree::
+   tropy.functions
+
+
 Subpackages
 -----------
 
@@ -14,35 +20,6 @@ Subpackages
 Submodules
 ----------
 
-tropy.ECMWFtools module
------------------------
+.. toctree::
+   submodules
 
-.. automodule:: tropy.ECMWFtools
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tropy.MSGtools module
----------------------
-
-.. automodule:: tropy.MSGtools
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-tropy.standard\_config module
------------------------------
-
-.. automodule:: tropy.standard_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: tropy
-   :members:
-   :undoc-members:
-   :show-inheritance:
