@@ -1,5 +1,15 @@
 #!/usr/bin/python
 
+
+'''
+This module contains / will contain variables
+derived from some basic input fields.
+The name "basic" refers to the typical set of
+variables stored in climate or weather model
+output.
+'''
+
+
 import sys, os
 
 #import tropy.ECMWFtools as ECMWFtools
