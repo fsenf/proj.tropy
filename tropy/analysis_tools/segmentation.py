@@ -67,28 +67,29 @@ def clustering(f, thresh,
     General interface to aplly either connectivity or watershed clustering.
 
     
-    USAGE
-    =====
-    c = clustering(f, thresh, cluster_method = 'watershed', **kwargs)
+    Parameters
+    ----------
+    f : np.array
+        field to be segmented
 
+    thresh : float
+        threshold for masking, set foreground to f > thresh
 
-    INPUT
-    =====
-    f: binary field
-    thresh: threshold for masking, set foreground to f > thresh
-
-    cluster_method: optional, either 'watershed' or 'connect' for 
-                    watershed or connectivity clustering
-
-    min_size: optional, minimum cluster size (px) left in the cluster field
+    cluster_method : {'watershed', 'watershed_merge', 'connect'}, optional
+        switch between watershed or connectivity clustering
+    
+    min_size : int, optional, default = 20
+        minimum cluster size (px) left in the cluster field
  
-    **kwargs: optional, keyword argument for selected cluster algorithm
+    **kwargs : dict, optional 
+        keyword argument for selected cluster algorithm
 
 
     
-    OUTPUT
-    ======
-    c: cluster field 
+    Returns
+    -------
+    c : np.array
+        categorial cluster field 
     '''
 
     if cluster_method == 'watershed':
@@ -130,46 +131,70 @@ def watershed_clustering(f, thresh,
     Applies watershed clustering to a field.
 
     
-    USAGE
-    =====
-    c =  watershed_clustering(f, thresh, dradius = 3, numberOfIterations = 5)
+    Parameters
+    ----------
+    f : np.array
+        field to be segmented
 
+    thresh : float
+        threshold for masking, set foreground to f > thresh
 
-    INPUT
-    =====
-    f: binary field
-    thresh: threshold for masking, set foreground to f > thresh
-    
-    marker_field: (optional) if 'dist', then max. in Euclidean distance to background
-                             is used to set initial markers, else the max. in field f
-                             are taken
-    
-    dradius: (optional) minimal distance for neighboring maxima
-    ctype: (optional) 4 or 8 for 4- or 8-connectivity
+    dradius : int, optional
+        minimal distance for neighboring maxima
 
-    filter_method: (optional) either 'gauss' or 'curve' for 2d-Gaussian or curvature
-                   flow filter  
-    numberOfIterations: (optional) number of repeated application of curvature flow filter
-                         the larger then smoother if selected
-    siggauss: (optional) sigma for Gaussian filter if selected
+    ctype: {4, 8}, optional
+        set either 4- or 8-connectivity (edge vs. edges+corners)
 
-    cluster_masking: (optional) if original (True) or smoothed (False) threshold mask is used.
+    marker_field : str, optional 
+        switch if input field `f` or a distance transform as used
+        to set the watershed markers
 
-    marker_method: (optional), set a method for marker assignment
+        if 'dist', then max. in Euclidean distance to background
+        is used to set initial markers, else the max. in field f
+        are taken
 
-       Options:
-       -------
-       'brute_force_local_max'  : just uses scipy.ndimage.maximum_filter
-       'skimage_peak_local_max' : uses skimage local maximum routine
-       'mahotas_regmax'         : uses mahotas regional maximum detection
-       'iterative_shrinking'    : uses iterative object shrinking depending on 
-                                       relative distance-to-background
+    filter_method : {'gauss', 'curve'}, optional
+        filter method used to smooth the input field
+        
+        * 'gauss' for 2d-Gaussian 
+        * 'curve' for curvature flow filter
+  
+    numberOfIterations : int, optional
+        number of repeated application of curvature 
+        flow filter the larger then smoother if selected
 
+    cluster_masking : {True, False}, optional 
+        if original (True) or smoothed (False) threshold mask is used.
+
+    exclude_border : {True, False}, optional 
+        if clusters that touch domain borders are excluded (set to zero)
+
+    marker_method : str, optional
+        defines a method for marker assignment
+
+        * 'brute_force_local_max'  : just uses scipy.ndimage.maximum_filter
+        * 'skimage_peak_local_max' : uses skimage local maximum routine
+        * 'mahotas_regmax'         : uses mahotas regional maximum detection
+        * 'iterative_shrinking'    : uses iterative object shrinking depending on 
+          relative distance-to-background
+
+    siggauss : float, optional 
+        sigma for Gaussian filter if selected
+
+    marker_shrinkage_Niter : int, optional
+        option for marker creation, how often shrinking is applied
+ 
+    marker_shrinkage_dmin : float, optional
+        option for marker creation 
+
+        How much of the edge is taken away. Distance is measured 
+        relative to the maximum distance, thus 0 < dmin < 1.
  
    
-    OUTPUT
-    ======
-    c: cluster field 
+    Returns
+    -------
+    c : np.array
+        categorial cluster field 
     '''
 
     # apply filtering ------------------------------------------------
@@ -275,34 +300,44 @@ def connectivity_clustering(f, thresh,
 
     '''
     Applies connectivity clustering to a field.
-
-    
-    USAGE
-    =====
-    c =   connectivity_clustering(f, thresh, **kwargs)
-
-
-    INPUT
-    =====
-    f: binary field
-    thresh: threshold for masking, set foreground to f > thresh
-    
-    ctype: (optional) 4 or 8 for 4- or 8-connectivity
-
-
-    filter_method: (optional) either 'gauss' or 'curve' for 2d-Gaussian or curvature
-                   flow filter  
  
-    numberOfIterations: (optional) number of repeated application of curvature flow filter
-                         the larger then smoother if selected
-    siggauss: (optional) sigma for Gaussian filter if selected
 
-    cluster_masking: (optional) if original (True) or smoothed (False) threshold mask is used.
+    Parameters
+    ----------
+    f : np.array
+        field to be segmented
 
-    
-    OUTPUT
-    ======
-    c: cluster field 
+    thresh : float
+        threshold for masking, set foreground to f > thresh
+
+    filter_method : {'gauss', 'curve'}, optional
+        filter method used to smooth the input field
+        
+        * 'gauss' for 2d-Gaussian 
+        * 'curve' for curvature flow filter
+  
+    numberOfIterations : int, optional
+         number of repeated application of curvature 
+         flow filter the larger then smoother if selected
+
+    ctype: {4, 8}, optional
+        set either 4- or 8-connectivity (edge vs. edges+corners)
+
+    cluster_masking : {True, False}, optional 
+         if original (True) or smoothed (False) threshold mask is used.
+
+    siggauss : float, optional 
+         sigma for Gaussian filter if selected
+
+    **kwargs : dict, optional
+         set of additional, but not used keywords
+
+   
+    Returns
+    -------
+    c : np.array
+        categorial cluster field 
+ 
     '''
 
     # apply filtering ------------------------------------------------
@@ -351,27 +386,32 @@ def watershed_merge_clustering(f, thresh,
     The merging is based on the ratio between maximum distances-to-background 
     within the subclusters and on the cluster broders.
 
+     
+    Parameters
+    ----------
+    f : np.array
+        field to be segmented
+
+    thresh : float
+        threshold for masking, set foreground to f > thresh
+ 
+    min_size : int, optional, default = 20
+        optional, minimum cluster size (px) left in the cluster field
+ 
+    merge_ratio : float, optional
+        essentially the ratio between interface length and cluster size
     
-    USAGE
-    =====
-    c =  watershed_clustering(f, thresh, **kwargs)
+        if the interface is longer than `merge_ratio` * cluster_size
+        than to two connected objects are merged. 
+
+    **kwargs : dict, optional
+        keywords passed to `watershed_clustering` routine
 
 
-    INPUT
-    =====
-    f: binary field
-    thresh: threshold for masking, set foreground to f > thresh
-    min_size: minimum cluster size
-
-    merge_ratio: optional, most important parameter which determines when clusters
-                 are merged, ratio between maximal in-cluster and cluster edge distance
-    
-    **kwargs: keywords of the watershed_cluster routine
-
-
-    OUTPUT
-    ======
-    c_update: updated cluster field
+    Returns
+    -------
+    c_update : np.array
+        categorial cluster field (updated for merges)
 
     '''
   
@@ -484,14 +524,16 @@ def connected_sequences2pairlists( connected_pairs_list ):
     and collects all connections in a list of pairs.
 
 
-    INPUT
-    =====
-    connected_pairs_list: list of number pairs
+    Parameters
+    ----------
+    connected_pairs_list : list 
+        list of number pairs
 
 
-    OUTPUT
-    =====
-    pair_list: dictionary that contains pair lists
+    Returns
+    -------
+    pair_list : dict
+        dictionary that contains pair lists
 
     '''
 
@@ -552,18 +594,26 @@ def markers_from_iterative_shrinking(mask,
     makes the algorithm scale-invariant.
 
 
-    INPUT
-    =====
-    mask: binary mask
-    marker_shrinkage_Niter: optional, number of iterations performed
-    marker_shrinkage_dmin: optional, relative distance threshold used of masking to
-                           shrink the objects
+    Parameters
+    ----------
+    mask : np.array
+        binary mask
 
 
+    marker_shrinkage_Niter : int, optional
+        option for marker creation, how often shrinking is applied
+ 
+    marker_shrinkage_dmin : float, optional
+        option for marker creation 
 
-    OUTPUT
-    =====
-    markers: markers field with increasing index per marker region
+        How much of the edge is taken away. Distance is measured 
+        relative to the maximum distance, thus 0 < dmin < 1.
+ 
+
+    Returns
+    -------
+    markers : np.array
+         markers field with increasing index per marker region
     '''
 
     
@@ -636,9 +686,12 @@ def multithreshold_clustering( f, thresh_min, thresh_max,
     thresh_max : float
         maximum threshold value
         
-    nthresh : int
+    nthresh : int, optional
         number of threshold values
         
+    use_percentile_threshold : {True, False}, optional
+        if threshold list is derived from field percentiles
+    
     **kws : dict
         keywords passed to segmentation routine
         
@@ -688,6 +741,9 @@ def sequential_segmentation( f, thresh_min, thresh_max,
     nthresh : int
         number of threshold values
         
+    use_percentile_threshold : {True, False}, optional
+        if threshold list is derived from field percentiles
+    
     **kws : dict
         keywords passed to segmentation routine
         
@@ -802,20 +858,20 @@ def set_connectivity_footprint(ctype, ndim):
     includes neighboring diagonal values.
 
 
-    USAGE
-    =====
-    footprint = set_connectivity_footprint(ctype, ndim)
+    
+    Parameters
+    ----------
+    ctype: {4, 8}
+        set either 4- or 8-connectivity (edge vs. edges+corners)
+
+    ndim : {2,3}
+        dimension of the field (either 2-dim or 3-dim)
 
     
-    INPUT
-    =====
-    ctype: connectivity type (either 4 or 8)
-    ndim: dimension of the field (either 2 or 3)
-
-    
-    OUTPUT
-    ======
-    footprint: ndim-dimensional connectivity footprint
+    Returns
+    -------
+    footprint : np.array
+        ndim-dimensional connectivity footprint
     '''
 
     if ctype == 4:
@@ -855,19 +911,16 @@ def sort_clusters(c):
     It sorts clusters by size (number of pixels) in decreasing order.
 
     
-    USAGE
-    =====
-    c_re =  sort_clusters(c)
-
-
-    INPUT
-    =====
-    c: categorial cluster field
-
+    Parameters
+    ----------
+    c : np.array
+        categorial cluster field 
     
-    OUTPUT
-    ======
-    c_re: cleaned cluster field with cluster larger than min_size
+    
+    Returns
+    -------
+    c_re : np.array
+        categorial cluster field with sorted objects (from large to small)
     '''
 
     c_re = remove_clustersize_outside(c, 
@@ -890,22 +943,22 @@ def remove_small_clusters(c, min_size = 6):
 
     In addition, it sorts clusters by size in decreasing order.
 
+
+    Parameters
+    ----------
+    c : np.array
+        categorial cluster field 
     
-    USAGE
-    =====
-    c_re =  remove_small_clusters(c,  min_size = 6, sort = True)
+    min_size : int, optional
+        minimum cluster size (px) left in the cluster field
+ 
 
+    Returns
+    -------
+    c_re : np.array
+        categorial cluster field with sorted objects (from large to small)
 
-    INPUT
-    =====
-    c: categorial cluster field
-    min_size: (optional), minimum size of clusters that are retained
-    sort: (optional) if True, cluster category numbers are sorted by size
-
-    
-    OUTPUT
-    ======
-    c_re: cleaned cluster field with cluster larger than min_size
+        objects smaller than or equal `min_size` are removed
     '''
 
     return remove_clustersize_outside(c, min_size = min_size)
@@ -925,25 +978,27 @@ def remove_clustersize_outside(c,
 
     In addition, it sorts clusters by size in decreasing order.
 
+
+    Parameters
+    ----------
+    c : np.array
+        categorial cluster field 
     
-    USAGE
-    =====
-    c_re =  remove_clustersize_outside(c,  min_size = 6,  
-                                           max_size = np.inf, 
-                                           sort = True)
+    min_size : int, optional
+        minimum cluster size (px) left in the cluster field
+ 
+    max_size : int, optional
+        maximum cluster size (px) left in the cluster field
+ 
 
+    Returns
+    -------
+    c_re : np.array
+        categorial cluster field with sorted objects (from large to small)
 
-    INPUT
-    =====
-    c: categorial cluster field
-    min_size: (optional), minimum size of clusters that are retained
-    max_size: (optional), maximum size of clusters that are retained
-    sort: (optional) if True, cluster category numbers are sorted by size
+        * objects smaller than or equal `min_size` are removed
+        * objects larger than or equal `max_size` are removed
 
-    
-    OUTPUT
-    ======
-    c_re: cleaned cluster field with clusters within a certain size range
     '''
 
     # set binary mask
@@ -994,25 +1049,29 @@ def remove_clustersize_outside_slow(c,
 
     In addition, it sorts clusters by size in decreasing order.
 
+
+    Parameters
+    ----------
+    c : np.array
+        categorial cluster field 
     
-    USAGE
-    =====
-    c_re =  remove_clustersize_outside(c,  min_size = 6,  
-                                           max_size = np.inf, 
-                                           sort = True)
+    min_size : int, optional
+        minimum cluster size (px) left in the cluster field
+ 
+    max_size : int, optional
+        maximum cluster size (px) left in the cluster field
+
+    sort : {True, False}, optional
+       if objects are sorted by size
 
 
-    INPUT
-    =====
-    c: categorial cluster field
-    min_size: (optional), minimum size of clusters that are retained
-    max_size: (optional), maximum size of clusters that are retained
-    sort: (optional) if True, cluster category numbers are sorted by size
+    Returns
+    -------
+    c_re : np.array
+        categorial cluster field with sorted objects (from large to small)
 
-    
-    OUTPUT
-    ======
-    c_re: cleaned cluster field with clusters within a certain size range
+        * objects smaller than or equal `min_size` are removed
+        * objects larger than or equal `max_size` are removed
     '''
 
 
@@ -1073,16 +1132,25 @@ def percentiles_from_cluster(f, c, p = [25, 50, 75], index = None):
 
     Functionality missing in scipy.ndimage.measurements.
 
-    INPUT
-    =====
-    f: the field as basis for percentile calculation
-    c: labeled field
-    p: optional, percentiles array
+    Parameters
+    ----------
+    f : np.array
+        the field as basis for percentile calculation
+
+    c : np.array
+        categorial cluster field
+
+    p : list or np.array, optional
+        percentiles array
+
+    index : list or `None`, optional
+        list of object labels for which percentiles are calculated
 
 
-    OUTPUT
-    ======
-    pc: array of percentiles per cell (including background (set to zero))
+    Returns
+    -------
+    pc : np.array 
+        percentiles per cell (including background (set to zero))
     '''
 
     # get slices .....................................................
