@@ -1,6 +1,17 @@
 #!/usr/bin/python
 
 
+'''
+Package for some statistical utility functions.
+
+**Special Highlights** are:
+
+* conditioned percentiles
+* rank transformation / distribution mapping
+* drawing from an empirical 1d / 2d distribution
+
+'''
+
 import sys
 import numpy as np
 import scipy.optimize, scipy.ndimage, scipy.stats, scipy.odr
