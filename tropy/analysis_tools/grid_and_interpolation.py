@@ -982,7 +982,7 @@ def simple_pixel_area(lon, lat, xy = False, uncertainty = False):
     a : numpy array (2-dim)
         grid box area
 
-    a : numpy array (2-dim), optional
+    da : numpy array (2-dim), optional
         standard deviation of grid box area, if ``uncertainty == True``
     
     '''
@@ -1532,7 +1532,7 @@ def low2hres_region(region):
     
     Returns
     --------
-    hrv_region: corresponding HRV region as ((row1, row2), (col1, col2))
+    hrv_region : corresponding HRV region as ((row1, row2), (col1, col2))
     
 
     Notes
