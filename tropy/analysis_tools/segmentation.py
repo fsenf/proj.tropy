@@ -22,6 +22,20 @@
 # GNU General Public License for more details.
 
 
+'''
+Package to perform segmentation of fields.
+
+The special emphasis is on threshold-based segmentation of 
+2-dim atmoshperic fields for which object-based analysis 
+techniques should be applied.
+
+**Notes**
+
+* the package has variants of connected compund analsis & watershedding
+* some split-and-merge rules exists
+* most of the method might be also applied to 3-dim fields
+'''
+
 # load libraries -----------------------------------------------------
 import sys, os, glob
 
