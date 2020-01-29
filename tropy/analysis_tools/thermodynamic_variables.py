@@ -4,21 +4,19 @@
 
 ######################################################################
 ######################################################################
-# 
-# Description
-# ===========
-#
-# Package for the calculation of several thermodynamical properties
-# of moist air (including condensate).
+
+'''
+Package for the calculation of several thermodynamical properties
+of moist air (including condensate).
 
 
-# ToDo:
-# ====
-#
-# * Some final tests of the routines should be done. 
-# * There was an issue with mixing ratio vs. specific humidity, 
-#   but might be resolved ... 
-#
+**ToDo**
+
+
+* Some final tests of the routines should be done. 
+* There was an issue with mixing ratio vs. specific humidity, 
+  but might be resolved ... 
+'''
 
 ######################################################################
 ######################################################################
