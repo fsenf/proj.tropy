@@ -1,0 +1,21 @@
+name: tropy-docs
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - python=3.7
+    - sphinx>=1.4
+    - sphinx_rtd_theme
+    - numpy
+    - h5py
+    - matplotlib
+    - scipy
+    - pillow
+    - netCDF4
+    - pyorbital
+    - scikit-learn
+    - scikit-image
+    - statsmodels
+    - opencv
+    - basemap
+    - pygrib
