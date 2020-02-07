@@ -9,7 +9,8 @@ e1 = Extension( '_f90_bit_conversion',
                 sources = ['tropy/io_tools/bit_conversion.f90',],
                 extra_f90_compile_args = ['-fPIC'], )
 
-setup(name='tropy',
+setup_kws = dict(
+      name='tropy',
       version = __version__,
       description='Collection of IO and Analysis Tools for TROPOS work',
       author='Fabian Senf',
@@ -19,4 +20,12 @@ setup(name='tropy',
       ext_package = 'tropy.io_tools',
       ext_modules = [e1, ], 
       zip_safe=False)
+
+try:
+    setup( **setup_kws )
+except:
+    print('Install without Fortran Extensions')
+    setup_kws['ext_modules'] = []
+
+    setup( **setup_kws )
 
