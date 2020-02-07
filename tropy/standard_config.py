@@ -4,10 +4,13 @@ import os
 
 try:
     local_home_path  =  os.environ['LHOME']
-    proj_path = '%s/proj' % local_home_path
-    pics_path = '%s/pics' % local_home_path
 except:
-    pass
+    local_home_path = os.environ['HOME']
+    
+proj_path       = '%s/proj' % local_home_path
+pics_path       = '%s/pics' % local_home_path
+local_data_path = '%s/data' % local_home_path
+
 
 try:
     global_data_path =  os.environ['GLOBAL_DATA_PATH']
