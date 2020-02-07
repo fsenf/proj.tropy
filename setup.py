@@ -1,6 +1,5 @@
 
-
-# from setuptools import setup
+from setuptools import setup
 from tropy._version import __version__
 
 setup_kws = dict(
