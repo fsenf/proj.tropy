@@ -264,7 +264,7 @@ def get_field_from_indx(indx, var_name, lonlat = False):
     
     l = lev[ils]
     
-    if np.rank(var) == 3:
+    if np.ndim(var) == 3:
         v = var[..., ils]
 
 

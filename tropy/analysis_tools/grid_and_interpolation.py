@@ -987,7 +987,7 @@ def simple_pixel_area(lon, lat, xy = False, uncertainty = False):
     
     '''
 
-    if not np.rank(lon) == 2 and not np.rank(lat) == 2:
+    if not np.ndim(lon) == 2 and not np.ndim(lat) == 2:
         print('ERROR: please only use 2d matrices for lon and lat')
         sys.exit(0)
 
