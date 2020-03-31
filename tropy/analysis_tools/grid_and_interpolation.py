@@ -156,7 +156,7 @@ def ll2xy(lon, lat, lon0 = 10., lat0 = 50., R = 6380.):
     phi = np.deg2rad(lat)
     
     # get x and y from lam and phi
-    x = R  * np.cos(phi) * (lam - lam0)
+    x = R  * np.cos(phi - phi0) * (lam - lam0)
     y = R * (phi - phi0)
 
     return x,y 
@@ -284,7 +284,7 @@ def xy2ll(x, y, lon0=10., lat0=50., R = 6380):
 
     # get phi and lam from x and y 
     phi = y / R + phi0
-    lam = x / ( R * np.cos(phi) ) + lam0
+    lam = x / ( R * np.cos(phi - phi0) ) + lam0
     
     # conversion from radiant to degree
     lon = np.rad2deg(lam)
