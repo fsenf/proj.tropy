@@ -1274,11 +1274,11 @@ def cutout_field4box(f, ind, bsize, **kwargs):
 
 
     # set box edges
-    ir1 = irow -  bsize / 2
-    ir2 = irow +  bsize / 2  +  1
+    ir1 = irow -  bsize // 2
+    ir2 = irow +  bsize // 2  +  1
 
-    ic1 = icol -  bsize / 2
-    ic2 = icol +  bsize / 2  +  1
+    ic1 = icol -  bsize // 2
+    ic2 = icol +  bsize // 2  +  1
 
     # check for box which extend the field dimensions
     dc_left, dc_right = (0, 0)
